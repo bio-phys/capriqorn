@@ -1,0 +1,56 @@
+# Capriqorn postprocessor YAML template
+- H5Reader:
+    active: true
+    file: ./histograms_output/histograms.h5
+    first: null
+    last: null
+    step: 1
+    shuffle: false  # put the frames in random order (expert)
+    shuffle_reproducible: false  # put the frames in random order but use a constant random seed (expert)
+    verbose: false
+- StripVirtualParticles:
+    active: true
+    verbose: false
+- Average:
+    active: true
+    factor: 1.0
+    n_avg: 1  # perform averaging over n_avg frames
+    all: false  # if set to true, averaging is performed over all available frames
+    verbose: false
+- RDF:
+    active: false
+    verbose: false
+- Solvent:
+    active: true
+    debug: false
+    g_ascii_file: __DATA_DIR__/rdf.extended.dat  # ASCII file containing ???
+    g_plateau_fraction: 0.3  # fraction of the distance, where the rdfs have a plateau. Used to determine ginfty and for noise tapering.
+    g_noise_fraction: 0.01  # noise tapering if <1. If set to 1, no noise tapering takes place. 
+    g_match: O,O
+    g_scaled_file: null  # HDF5 file containing g_scaled
+    verbose: false
+- DeltaH:
+    active: true
+    debug: false
+    form_factor_file: __DATA_DIR__/atomsf.dat
+    dq: 0.01
+    nq: 300
+    verbose: false
+- PDDF:
+    active: true
+    debug: false
+    do_bulk: false
+    do_intensity: false
+    delta: 0.01
+    dq: 0.01
+    dr_intra: 0.001  # (expert)
+    nr_intra: 10000  # (expert)
+    form_factor_file: __DATA_DIR__/atomsf.dat
+    nbin_coarse: 10
+    nq: 300
+    verbose: false
+- H5Writer:
+    active: true
+    compression: lzf
+    file: ./postprocessor_output/postprocessor.h5
+    verbose: false

@@ -1,0 +1,66 @@
+# Capriqorn preprocessor YAML template
+- MDReader:  # MDAnalysis-based trajectory reader
+    active: true
+    alias_file: __DATA_DIR__/alias.dat
+    pdb_file: __DATA_DIR__/protein.pdb.gz
+    traj_file: __DATA_DIR__/protein.crdbox.gz
+    first: null
+    last: null
+    selection: all  # species selection (expert)
+    verbose: false
+- VirtualParticles:
+    active: true
+    label: X
+    method: lattice
+    noise: true  # (expert)
+    verbose: false
+    x_box_length: 80.0
+    x_density: 0.033
+    random_seed: 0  # set >0 to achieve reproducibility
+- Sphere:
+    active: true
+    radius: 35.0
+    shell_width: 3.0
+    verbose: false
+- Ellipsoid:
+    active: false
+    semi_principal_axes:
+    - 1000000.0
+    - 1000000.0
+    - 1000000.0
+    shell_width: -1
+    verbose: false
+- Cuboid:
+    active: false
+    half_lengths:
+    - 1000000.0
+    - 1000000.0
+    - 1000000.0
+    shell_width: -1
+    verbose: false
+- ReferenceStructure:
+    active: false
+    topology_file: null
+    selection: all
+    distance: null
+    shell_width: -1
+    verbose: false
+- MultiReferenceStructure:
+    active: false
+    topology_file: null
+    trajectory_file: null
+    selection: all
+    distance: null  # explanation
+    r_max: -1  # explanation, see math in implementation
+    shell_width: -1
+    verbose: false
+- XYZ:  # XYZ file writer
+    active: false
+    file_prefix: null  # optional file prefix string before frame number
+    output_directory: ./preprocessor_output
+    verbose: false
+- H5Writer:
+    active: true
+    file: ./preprocessor_output/trajectory.h5  # output file, optionally including a relative or absolute directories
+    compression: lzf
+    verbose: false

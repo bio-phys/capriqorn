@@ -1,0 +1,7 @@
+include capriq.bash README.*
+include capriqorn/tests/run_tests.sh
+include capriqorn/data/* capriqorn/tests/data/*
+include capriqorn/kernel/*.pyx capriqorn/kernel/*.c
+include doc/*
+include scripts/*.sh
+global-exclude *.so *.pyc *.pyo
