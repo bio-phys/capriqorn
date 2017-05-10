@@ -6,4 +6,7 @@
 .project
 .pydevproject
 .settings
-
+doc/html
+build
+*egg-info/
+capriqorn/version.py
