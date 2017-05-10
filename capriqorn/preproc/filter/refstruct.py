@@ -285,8 +285,8 @@ class MultiReferenceStructure(ReferenceStructure):
         self.src = source
         self.verb = verbose
         # ---
-        self._depends.extend(super(base.ReferenceStructure, self)._depends)
-        self._conflicts.extend(super(base.ReferenceStructure, self)._conflicts)
+        #self._depends.extend(super(base.ReferenceStructure, self)._depends)
+        #self._conflicts.extend(super(base.ReferenceStructure, self)._conflicts)
 
     def get_meta(self):
         """
@@ -313,7 +313,7 @@ class MultiReferenceStructure(ReferenceStructure):
                 assert(frm_idx_0 >= 0)
                 self.universe.trajectory[frm_idx_0]
             except:
-                raise RuntimeError("Frame %d not available in reference trajectory" % format(frm_in.i))
+                raise RuntimeError("Frame %d not available in reference trajectory" % frm_in.i)
             # if self.qDetermineRMax==True:
             d_max = maxInnerDistance(self.atoms.positions)
             d_max += 3. * self.distance
