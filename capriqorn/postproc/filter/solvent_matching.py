@@ -96,7 +96,7 @@ class Solvent(base.Filter):
                 virtual_param = obj.query_meta('VirtualParticles')
                 if (virtual_param is not None):
                     self.x_particle_method = virtual_param['method']
-                    xrho = virtual_param['xRho']
+                    xrho = virtual_param['x_density']
 
                 # --- obtain the shell volume from the pipeline log
                 if (self.geometry in ['Sphere', 'Cuboid', 'Ellipsoid']):

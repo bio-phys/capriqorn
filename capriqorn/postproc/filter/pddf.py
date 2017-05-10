@@ -118,8 +118,10 @@ class PDDF(base.Filter):
 
             dHistoOrg = copy.deepcopy(dHisto)
 
-            R = frm.query_meta('Sphere/radius')
+            geom=frm.get_geometry()
+            R = frm.query_meta('%s/r_max' % geom)
             assert(R is not None)
+
             nr = int((R + 2) * 2 / dr)
             # ---
             rArray = np.zeros(nr + 1)
