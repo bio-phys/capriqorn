@@ -70,11 +70,9 @@ Quick Start
 To run the example analysis pipeline that comes with Capriqorn please issue
 the following sequence of commands::
 
-   capriq preproc-example
+   capriq example
    capriq preproc
-   capriq histo-example
    capriq histo
-   capriq postproc-example
    capriq postproc
 
 Tutorial
