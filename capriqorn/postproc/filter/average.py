@@ -51,7 +51,7 @@ def scaleVirtualHistograms(frm):
     shell histograms are no longer meaningfull. Only the norm of the full histogram is.
     """
 
-    virtual_param = frm.query_meta('AddVirtualParticles')
+    virtual_param = frm.query_meta('VirtualParticles')
     if (virtual_param is not None):
         method = virtual_param['method']
         xrho = virtual_param['xRho']
@@ -170,7 +170,7 @@ class Average(base.Filter):
         for frm_in in self.src.next():
             self.geometry = frm_in.get_geometry()
             # --- multiref: scale histograms containing virtual particles
-            virtual_param = frm_in.query_meta('AddVirtualParticles')
+            virtual_param = frm_in.query_meta('VirtualParticles')
             if (virtual_param is not None and self.geometry == 'MultiReferenceStructure'):
                 frm_in = scaleVirtualHistograms(frm_in)
             # --- take into account the histogram sample parameter when averaging

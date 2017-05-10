@@ -93,7 +93,7 @@ class Solvent(base.Filter):
                 geometry_param = obj.query_meta(self.geometry)
                 assert (geometry_param is not None)
                 # ---
-                virtual_param = obj.query_meta('AddVirtualParticles')
+                virtual_param = obj.query_meta('VirtualParticles')
                 if (virtual_param is not None):
                     self.x_particle_method = virtual_param['method']
                     xrho = virtual_param['xRho']

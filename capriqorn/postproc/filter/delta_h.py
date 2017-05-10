@@ -124,10 +124,10 @@ class DeltaH(base.Filter):
                 # --- for non-sphere geometries, we calculate V using x particles below
                 V = None
             # ---
-            virtual_param = hs.query_meta('AddVirtualParticles')
+            virtual_param = hs.query_meta('VirtualParticles')
             if (virtual_param is not None):
                 self.x_particle_method = virtual_param['method']
-                xrho = virtual_param['xRho']
+                xrho = virtual_param['x_density']
 
             # ---
             rdf_header = (hs.get_data(base.loc_solv_match + '/g_scaled')).keys()
