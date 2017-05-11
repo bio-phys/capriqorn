@@ -19,6 +19,9 @@ except:
 
 def queryDistance(xyz, ref, R):
     """Lightweight wrapper of the queryDistance function."""
+    # the cython kernel needs double precision input
+    xyz = np.asanyarray(xyz, dtype=np.float64)
+    ref = np.asanyarray(ref, dtype=np.float64)
     if have_c_refstruct:
         return c_refstruct.queryDistance(xyz, ref, R)
     else:
@@ -27,7 +30,7 @@ def queryDistance(xyz, ref, R):
 def queryDistance_opt(xyz, ref, R):
     """Check which atoms in xyz lie within a radius R of any reference
     atom.
-    
+
     Improved implementation in terms of memory and speed.
 
     Parameters

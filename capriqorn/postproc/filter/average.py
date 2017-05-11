@@ -54,7 +54,7 @@ def scaleVirtualHistograms(frm):
     virtual_param = frm.query_meta('VirtualParticles')
     if (virtual_param is not None):
         method = virtual_param['method']
-        xrho = virtual_param['xRho']
+        xrho = virtual_param['x_density']
     else:
         return frm
     geom = frm.get_geometry()
