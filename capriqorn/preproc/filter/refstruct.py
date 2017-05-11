@@ -288,8 +288,8 @@ class MultiReferenceStructure(ReferenceStructure):
         self.src = source
         self.verb = verbose
         # ---
-        #self._depends.extend(super(base.ReferenceStructure, self)._depends)
-        #self._conflicts.extend(super(base.ReferenceStructure, self)._conflicts)
+        self._depends.extend(ReferenceStructure._depends)
+        self._conflicts.extend(ReferenceStructure._conflicts)
 
     def get_meta(self):
         """
