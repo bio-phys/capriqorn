@@ -1,12 +1,12 @@
+before_script:
+  - git clone git@gitlab.mpcdf.mpg.de:MPIBP-Hummer/Cadishi.git
+  - cd Cadishi
+  - export CAD_CUDA=0
+  - python setup.py build_ext --inplace
+  - export PYTHONPATH=`pwd`
+  - cd ..
+
 capriqorn:
   script:
-      # cadishi installation from the master branch available on CI-VM:
-    - source /opt/cadhishi/cadishi.sh
-    - python setup.py config
-    - python setup.py build
-    - python setup.py develop --user
-    - python setup.py build_sphinx
-    - cd capriqorn/tests
-    - ./run_tests.sh
-    - cd ../..
-    - python setup.py develop --user --uninstall
+    - python setup.py build_ext --inplace
+    - py.test capriqorn
