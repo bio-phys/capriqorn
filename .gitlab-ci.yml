@@ -1,3 +1,4 @@
+# build Cadishi first, requires deploy-key
 before_script:
   - git clone git@gitlab.mpcdf.mpg.de:MPIBP-Hummer/Cadishi.git
   - cd Cadishi
