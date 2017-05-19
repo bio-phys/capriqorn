@@ -5,6 +5,7 @@ capriqorn:
     - python setup.py config
     - python setup.py build
     - python setup.py develop --user
+    - python setup.py build_sphinx
     - cd capriqorn/tests
     - ./run_tests.sh
     - cd ../..
