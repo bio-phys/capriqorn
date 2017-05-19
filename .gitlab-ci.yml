@@ -1,0 +1,11 @@
+capriqorn:
+  script:
+      # cadishi installation from the master branch available on CI-VM:
+    - source /opt/cadhishi/cadishi.sh
+    - python setup.py config
+    - python setup.py build
+    - python setup.py develop --user
+    - cd capriqorn/tests
+    - ./run_tests.sh
+    - cd ../..
+    - python setup.py develop --user --uninstall
