@@ -118,11 +118,19 @@ class Average(base.Filter):
     _depends = []
     _conflicts = []
 
-    def __init__(self, n_avg=1, factor=1.0, source=-1, all=False, verbose=False):
-        # average over n_avg frames
-        self.n_avg = n_avg
-        # alternatively: average over all frames
-        self.all = all
+    def __init__(self, n_avg=1, factor=1.0, source=-1, verbose=False):
+        if isinstance(n_avg, basestring):
+            if n_avg is "all":
+                self.n_avg = 0
+                self.all = True
+            else:
+                self.n_avg = 1
+                self.all = False
+        elif isinstance(n_avg, int):
+            self.n_avg = n_avg
+            self.all = False
+        else:
+            raise ValueError("n_avg must be an integer or a string ('all')")
         # custom factor applied when averaging
         self.factor = factor
         self.src = source
@@ -151,17 +159,21 @@ class Average(base.Filter):
             dict_util.scale_values(X, val)
         # ---
         frm_out.put_data('log', frm_in.get_data('log'))
-        frm_out.put_meta(self.get_meta())
+        frm_out.put_meta(self.get_meta(n_avg=n_avg))
 
-    def get_meta(self):
+    def get_meta(self, n_avg=None):
         """
         return information on the present filter,
         ready to be added to a frame frm_inect's list of
         pipeline meta information
         """
+        if n_avg is None:
+            n_avg = self.n_avg
         meta = {}
         label = 'Average'
-        param = {'n_avg': self.n_avg, 'factor': self.factor}
+        param = {'n_avg': n_avg,
+                 'all': self.all,
+                 'factor': self.factor}
         meta[label] = param
         return meta
 
@@ -218,8 +230,16 @@ class Average(base.Filter):
                 del frm_out
                 frm_out = base.Container()
         # rescale and deliver a single frame if averaging over all frames is desired
+        # OR
+        # treat a remainder properly
+        remainder_avg = -1
         if self.all:
-            self.apply_rescaling(frm_in, frm_out, self.count, virtual_param)
+            remainder_avg = self.count
+        elif (self.count % self.n_avg > 0):
+            remainder_avg = self.count % self.n_avg
+            print("Average.next(): averaged over " + str(remainder_avg) + " remainder elements")
+        if (remainder_avg > 0):
+            self.apply_rescaling(frm_in, frm_out, remainder_avg, virtual_param)
             if self.verb:
                 print "Average.next() :", frm_in.i
             yield frm_out

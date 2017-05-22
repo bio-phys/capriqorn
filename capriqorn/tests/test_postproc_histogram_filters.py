@@ -54,13 +54,33 @@ def test_average_filter_all():
     n_tot = 100
     n_bins = 1024
     reader = postproc_io.DummyReader(n_histogram_sets=n_tot, n_bins=n_bins, random=False)
-    average = postproc_filter.Average(source=reader, all=True)
+    average = postproc_filter.Average(source=reader, n_avg='all')
     counter = FrameCounter(source=average)
     keeper = KeepLastFrame(source=counter)
     writer = postproc_io.DummyWriter(source=keeper)
     writer.dump()
     # consistency checks
     assert(counter.count == 1)
+    # check the last processed frame
+    frm = keeper.last_frame
+    keys = frm.get_keys(base.loc_histograms, skip_keys='radii')
+    for key in keys:
+        histo = frm.get_data(base.loc_histograms + '/' + key)
+        assert(np.sum(histo, dtype=np.int) == n_bins)
+
+
+def test_average_filter_remainder():
+    n_tot = 100
+    n_avg = 70
+    n_bins = 1024
+    reader = postproc_io.DummyReader(n_histogram_sets=n_tot, n_bins=n_bins, random=False)
+    average = postproc_filter.Average(source=reader, n_avg=n_avg)
+    counter = FrameCounter(source=average)
+    keeper = KeepLastFrame(source=counter)
+    writer = postproc_io.DummyWriter(source=keeper)
+    writer.dump()
+    # consistency checks
+    assert(counter.count == 2)
     # check the last processed frame
     frm = keeper.last_frame
     keys = frm.get_keys(base.loc_histograms, skip_keys='radii')
