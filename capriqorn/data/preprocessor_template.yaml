@@ -15,12 +15,14 @@
     noise: true  # (expert)
     verbose: false
     x_box_length: 80.0
-    x_density: 0.033
+    x_density: 0.1
     random_seed: 0  # set >0 to achieve reproducibility
 - Sphere:
     active: true
     radius: 35.0
     shell_width: 3.0
+    do_len_histo: true  # (expert)
+    len_histo_dr: 0.01  # (expert)
     verbose: false
 - Ellipsoid:
     active: false
@@ -51,7 +53,7 @@
     trajectory_file: null
     selection: all
     distance: null  # explanation
-    r_max: -1  # explanation, see math in implementation
+    r_max: -1  # TODO explanation, see math in implementation
     shell_width: -1
     verbose: false
 - XYZ:  # XYZ file writer --- may harm performance significantly
@@ -63,5 +65,5 @@
 - H5Writer:
     active: true
     file: ./preprocessor_output/trajectory.h5  # output file, optionally including a relative or absolute directories
-    compression: lzf
+    compression: lzf  # 'null' no compression, 'gzip' gzip compression, 'lzf' LZF compression, comes by default with H5PY
     verbose: false

@@ -23,10 +23,13 @@ class Sphere(base.Filter):
     _depends = []
     _conflicts = []
 
-    def __init__(self, radius=1.e6, shell_width=-1,
+    def __init__(self,
+                 radius=1.e6,
+                 shell_width=-1,
                  do_len_histo=True,
                  len_histo_dr=0.01,
-                 source=-1, verbose=False):
+                 source=-1,
+                 verbose=False):
         self.radius = radius
         self.shell_width = shell_width
         # ---

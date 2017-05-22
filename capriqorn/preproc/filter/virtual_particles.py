@@ -73,8 +73,15 @@ class VirtualParticles(base.Filter):
     _depends = []
     _conflicts = []
 
-    def __init__(self, source=-1, method=None, x_box_length=None, x_density=None,
-                 noise=False, label='X', random_seed=0, verbose=False):
+    def __init__(self,
+                 source=-1,
+                 method='lattice',
+                 x_box_length=80.0,
+                 x_density=0.1,
+                 noise=False,
+                 label='X',
+                 random_seed=0,
+                 verbose=False):
         self.src = source
         self.verb = verbose
         assert (method is not None)
