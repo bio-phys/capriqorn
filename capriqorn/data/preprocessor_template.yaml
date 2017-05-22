@@ -3,7 +3,7 @@
     active: true
     alias_file: __DATA_DIR__/alias.dat
     pdb_file: __DATA_DIR__/protein.pdb.gz
-    traj_file: __DATA_DIR__/protein.crdbox.gz
+    trajectory_file: __DATA_DIR__/protein.crdbox.gz
     first: null
     last: null
     selection: all  # species selection (expert)

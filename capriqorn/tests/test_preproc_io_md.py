@@ -29,7 +29,7 @@ import pytest
                                          [None, None]])
 def test_MDReader_first_last(data, first, last):
     reader = preproc_io.MDReader(pdb_file=data["protein.pdb.gz"],
-                                 traj_file=data["protein.crdbox.gz"],
+                                 trajectory_file=data["protein.crdbox.gz"],
                                  alias_file=data["alias.dat"],
                                  first=first, last=last)
     counter = FrameCounter(source=reader)
@@ -53,7 +53,7 @@ def test_MDReader_first_last(data, first, last):
                                                [None, None, 3]])
 def test_MDReader_first_last_step(data, first, last, step):
     reader = preproc_io.MDReader(pdb_file=data["protein.pdb.gz"],
-                                 traj_file=data["protein.crdbox.gz"],
+                                 trajectory_file=data["protein.crdbox.gz"],
                                  alias_file=data["alias.dat"],
                                  first=first, last=last, step=step)
     counter = FrameCounter(source=reader)

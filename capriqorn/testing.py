@@ -42,7 +42,7 @@ def reader():
     """
     data = TestDataDir(pjoin(dirname(__file__), 'tests'), 'data')
     reader = io.MDReader(pdb_file=data["protein.pdb.gz"],
-                         traj_file=data["protein.crdbox.gz"],
+                         trajectory_file=data["protein.crdbox.gz"],
                          alias_file=data["alias.dat"])
     return reader
 
@@ -96,7 +96,7 @@ class KeepLastFrame(base.Filter):
 
 def testcase():
     """Try to locate the test case that comes with capriqorn.
-    
+
     Returns the full path to the testcase including a trailing slash, or None.
     """
     file_path = os.path.dirname(os.path.abspath(__file__))

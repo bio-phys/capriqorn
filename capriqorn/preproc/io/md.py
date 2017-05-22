@@ -20,7 +20,7 @@ class MDReader(base.Reader):
     _depends = []
     _conflicts = []
 
-    def __init__(self, pdb_file="protein.pdb", traj_file="protein.xtc", selection='all',
+    def __init__(self, pdb_file="protein.pdb", trajectory_file="protein.xtc", selection='all',
                  alias_file="alias.dat", first=1, last=None, step=1, verbose=False):
         """Constructor of the MDAnalysis-based MDReader.
 
@@ -28,7 +28,7 @@ class MDReader(base.Reader):
         ----------
         pdb_file : string
             File name of PDB file.
-        traj_file : string
+        trajectory_file : string
             File name of trajectory {xtc,crdbox} file.
         alias_file : string
             File name of alias file.
@@ -56,7 +56,7 @@ class MDReader(base.Reader):
         # --- pdb file needed for atom species
         self.pdb_file = pdb_file
         # --- Amber crd trajectory file with box information
-        self.traj_file = traj_file
+        self.trajectory_file = trajectory_file
         # --- alias.dat needed to assign element names to atom names in pdb
         self.alias_file = alias_file
         self.selection = selection
@@ -70,10 +70,10 @@ class MDReader(base.Reader):
         because no actual work should be done during the setup of the pipeline.
         """
         aliasDict = dict(np.genfromtxt(self.alias_file, dtype='S4'))
-        if self.traj_file.endswith(('crdbox', 'crdbox.gz', 'crdbox.bz2')):
-            self.universe = mda.Universe(self.pdb_file, self.traj_file, format='trj')
+        if self.trajectory_file.endswith(('crdbox', 'crdbox.gz', 'crdbox.bz2')):
+            self.universe = mda.Universe(self.pdb_file, self.trajectory_file, format='trj')
         else:
-            self.universe = mda.Universe(self.pdb_file, self.traj_file)
+            self.universe = mda.Universe(self.pdb_file, self.trajectory_file)
         self.atoms = self.universe.select_atoms(self.selection)
         # ---
         self.nrPart = self.atoms.n_atoms
@@ -108,7 +108,7 @@ class MDReader(base.Reader):
         """
         meta = {}
         label = 'MDReader'
-        param = {'pdb_file': self.pdb_file, 'traj_file': self.traj_file,
+        param = {'pdb_file': self.pdb_file, 'trajectory_file': self.trajectory_file,
                  'alias_file': self.alias_file,
                  'first': self.first, 'last': self.last, 'step': self.step}
         meta[label] = param
