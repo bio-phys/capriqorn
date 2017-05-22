@@ -54,10 +54,11 @@
     r_max: -1  # explanation, see math in implementation
     shell_width: -1
     verbose: false
-- XYZ:  # XYZ file writer
+- XYZ:  # XYZ file writer --- may harm performance significantly
     active: false
     file_prefix: null  # optional file prefix string before frame number
     output_directory: ./preprocessor_output
+    first_frame_only: true  # only dump the first frame, then disable XYZ writer
     verbose: false
 - H5Writer:
     active: true

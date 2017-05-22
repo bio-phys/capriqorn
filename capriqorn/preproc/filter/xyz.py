@@ -27,6 +27,7 @@ class XYZ(base.Filter):
     def __init__(self, source=-1,
                  file_prefix='',
                  output_directory='./preprocessor_output',
+                 first_frame_only=False,
                  verbose=False):
         self.src = source
         if not isinstance(file_prefix, basestring):
@@ -35,6 +36,7 @@ class XYZ(base.Filter):
         if not isinstance(output_directory, basestring):
             output_directory = './preprocessor_output'
         self.output_directory = output_directory.rstrip('/') + '/'
+        self.first_frame_only = first_frame_only
         self.verb = verbose
         # ---
         self._depends.extend(super(base.Filter, self)._depends)
@@ -47,26 +49,31 @@ class XYZ(base.Filter):
         meta = {}
         label = 'XYZ'
         param = {'output_directory': self.output_directory,
-                 'file_prefix': self.file_prefix}
+                 'file_prefix': self.file_prefix,
+                 'first_frame_only': self.first_frame_only}
         meta[label] = param
         return meta
 
     def next(self):
+        do_write = True
         util.md(self.output_directory)
         for frm_in in self.src.next():
             assert isinstance(frm_in, base.Container)
             # ---
-            volCrds = []
-            volSpecies = []
-            elements = frm_in.get_keys(base.loc_coordinates, skip_keys='radii')
-            for el in elements:
-                coord_set = frm_in.get_data(base.loc_coordinates + '/' + el)
-                for ij in range(coord_set.shape[0]):
-                    triple = coord_set[ij, :]
-                    volCrds.append(triple)
-                    volSpecies.append(el)
-            file_name = self.output_directory + self.file_prefix + "%08d.xyz" % frm_in.i
-            util.write_xyzFile(volCrds, volSpecies, file_name)
+            if (do_write):
+                volCrds = []
+                volSpecies = []
+                elements = frm_in.get_keys(base.loc_coordinates, skip_keys='radii')
+                for el in elements:
+                    coord_set = frm_in.get_data(base.loc_coordinates + '/' + el)
+                    for ij in range(coord_set.shape[0]):
+                        triple = coord_set[ij, :]
+                        volCrds.append(triple)
+                        volSpecies.append(el)
+                file_name = self.output_directory + self.file_prefix + "%08d.xyz" % frm_in.i
+                util.write_xyzFile(volCrds, volSpecies, file_name)
+                if self.first_frame_only:
+                    do_write = False
             # ---
             frm_out = frm_in
             frm_out.put_meta(self.get_meta())
