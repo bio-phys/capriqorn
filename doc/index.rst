@@ -85,6 +85,15 @@ The Capriqorn tutorial provides in-depth information:
 
    tutorial.rst
 
+Tips
+~~~~
+
+Some tips and tricks regarding the use of Capriqorn and Cadishi:
+
+.. toctree::
+  :maxdepth: 2
+
+  tips.rst
 
 Source documentation
 --------------------
@@ -133,7 +142,7 @@ presentations. We suggest the following citations as appropriate:
    macromolecules in solution, Jürgen Köfinger and Gerhard Hummer, Phys. Rev. E 87,
    052712 (2013).
 
-.. TODO: Add code paper reference(s) once it is on the arxiv and/or published! 
+.. TODO: Add code paper reference(s) once it is on the arxiv and/or published!
 
 
 Indices and tables
