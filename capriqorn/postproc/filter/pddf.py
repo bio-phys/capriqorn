@@ -183,9 +183,8 @@ class PDDF(base.Filter):
             i_mx = len(keyList) - 1
             print("")
             print(util.SEP)
-            print(" PPDF: processing frame %d" % frm.i)
+            print(" PPDF: processing histogram %d" % frm.i)
             for i, key in enumerate(keyList):
-                # print "pddf: processing ", key, "(", float(i)/float(i_mx), " \%)"
                 print("   %3d%% (%s)" % (int(100.0 * float(i) / float(i_mx)), key))
                 partCFSingle[key] = pddf.getPartCharFunc1(partDHisto, key,
                                         self.paramProd, rArraySingle, self.dr_intra, 0)

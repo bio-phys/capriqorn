@@ -119,18 +119,14 @@ class Average(base.Filter):
     _conflicts = []
 
     def __init__(self, n_avg=1, factor=1.0, source=-1, verbose=False):
-        if isinstance(n_avg, basestring):
-            if n_avg is "all":
-                self.n_avg = 0
-                self.all = True
-            else:
-                self.n_avg = 1
-                self.all = False
+        if isinstance(n_avg, basestring) and ("all" in n_avg):
+            self.n_avg = 0
+            self.all = True
         elif isinstance(n_avg, int):
             self.n_avg = n_avg
             self.all = False
         else:
-            raise ValueError("n_avg must be an integer or a string ('all')")
+            raise ValueError("n_avg must be an integer or the string 'all'")
         # custom factor applied when averaging
         self.factor = factor
         self.src = source
@@ -140,7 +136,7 @@ class Average(base.Filter):
         self._conflicts.extend(super(base.Filter, self)._conflicts)
 
     def apply_rescaling(self, frm_in, frm_out, n_avg, virtual_param):
-        """Apply rescaling and averaging operations. Method factored out from next()."""
+        """Apply rescaling and averaging operations."""
         frm_out.i = frm_in.i
         # --- perform averaging on histograms
         val = np.float_(self.factor) / np.float_(n_avg)
@@ -237,7 +233,7 @@ class Average(base.Filter):
             remainder_avg = self.count
         elif (self.count % self.n_avg > 0):
             remainder_avg = self.count % self.n_avg
-            print("Average.next(): averaged over " + str(remainder_avg) + " remainder elements")
+            print("Average.next(): averaged over " + str(remainder_avg) + " remainder histograms")
         if (remainder_avg > 0):
             self.apply_rescaling(frm_in, frm_out, remainder_avg, virtual_param)
             if self.verb:
