@@ -21,16 +21,11 @@ if do_cython:
     print "Re-generating C code for extensions from Cython sources ..."
 
 
-def update_git_hash(package_name):
-    try:
-        import subprocess as sub
-        cmd = "git describe --all --long --dirty --tags".split()
-        raw = sub.check_output(cmd).rstrip().split("/")[1]
-    except:
-        raw = "unknown"
-        pass
-    with open("./" + package_name + "/version.py", "w") as fp:
-        fp.write("version = \"" + raw + "\"\n")
+def get_version_string():
+    ver = {}
+    with open("./capriqorn/version.py") as fp:
+        exec(fp.read(), ver)
+    return ver['get_version_string']()
 
 
 def on_mac():
@@ -133,10 +128,8 @@ data_files = [('capriqorn/tests/data', glob.glob('capriqorn/tests/data/*')),
               ('capriqorn/data', glob.glob('capriqorn/data/*'))]
 
 
-update_git_hash("capriqorn")
-
 setup(name='capriqorn',
-      version='0.1',
+      version=get_version_string(),
       description='RDF calculation framework',
       author='Juergen Koefinger, Klaus Reuter',
       author_email='juergen.koefinger@biophys.mpg.de, khr@mpcdf.mpg.de',

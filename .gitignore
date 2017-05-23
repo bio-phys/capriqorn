@@ -9,4 +9,4 @@
 doc/html
 build
 *egg-info/
-capriqorn/version.py
+capriqorn/githash.py

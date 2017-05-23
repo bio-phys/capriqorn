@@ -19,10 +19,21 @@ from . import compare
 from cadishi.exe import histograms
 from cadishi.exe import merge
 from cadishi.exe import unpack
+from .. import version
+
+version_string = "Capriqorn " + version.get_version_string()
+try:
+    from .. import githash
+except:
+    pass
+else:
+    version_string += " (git: " + githash.human_readable + ")"
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-v', '--version', help='print version information',
+                        action='version', version=version_string)
     subparsers = parser.add_subparsers(help='Commands')
     # ---
     preprocessor.configure_cli(subparsers)
