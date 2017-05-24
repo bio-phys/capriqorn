@@ -56,7 +56,7 @@ def main(argparse_args):
 
     # --- set up pipeline from JSON meta information
     pipeline = []
-    print " Capriqorn postprocessor (git: " + version + ")"
+    print version.get_printable_version_string()
     print util.SEP
     print " Setting up pipeline based on <" + parameter_file + ">."
     for filter_meta in pipeline_meta:

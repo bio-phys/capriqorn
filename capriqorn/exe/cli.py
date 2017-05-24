@@ -21,14 +21,7 @@ from cadishi.exe import merge
 from cadishi.exe import unpack
 from .. import version
 
-version_string = "Capriqorn " + version.get_version_string()
-try:
-    from .. import githash
-except:
-    pass
-else:
-    version_string += " (git: " + githash.human_readable + ")"
-
+version_string = version.get_printable_version_string()
 
 def parse_args():
     parser = argparse.ArgumentParser()
