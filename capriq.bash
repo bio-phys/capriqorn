@@ -12,16 +12,18 @@ _capriq()
           example_opts \
           preproc_opts \
           histo_opts \
-          postproc_opts
+          postproc_opts  merge_opts unpack_opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    opts="example preproc histo postproc -h --help -v --version"
-    example_opts="-h --help --expert"
-    histo_opts="-h --help --input"
+    opts="example preproc histo postproc merge unpack --help --version"
+    example_opts="--help --expert"
+    histo_opts="--help --input"
     preproc_opts=${histo_opts}
     postproc_opts=${histo_opts}
+    merge_opts="--help --force --output"
+    unpack_opts="--help --force --output"
 
     if [[ ${prev} == --input ]] ; then
         COMPREPLY=( $(compgen -f -X '!*.yaml' -- ${cur}) )
@@ -45,6 +47,14 @@ _capriq()
     fi
     if [[ ${prev} == postproc ]] ; then
         COMPREPLY=( $(compgen -W "${postproc_opts}" -- ${cur}) )
+        return 0
+    fi
+    if [[ ${prev} == merge ]] ; then
+        COMPREPLY=( $(compgen -W "${merge_opts}" -- ${cur}) )
+        return 0
+    fi
+    if [[ ${prev} == unpack ]] ; then
+        COMPREPLY=( $(compgen -W "${unpack_opts}" -- ${cur}) )
         return 0
     fi
     if [[ ${cur} == * ]] ; then
