@@ -9,20 +9,19 @@
 _capriq()
 {
     local cur prev opts \
-          preproc_opts preproc_example_opts \
-          histo_opts histo_example_opts \
-          postproc_opts postproc_example_opts
+          example_opts \
+          preproc_opts \
+          histo_opts \
+          postproc_opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    opts="preproc preproc-example histo histo-example postproc postproc-example -h --help"
+    opts="example preproc histo postproc -h --help -v --version"
+    example_opts="-h --help --expert"
     histo_opts="-h --help --input"
-    histo_example_opts="-h --help --output"
     preproc_opts=${histo_opts}
-    preproc_example_opts=${histo_example_opts}
     postproc_opts=${histo_opts}
-    postproc_example_opts=${histo_example_opts}
 
     if [[ ${prev} == --input ]] ; then
         COMPREPLY=( $(compgen -f -X '!*.yaml' -- ${cur}) )
@@ -32,28 +31,20 @@ _capriq()
         COMPREPLY=( $(compgen -f -X '!*.yaml' -- ${cur}) )
         return 0
     fi
-    if [[ ${prev} == preproc ]] ; then
-        COMPREPLY=( $(compgen -W "${preproc_opts}" -- ${cur}) )
+    if [[ ${prev} == example ]] ; then
+        COMPREPLY=( $(compgen -W "${example_opts}" -- ${cur}) )
         return 0
     fi
-    if [[ ${prev} == preproc-example ]] ; then
-        COMPREPLY=( $(compgen -W "${preproc_example_opts}" -- ${cur}) )
+    if [[ ${prev} == preproc ]] ; then
+        COMPREPLY=( $(compgen -W "${preproc_opts}" -- ${cur}) )
         return 0
     fi
     if [[ ${prev} == histo ]] ; then
         COMPREPLY=( $(compgen -W "${histo_opts}" -- ${cur}) )
         return 0
     fi
-    if [[ ${prev} == histo-example ]] ; then
-        COMPREPLY=( $(compgen -W "${histo_example_opts}" -- ${cur}) )
-        return 0
-    fi
     if [[ ${prev} == postproc ]] ; then
         COMPREPLY=( $(compgen -W "${postproc_opts}" -- ${cur}) )
-        return 0
-    fi
-    if [[ ${prev} == postproc-example ]] ; then
-        COMPREPLY=( $(compgen -W "${postproc_example_opts}" -- ${cur}) )
         return 0
     fi
     if [[ ${cur} == * ]] ; then
