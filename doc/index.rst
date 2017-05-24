@@ -14,15 +14,15 @@ Atomic-resolution structural information from scattering experiments on
 macromolecules in solution, Jürgen Köfinger and Gerhard Hummer, Phys. Rev. E 87,
 052712 (2013).
 
-Moreover, additional novel methods (virtual particles) are implemented.
-Capriqorn is mostly implemented in Python with time-critical kernels accelerated
-using compiled Cython code. The distance histogram calculation is done via the
-Cadishi package which offers high-performance parallel implementations for the
-CPU and the GPU.
+Additionally, a novel method for non-spherical observation volumes using virtual
+particles has been implemented. Capriqorn is mostly implemented in Python with
+time-critical kernels accelerated using compiled Cython code. The distance
+histogram calculation is done via the Cadishi package which offers
+high-performance parallel implementations for the CPU and the GPU.
 
 
-Features
---------
+Technical Features
+------------------
 
 Capriqorn provides -- but is not restricted to -- the following functionalities:
 
@@ -86,9 +86,6 @@ flag (and prefix the command with ``sudo`` to gain administrative privileges on
 a typical Linux system).
 
 
-Usage
------
-
 Quick Start
 ~~~~~~~~~~~
 
@@ -101,18 +98,17 @@ the following sequence of commands::
    capriq postproc  # run postprocessor
 
 
-Tutorial
-~~~~~~~~
-
-The Capriqorn tutorial provides in-depth information:
+Documentation
+~~~~~~~~~~~~~
 
 .. toctree::
    :maxdepth: 2
 
-   tutorial.rst
+   manual.rst
 
-Tips
-~~~~
+
+Tips and Tricks
+~~~~~~~~~~~~~~~
 
 Some tips and tricks regarding the use of Capriqorn and Cadishi are available.
 
@@ -136,6 +132,13 @@ To be done via docstrings after re-structuring of the code base.
 
 License and Citation
 --------------------
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 All rights reserved. For questions regarding a license or permission to use this
 software package, please contact Jürgen Köfinger.
@@ -162,7 +165,7 @@ Copyright 2015-2017
   max.linke@biophys.mpg.de
 
 We kindly request that you cite Capriqorn in your publications and
-presentations. We suggest the following citations as appropriate:
+presentations:
 
 *  Atomic-resolution structural information from scattering experiments on
    macromolecules in solution, Jürgen Köfinger and Gerhard Hummer, Phys. Rev. E 87,
