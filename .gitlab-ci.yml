@@ -1,27 +1,34 @@
+stages:
+- prepare
+- test
+- cleanup
+
 # Preparation
 # The tests of the CLI makes it necessary to create develop--user installations.
 # 1) clean possible remnants of previous develop--user installations
 # 2) clone and build Cadishi, requires deploy-key
 # 3) build Capriqorn
-setup:
+prepare_job:
+  stage: prepare
   script:
     - export BASE=`pwd`
     - rm -f ~/.local/lib/python2.7/site-packages/cadishi.egg-link
     - rm -f ~/.local/lib/python2.7/site-packages/capriqorn.egg-link
     - git clone git@gitlab.mpcdf.mpg.de:MPIBP-Hummer/Cadishi.git
     - cd Cadishi
-    - export CAD_CUDA=0
-    - python setup.py develop --user
+    - CAD_CUDA=0 python setup.py develop --user
     - cd $BASE
     - python setup.py develop --user
 
 # Run the included unit test cases
-unit_tests:
+unit_test_job:
+  stage: test
   script:
     - py.test capriqorn
 
 # Call the Capriqorn CLI by running the trivial included test case
-cli_tests:
+cli_test_job:
+  stage: test
   script:
     - mkdir tmp
     - cd tmp
@@ -36,13 +43,21 @@ cli_tests:
     - capriq merge --output foo.h5 postprocessor.h5
     - cd $BASE
 
+# Test the documentation creation.
+sphinx_test_job:
+  stage: test
+  script:
+    - python setup.py build_sphinx
+
 # Test the tarball creation.
-dist_tests:
+sdist_test_job:
+  stage: test
   script:
     - python setup.py sdist --formats=gztar
 
 # Clean up remnants.
-cleanup:
+cleanup_job:
+  stage: cleanup
   script:
     - python setup.py develop --user --uninstall
     - rm -f ~/.local/lib/python2.7/site-packages/cadishi.egg-link
