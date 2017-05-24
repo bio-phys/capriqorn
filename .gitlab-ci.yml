@@ -1,35 +1,23 @@
-stages:
-- prepare
-- test
-- cleanup
-
 # Preparation
-# The tests of the CLI makes it necessary to create develop--user installations.
+# The tests of the CLI makes it necessary to create 'develop --user' installations.
 # 1) clean possible remnants of previous develop--user installations
 # 2) clone and build Cadishi, requires deploy-key
 # 3) build Capriqorn
-prepare_job:
-  stage: prepare
-  script:
-    - export BASE=`pwd`
-    - rm -f ~/.local/lib/python2.7/site-packages/cadishi.egg-link
-    - rm -f ~/.local/lib/python2.7/site-packages/capriqorn.egg-link
-    - git clone git@gitlab.mpcdf.mpg.de:MPIBP-Hummer/Cadishi.git
-    - cd Cadishi
-    - CAD_CUDA=0 python setup.py develop --user
-    - cd $BASE
-    - python setup.py develop --user
+before_script:
+  - export BASE=`pwd`
+  - rm -f ~/.local/lib/python2.7/site-packages/cadishi.egg-link
+  - rm -f ~/.local/lib/python2.7/site-packages/capriqorn.egg-link
+  - git clone git@gitlab.mpcdf.mpg.de:MPIBP-Hummer/Cadishi.git
+  - cd Cadishi
+  - CAD_CUDA=0 python setup.py develop --user
+  - cd $BASE
+  - python setup.py develop --user
 
-# Run the included unit test cases
-unit_test_job:
-  stage: test
+test_job:
   script:
+    # Run the included unit test cases
     - py.test capriqorn
-
-# Call the Capriqorn CLI by running the trivial included test case
-cli_test_job:
-  stage: test
-  script:
+    # Call the Capriqorn CLI by running the trivial included test case
     - mkdir tmp
     - cd tmp
     - capriq --help
@@ -42,23 +30,13 @@ cli_test_job:
     - capriq unpack postprocessor.h5
     - capriq merge --output foo.h5 postprocessor.h5
     - cd $BASE
-
-# Test the documentation creation.
-sphinx_test_job:
-  stage: test
-  script:
+    # Test the documentation creation.
     - python setup.py build_sphinx
-
-# Test the tarball creation.
-sdist_test_job:
-  stage: test
-  script:
+    # Test the tarball creation.
     - python setup.py sdist --formats=gztar
 
 # Clean up remnants.
-cleanup_job:
-  stage: cleanup
-  script:
-    - python setup.py develop --user --uninstall
-    - rm -f ~/.local/lib/python2.7/site-packages/cadishi.egg-link
-    - rm -f ~/.local/lib/python2.7/site-packages/capriqorn.egg-link
+after_script:
+  - python setup.py develop --user --uninstall
+  - rm -f ~/.local/lib/python2.7/site-packages/cadishi.egg-link
+  - rm -f ~/.local/lib/python2.7/site-packages/capriqorn.egg-link
