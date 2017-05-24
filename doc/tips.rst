@@ -5,17 +5,25 @@ Capriqorn
 ---------
 
 Capriqorn offers a plethora of methods and modules. See the example parameter
-file for an overview. The file can be written via the command::
+files for an overview. The files can be written via the command::
 
-   capriq example --expert
+   capriq example [--expert]
 
-The following rules of thumb apply:
+The `--expert` switch adds additional options which allow to override some default
+values.
+
+Some hints on the parameter choices, the general usage, and the file handling
+are given in the following.
+
+* For various reasons Capriqorn uses HDF5 files. To inspect a HDF5 file, use
+  a viewer software or extract the HDF5 file using the Capriqorn command
+  ``capriq unpack``.
 
 * Compression of the HDF5 output datasets using the LZF algorithm is usually
   beneficial regarding performance and file size. LZF comes with h5py by default.
-  Other installations and tools may lack LZF, so better use no compression or
+  Other installations and tools may lack LZF, so use no compression or
   gzip compression in case you need to interact with such software.  You can use
-  the `capriq merge` tool to change the compression of a file.
+  the ``capriq merge`` tool to change the compression of a file.
 
 
 Cadishi --- Distance histogram calculation

@@ -1,4 +1,4 @@
 Capriqorn tutorial
 ==================
 
-TODO: write tutorial :-)
+To be written.
