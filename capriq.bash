@@ -9,28 +9,23 @@
 _capriq()
 {
     local cur prev opts \
-          example_opts \
-          preproc_opts \
-          histo_opts \
-          postproc_opts  merge_opts unpack_opts
+          example_opts preproc_opts histo_opts \
+          postproc_opts merge_opts unpack_opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
     opts="example preproc histo postproc merge unpack --help --version"
-    example_opts="--help --expert"
-    histo_opts="--help --input"
-    preproc_opts=${histo_opts}
-    postproc_opts=${histo_opts}
-    merge_opts="--help --force --output"
+    compression_opts="none gzip lzf"
+    example_opts="--help --expert --preproc --histo --postproc"
+    histo_opts="--help"
+    preproc_opts="--help"
+    postproc_opts="--help"
+    merge_opts="--help --force --output --compression"
     unpack_opts="--help --force --output"
 
-    if [[ ${prev} == --input ]] ; then
-        COMPREPLY=( $(compgen -f -X '!*.yaml' -- ${cur}) )
-        return 0
-    fi
-    if [[ ${prev} == --output ]] ; then
-        COMPREPLY=( $(compgen -f -X '!*.yaml' -- ${cur}) )
+    if [[ ${prev} == --compression ]] ; then
+        COMPREPLY=( $(compgen -W "${compression_opts}" -- ${cur}) )
         return 0
     fi
     if [[ ${prev} == example ]] ; then
@@ -38,23 +33,23 @@ _capriq()
         return 0
     fi
     if [[ ${prev} == preproc ]] ; then
-        COMPREPLY=( $(compgen -W "${preproc_opts}" -- ${cur}) )
+        COMPREPLY=( $(compgen -W "${preproc_opts}" -- ${cur}) $(compgen -f -X '!*.yaml' -- ${cur}) )
         return 0
     fi
     if [[ ${prev} == histo ]] ; then
-        COMPREPLY=( $(compgen -W "${histo_opts}" -- ${cur}) )
+        COMPREPLY=( $(compgen -W "${histo_opts}" -- ${cur}) $(compgen -f -X '!*.yaml' -- ${cur}) )
         return 0
     fi
     if [[ ${prev} == postproc ]] ; then
-        COMPREPLY=( $(compgen -W "${postproc_opts}" -- ${cur}) )
+        COMPREPLY=( $(compgen -W "${postproc_opts}" -- ${cur}) $(compgen -f -X '!*.yaml' -- ${cur}) )
         return 0
     fi
     if [[ ${prev} == merge ]] ; then
-        COMPREPLY=( $(compgen -W "${merge_opts}" -- ${cur}) )
+        COMPREPLY=( $(compgen -W "${merge_opts}" -- ${cur}) $(compgen -f -X '!*.h5' -- ${cur}) )
         return 0
     fi
     if [[ ${prev} == unpack ]] ; then
-        COMPREPLY=( $(compgen -W "${unpack_opts}" -- ${cur}) )
+        COMPREPLY=( $(compgen -W "${unpack_opts}" -- ${cur}) $(compgen -f -X '!*.h5' -- ${cur}) )
         return 0
     fi
     if [[ ${cur} == * ]] ; then
