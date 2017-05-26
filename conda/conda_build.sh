@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# disabled, cadishi dependence not yet solved
+exit 1
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CONDA_BLD_OUTDIR=$DIR/output/
 mkdir -p $CONDA_BLD_OUTDIR
