@@ -8,11 +8,11 @@ To calculate the **scattering intensities** and **pair-distance distribution fun
 
 **Pure solvent simulations**
 
-In experiments, the **difference intensity** between the macromlecule in solution and pure solvent is determined. We therefor also have to simulate pure solvent. In our method, we only need the **particle densities** and **partial radial distribution functions** calculated from these pure solvent simulations. This in contrast to other methods, where the same observation volume as it is use for the macromolcule in soltuion, has to be cut out from the solvent trajectory. 
+In experiments, the **difference intensity** between the macromlecule in solution and pure solvent is determined. We therefor also have to simulate pure solvent. In our method, we only need the **particle densities** and **partial radial distribution functions** calculated from these pure solvent simulations. This procedure is different to other methods, where the same observation volume as it is used for the macromolcule in solution, has to be cut out from the solvent trajectory. 
 
 **Self-consistent solvent matching**
 
-Small differences in the solvent densities and structure in at the border of the observation volume can lead to artifacts in the small angle regime. To avoid such artifact, we match solvent properties of the system containing the macromolecule and pure solvent in a layer at the boundary of the observation volume by properly scaling particle densities and partial radial distribution functions.
+Small differences in the solvent densities and structure at the close to the surface of the observation volume can lead to artifacts in the small-angle regime. To avoid such artifacts, we match solvent properties of the system containing the macromolecule and pure solvent in a layer at the boundary of the observation volume by properly scaling particle densities and partial radial distribution functions.
 
 Method Details
 ==============
@@ -23,7 +23,14 @@ We describe pure solvent by its **particle densities** and **partial radial dist
 
 **Macromelcule in solution**
 
-We we can choose various **geometries (observation volumes)** to cut the macromolecule and sufficient solvent out of the simulation box. Each of the listed geometries has its own merrits. A sphere is the most efficient for globular macromolecules. For all other geometries, we have to use **virtual particles** ("ideal gas" particles) to account for the geometry of the observation volume. 
+We we can choose various **geometries (observation volumes)** to cut the macromolecule and sufficient solvent out of the simulation box. 
+
+Choosing the **geometry** we want to 
+
+* increase the signal-to-noise ratio and increase performance by minimizing the amount of bulk solvent while
+* including sufficient bulk solvent to avoid finite size effects and to facilitate solvent matching. 
+
+Each of the geometries listed below has its own merrits. A sphere is the most efficient geometry for globular macromolecules. For all other geometries, we have to use **virtual particles** ("ideal gas" particles) to account for the geometry of the observation volume which comes with additional computational costs. 
 
 Overview of **observation volume geometries**:
 
@@ -43,7 +50,7 @@ How to use Capriqorn
 
 We provide example input and output files at 
 http://ftp.biophys.mpg.de/tbhummer/Capriqorn. 
-We suggest to use it to get started. You can pick the parameter files for the geometry of your choice and adapt them accordingly.
+We suggest to use it to get started. You can pick the parameter files for the geometry of your choice and adapt them accordingly to your problem at hand.
 
 #. **Prerequisites**
 
@@ -56,9 +63,8 @@ We suggest to use it to get started. You can pick the parameter files for the ge
         **!!!YOU HAVE TO EDIT THIS FILE BY HAND AND MAKE CORRECTIONS!!!**  
 
 #. **Pure solvent**
-    * We suggest to use orthorombic (cubic) boxes of similar size as the simulation of the macromolecule in solution.  
-    * The composition of the pure solvent should be the same as in the simulation of the macromolecule.  
-
+    * We suggest to use orthorombic (cubic) boxes of similar size (or larger) as the simulation box used for the macromolecule in solution.  
+    * The force field and composition of the pure solvent should be the same as in the simulation of the macromolecule.  
 
 #. **Macromelcule in solution**
 
@@ -66,17 +72,17 @@ We suggest to use it to get started. You can pick the parameter files for the ge
     
         The macromolecule has to be centered in the box, ideally maximizing the solvent thickness around the macromolecule, i.e., maximizing the minimum distance of atoms of the macromolecule to the box borders: 
     
-        * Sphere:   Center macromolecule
-        * Cuboid:   Center macromolecule and align principal axis with VMD (tcl script :download:`orient.tcl <./scripts/orient.tcl>`) 
-        * Ellipsoid: Center macromolecule and align principal axis with VMD (tcl script :download:`orient.tcl <./scripts/orient.tcl>`)
+        * Sphere:   Center macromolecule at origin.
+        * Cuboid:   Center macromolecule at origin nd align principal axis with VMD (tcl script :download:`orient.tcl <./scripts/orient.tcl>`) 
+        * Ellipsoid: Center macromolecule at origin and align principal axis with VMD (tcl script :download:`orient.tcl <./scripts/orient.tcl>`)
         * Reference: RMSD alignment of the macromolecule with chosen reference structure. 
-        * MultiReference: When using the same trajectories as input and reference, nothing has to be done.
+        * MultiReference: When using the same trajectories as input and reference, no alignment is necessary.
 
         Trajectories can be prepared with VMD (wrapping of the box: http://www.ks.uiuc.edu/Research/vmd/plugins/pbctools/ ) or if you use Gromacs using 
-        *trjconv* (*gmx trjconv* in newer versions).
+        *trjconv* (*gmx trjconv* in newer versions Gromacs).
     
-    * Preprocessing: capriq preproc -f histograms.yaml 
-        * Run the preprocessor for each trajectory separately.
+    * Preprocessing: capriq preproc -f preprocessor.yaml 
+        * Run the preprocessor for each trajectory separately. As a note, splitting up a trajectory in multiple files facilitates trivial parallelizaiton of the preprocessor. 
     
     * Histogram calculation: capriq histo -f histograms.yaml 
         * Multiple trajectory h5-files (preprocessor output) can be read in. 
@@ -84,7 +90,7 @@ We suggest to use it to get started. You can pick the parameter files for the ge
     * Postprocessing: capriq postproc -f postprocessor.yaml 
         
         * Multiple histogram h5-files can be read in at once for postprocessing
-        * The output is stored in and hdf5 file, which can be unpacked using "capriq unpack" such that the output files are available in ASCII format.  
+        * The output is stored in an hdf5 file, which can be unpacked using "capriq unpack" such that the output files are available in ASCII format.  
     
 #. **Analysis**
     * Reading in hdf5 files with python (template is coming soon!)
@@ -95,6 +101,7 @@ Tips and tricks
 
 * Use VMD to choose geometry. 
     Using selection strings, you can choose representation in VMD which visualize various geometries. 
+    Note that the selection string syntax in VMD is different to the one used in Capriqorn (Capriqorn using MD Analysis which uses CHARMM syntax).
 * The preprocessor can write out xyz files which you can visualize using VMD to check that the macromolecule has been cut out correctly. 
 
 Notes
@@ -102,5 +109,4 @@ Notes
 
 * Efficiency: 
     * In the current version of the code, the histogram calculation in Cadishi has been highly optimized. Compared to the histogram calculation, the preprocessor, however, can take a significant amount of time as it has not been fully optimized yet. 
-
 

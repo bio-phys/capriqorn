@@ -4,50 +4,27 @@ Capriqorn documentation
 Introduction
 ------------
 
+**CAPRIQORN**: **CA**\ lculation of **P**\(**R**) and **I**\(**Q**\) **O**\f mac\ **R**\ omolecules in solutio\ **N**. 
+
 Capriqorn is a software suite designed to facilitate the calculation of
-quantities such as pair-distance distribution functions and scattering
-intensities directly from the output trajectories of molecular dynamics
-simulations. In particular, Capriqorn implements the methods proposed in the
+quantities such as **pair-distance distribution functions** and **scattering
+intensities** directly from the output trajectories of **molecular dynamics
+simulations**. In particular, Capriqorn implements the methods published in the
 following publication:
 
 Atomic-resolution structural information from scattering experiments on
 macromolecules in solution, Jürgen Köfinger and Gerhard Hummer, Phys. Rev. E 87,
 052712 (2013).
+https://journals.aps.org/pre/pdf/10.1103/PhysRevE.87.052712
 
-Additionally, a novel method for non-spherical observation volumes using virtual
-particles has been implemented. Capriqorn is mostly implemented in Python with
+
+Additionally, a novel method for **non-spherical observation volumes** using **virtual
+particles** has been implemented. 
+
+Capriqorn is mostly implemented in Python with
 time-critical kernels accelerated using compiled Cython code. The distance
 histogram calculation is done via the Cadishi package which offers
 high-performance parallel implementations for the CPU and the GPU.
-
-
-Technical Features
-------------------
-
-Capriqorn provides -- but is not restricted to -- the following functionalities:
-
-* versatile read-in of MD trajectories in various formats
-* trajectory preprocessing
-* high-performance parallel distance histogram calculation on CPUs and GPUs using
-  the Cadishi package
-* histogram postprocessing
-* efficient data handling using HDF5 files
-
-
-Workflow
---------
-
-Capriqorn implements the concept of a data processing pipeline. A typical workflow
-consists of three stages.
-
-1. preprocessor run: Read MD trajectory, apply methods, write to single HDF5 file.
-2. distance histogram calculation: Read frames from HDF5 file, compute histograms,
-   write to HDF5 file.
-3. postprocessor run: Read histograms from HDF5 file, perform computations (PDDF),
-   write to HDF5 file.
-
-The data processing pipeline is implemented using Python generators.  Methods
-(computations, geometry and data modifications, etc.) are considered 'filters'.
 
 
 Requirements
@@ -99,7 +76,7 @@ the following sequence of commands::
 
 
 Documentation
-~~~~~~~~~~~~~
+-------------
 
 .. toctree::
    :maxdepth: 2
@@ -116,6 +93,35 @@ Some tips and tricks regarding the use of Capriqorn and Cadishi are available.
   :maxdepth: 2
 
   tips.rst
+
+Technical Features
+~~~~~~~~~~~~~~~~~~
+
+Capriqorn provides -- but is not restricted to -- the following functionalities:
+
+* versatile read-in of MD trajectories in various formats
+* trajectory preprocessing
+* high-performance parallel distance histogram calculation on CPUs and GPUs using
+  the Cadishi package
+* histogram postprocessing
+* efficient data handling using HDF5 files
+
+
+Workflow
+~~~~~~~~
+
+Capriqorn implements the concept of a data processing pipeline. A typical workflow
+consists of three stages.
+
+1. preprocessor run: Read MD trajectory, apply methods, write to single HDF5 file.
+2. distance histogram calculation: Read frames from HDF5 file, compute histograms,
+   write to HDF5 file.
+3. postprocessor run: Read histograms from HDF5 file, perform computations (PDDF),
+   write to HDF5 file.
+
+The data processing pipeline is implemented using Python generators.  Methods
+(computations, geometry and data modifications, etc.) are considered 'filters'.
+
 
 Source documentation
 --------------------
@@ -169,7 +175,7 @@ presentations:
 
 *  Atomic-resolution structural information from scattering experiments on
    macromolecules in solution, Jürgen Köfinger and Gerhard Hummer, Phys. Rev. E 87,
-   052712 (2013).
+   052712 (2013). https://journals.aps.org/pre/pdf/10.1103/PhysRevE.87.052712
 
 .. TODO: Add code paper reference(s) once it is on the arxiv and/or published!
 
