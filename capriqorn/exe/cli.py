@@ -13,6 +13,10 @@ __license__ = "license_tba"
 import sys
 import argparse
 from . import preprocessor
+
+# NOTE: temporary, during development
+from . import parpreproc_dev
+
 from . import postprocessor
 from . import example
 from . import compare
@@ -28,7 +32,10 @@ def parse_args():
     parser.add_argument('-v', '--version', help='print version information',
                         action='version', version=version_string)
     subparsers = parser.add_subparsers(help='Commands')
-    # ---
+
+    # NOTE: temporary, during development
+    parpreproc_dev.configure_cli(subparsers)
+
     preprocessor.configure_cli(subparsers)
     histograms.configure_cli(subparsers)
     postprocessor.configure_cli(subparsers)

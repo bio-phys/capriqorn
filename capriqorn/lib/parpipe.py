@@ -43,6 +43,99 @@ __license__ = "license_tba"
 from cadishi import base
 
 
+# integer constants to be used to specify the side we're on
+SIDE_BOTH=0
+SIDE_UPSTREAM=1
+SIDE_DOWNSTREAM=2
+
+
+class ParallelFork(base.Filter):
+    """Filter to indicate the start of a parallel region of a pipeline."""
+    _depends = []
+    _conflicts = []
+
+    def __init__(self, source=-1, verbose=False, queue=None, side=SIDE_BOTH):
+        """
+        Parameters
+        ----------
+        source : filter class instance
+        verbose : boolean
+        queue : multiprocessing queue
+        side : int
+            Integer indicating the side: SIDE_BOTH, SIDE_UPSTREAM, SIDE_DOWNSTREAM
+        """
+        self.src = source
+        self.verb = verbose
+        self.queue = queue
+        self.side = side
+
+    def get_meta(self):
+        """ Return information on the present filter, ready to be added to a
+        frame object's list of pipeline meta information.
+        """
+        meta = {}
+        label = 'ParallelFork'
+        param = {'side': self.side}
+        meta[label] = param
+        return meta
+
+    def next(self):
+        if (self.side == SIDE_BOTH):
+            pass
+        elif (self.side == SIDE_UPSTREAM):
+            pass
+        elif (self.side == SIDE_DOWNSTREAM):
+            pass
+        else:
+            raise RuntimeError()
+
+
+class ParallelJoin(base.Filter):
+    """Filter to indicate the stop of a parallel region of a pipeline."""
+    _depends = []
+    _conflicts = []
+
+    def __init__(self, source=-1, verbose=False, queue=None, side=SIDE_BOTH):
+        """
+        Parameters
+        ----------
+        source : filter class instance
+        verbose : boolean
+        queue : multiprocessing queue
+        side : int
+            Integer indicating the side: SIDE_BOTH, SIDE_UPSTREAM, SIDE_DOWNSTREAM
+        """
+        self.src = source
+        self.verb = verbose
+        self.queue = queue
+        self.side = side
+
+    def get_meta(self):
+        """ Return information on the present filter, ready to be added to a
+        frame object's list of pipeline meta information.
+        """
+        meta = {}
+        label = 'ParallelFork'
+        param = {'side': self.side}
+        meta[label] = param
+        return meta
+
+    def next(self):
+        if (self.side == SIDE_BOTH):
+            pass
+        elif (self.side == SIDE_UPSTREAM):
+            pass
+        elif (self.side == SIDE_DOWNSTREAM):
+            pass
+        else:
+            raise RuntimeError()
+
+
+
+
+# --- code below is potentially obsolete ---
+
+
 class Parallel(base.Filter):
     """A filter that puts base.Container() objects into a queue and fetches
     the results from another queue, in order to allow to parallelize the
@@ -52,7 +145,7 @@ class Parallel(base.Filter):
     _conflicts = []
 
     def __init__(self, source=-1, verbose=False, input_queue=None,
-                 output_queue=None, worker_id=-1, n_workers):
+                 output_queue=None, worker_id=-1, n_workers=1):
         """ Initialize instance of parallel class.
         worker_id is zero or positive only in parallel setups.
         """
