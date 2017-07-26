@@ -57,10 +57,12 @@ def main(argparse_args):
     print(util.SEP)
     print(" Setting up pipeline based on <" + parameter_file + ">.")
 
-    pipeline = pipeutil.create(pipeline_meta, "capriqorn.postproc")
+    pipeline_module = "capriqorn.postproc"
 
-    pipeutil.check_dependencies(pipeline, "capriqorn.postproc")
-    pipeutil.check_conflicts(pipeline, "capriqorn.postproc")
+    pipeline = pipeutil.create(pipeline_meta, pipeline_module)
+
+    pipeutil.check_dependencies(pipeline, pipeline_module)
+    pipeutil.check_conflicts(pipeline, pipeline_module)
 
     print(" Running pipeline ...", end='')
     sys.stdout.flush()
