@@ -59,13 +59,19 @@ def main(argparse_args):
 
     pipeline_module = "capriqorn.preproc"
 
-    pipeline = pipeutil.create(pipeline_meta, pipeline_module)
+    (n_parallel, n_parallel_workers) = pipeutil.determine_parallel_configuration(pipeline_meta)
 
-    pipeutil.check_dependencies(pipeline, pipeline_module)
-    pipeutil.check_conflicts(pipeline, pipeline_module)
+    if (n_parallel <= 0):
+        pipeline = pipeutil.create(pipeline_meta, pipeline_module)
+        pipeutil.check_dependencies(pipeline, pipeline_module)
+        pipeutil.check_conflicts(pipeline, pipeline_module)
+        print(" Running sequential pipeline ...", end='')
+        sys.stdout.flush()
+        pipeline[-1].dump()
+    else:
+        # counting: reader, writer, parallel workers, worker between parallel regions
+        n_workers = 2 + n_parallel_workers + (n_parallel - 1)
+        print(" Running parallel pipeline with " + str(n_workers) + " worker processes in total...", end='')
 
-    print(" Running pipeline ...", end='')
-    sys.stdout.flush()
-    pipeline[-1].dump()
     print(" done.")
     print(util.SEP)
