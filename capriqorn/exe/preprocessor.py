@@ -43,7 +43,7 @@ def main(argparse_args):
 
     if not os.path.exists(parameter_file):
         print(" Could not find preprocessor input file <" + parameter_file + ">.")
-        print(" Run `" + util.get_executable_name() + " preproc-example` to generate an example input file.")
+        print(" Run `" + util.get_executable_name() + " example --preproc` to generate an example input file.")
         print(util.SEP)
         sys.exit(1)
 
