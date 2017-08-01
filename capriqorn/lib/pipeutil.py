@@ -5,6 +5,7 @@
 
 import sys
 import numpy as np
+import multiprocessing as mp
 from cadishi import base
 from cadishi import util
 from cadishi import dict_util
@@ -108,7 +109,7 @@ def check_conflicts(pipeline, pipeline_module):
                     raise RuntimeError(msg)
 
 
-def determine_parallel_configuration(pipeline_meta):
+def get_parallel_configuration(pipeline_meta):
     """Count the parallel regions of a pipeline specification.
 
     A parallel region is defined by an opening
@@ -155,3 +156,13 @@ def determine_parallel_configuration(pipeline_meta):
     if (n_fork != n_join):
         raise RuntimeError("number of ParallelFork and ParallelJoin filters is not equal")
     return (n_fork, n_workers)
+
+
+def prepare_mp_queues(n_parallel):
+    """Create a list with n_parallel pairs of multiprocessing.JoinableQueue instances."""
+    q_pairs = []
+    for i in range(n_parallel):
+        fork_q = mp.JoinableQueue()
+        join_q = mp.JoinableQueue()
+        q_pairs.append((fork_q, join_q))
+    return q_pairs
