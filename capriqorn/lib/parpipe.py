@@ -61,7 +61,7 @@ class ParallelFork(base.Filter):
     _depends = []
     _conflicts = []
 
-    def __init__(self, source=-1, verbose=False, queue=None, side=SIDE_BOTH):
+    def __init__(self, source=-1, verbose=False, queue=None, side=SIDE_BOTH, n_workers=1):
         """
         Parameters
         ----------
@@ -75,6 +75,8 @@ class ParallelFork(base.Filter):
         self.verb = verbose
         self.queue = queue
         self.side = side
+        self.n_workers = n_workers
+        print "###", side
 
     def get_meta(self):
         """ Return information on the present filter, ready to be added to a

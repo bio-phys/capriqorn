@@ -15,6 +15,7 @@ import os
 import sys
 import json
 import argparse
+import multiprocessing as mp
 from cadishi import util
 from ..lib import pipeutil
 from .. import postproc
@@ -59,7 +60,7 @@ def main(argparse_args):
 
     pipeline_module = "capriqorn.preproc"
 
-    (n_parallel, n_parallel_workers) = pipeutil.get_parallel_configuration(pipeline_meta)
+    (n_parallel, n_workers_per_segment) = pipeutil.get_parallel_configuration(pipeline_meta)
 
     if (n_parallel <= 0):
         pipeline = pipeutil.create(pipeline_meta, pipeline_module)
@@ -70,9 +71,27 @@ def main(argparse_args):
         pipeline[-1].dump()
     else:
         # counting: reader, writer, parallel workers, workers between parallel regions
-        n_workers = 2 + n_parallel_workers + (n_parallel - 1)
+        n_workers = sum(n_workers_per_segment)
         print(" Running parallel pipeline with " + str(n_workers) + " worker processes in total...", end='')
-        q_pairs = pipeutil.prepare_mp_queues(n_parallel)
+        # split pipeline description into per-process parts, obtain queue handles
+        meta_segments = pipeutil.get_meta_segments(pipeline_meta)
+
+        mp_pool = []
+        for i, segment in enumerate(meta_segments):
+            if (i == 0):
+                # run the first segment on the present process
+                pipeline = pipeutil.create(segment, pipeline_module)
+            else:
+                # run all subsequent segments on child processes
+                for j in range(n_workers_per_segment[i]):
+                    mp_worker = mp.Process(target=pipeutil.partial_pipeline_worker,
+                                           args=(segment, pipeline_module))
+                    mp_pool.append(mp_worker)
+
+        for mp_worker in mp_pool:
+            mp_worker.start()
+        # for mp_worker in mp_pool:
+        #     assert(mp_worker.is_alive())
 
     print(" done.")
     print(util.SEP)
