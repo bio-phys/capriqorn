@@ -210,17 +210,15 @@ def get_meta_segments(pipeline_meta):
             if (parameters['active'] == False):
                 continue
             del parameters['active']
+        segment.append(copy.deepcopy(filter_meta))
         if (label == 'ParallelFork') or (label == 'ParallelJoin'):
             queue_handles.append(mp.JoinableQueue())
-            # add the queue instance to the parameters of the Parallel* filters
-            parameters['queue'] = queue_handles[-1]
-            parameters['side'] = parpipe.SIDE_UPSTREAM
-        segment.append(filter_meta)
-        if (label == 'ParallelFork') or (label == 'ParallelJoin'):
-            # TODO handle deepcopy correctly
-            # meta_segments.append(copy.deepcopy(segment))
+            segment[-1][label]['queue'] = queue_handles[-1]
+            segment[-1][label]['side'] = parpipe.SIDE_UPSTREAM
+            meta_segments.append(segment)
             segment = []
-            parameters['side'] = parpipe.SIDE_DOWNSTREAM
-            segment.append(filter_meta)
+            segment.append(copy.deepcopy(filter_meta))
+            segment[-1][label]['queue'] = queue_handles[-1]
+            segment[-1][label]['side'] = parpipe.SIDE_DOWNSTREAM
     meta_segments.append(segment)
     return meta_segments

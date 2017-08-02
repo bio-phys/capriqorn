@@ -76,7 +76,7 @@ class ParallelFork(base.Filter):
         self.queue = queue
         self.side = side
         self.n_workers = n_workers
-        print "###", side
+        # print "Fork side:", side
 
     def get_meta(self):
         """ Return information on the present filter, ready to be added to a
@@ -118,6 +118,7 @@ class ParallelJoin(base.Filter):
         self.verb = verbose
         self.queue = queue
         self.side = side
+        # print "Join side:", side
 
     def get_meta(self):
         """ Return information on the present filter, ready to be added to a
