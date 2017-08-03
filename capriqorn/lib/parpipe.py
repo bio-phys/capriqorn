@@ -24,20 +24,9 @@ this as follows e.g. using five processes:
          f        filter
          w        writer
 
+Status: Implementation appears to work, see also <pipeutil.py>.
 
-The pipeline setup needs to be implemented as follows:
-
-* pipeline must be set up piecewise per process
-* parallel zones are defined between fork and join
-* central question is when the fork shall take place
-* multiprocessing queues must be created before the fork
-
-Algorithm:
-* parse and check pipeline setup once
-* count parallel regions, determine the number of processes needed
-* prepare multiprocessing queues, arrange them in a list and pass the
-  correct one to the respective worker
-* launch the worker, close any queues which are not needed
+TODO: implement an order-preserving ParallelJoin() option
 """
 
 from __future__ import print_function

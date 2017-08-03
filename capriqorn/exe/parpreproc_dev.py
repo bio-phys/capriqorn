@@ -76,14 +76,17 @@ def main(argparse_args):
         # split pipeline description into per-process parts, obtain queue handles
         meta_segments = pipeutil.get_meta_segments(pipeline_meta)
 
+        # launch child processes to work on the segmented pipeline
+        enumerated_segments = [pair for pair in enumerate(meta_segments)]
+        last, segment = enumerated_segments[-1]
         mp_pool = []
-        for i, segment in enumerate(meta_segments):
-            if (i == 0):
-                # run the first segment on the present process
+        for i, segment in enumerated_segments:
+            if (i == last):
+                # run the last pipeline segment on the present process
                 worker_id = 'segment_' + str(i) + '_worker_main'
                 pipeline = pipeutil.create(segment, pipeline_module, worker_id)
             else:
-                # run all subsequent segments on child processes
+                # run any previous pipeline egments on child processes
                 for j in range(n_workers_per_segment[i]):
                     worker_id = 'segment_' + str(i) + '_worker_' + str(j)
                     mp_worker = mp.Process(target=pipeutil.partial_pipeline_worker,
@@ -92,14 +95,15 @@ def main(argparse_args):
 
         for mp_worker in mp_pool:
             mp_worker.start()
-        for mp_worker in mp_pool:
-            assert(mp_worker.is_alive())
 
-        # feed data into the pipeline
         sys.stdout.flush()
+
+        # launch the last segment of the pipeline
         pipeline[-1].dump()
 
-        # wait until all the child processes have done their work
+        # all the child processes need to be finished until now, nevertheless we join() them
+        for mp_worker in mp_pool:
+            mp_worker.join()
 
     print(" done.")
     print(util.SEP)
