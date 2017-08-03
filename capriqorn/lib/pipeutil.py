@@ -166,22 +166,15 @@ def get_parallel_configuration(pipeline_meta):
     return (n_fork, n_workers_per_segment)
 
 
-# def prepare_mp_queues(n_parallel):
-#     """Create a list with n_parallel pairs of multiprocessing.JoinableQueue instances."""
-#     q_pairs = []
-#     for i in range(n_parallel):
-#         fork_q = mp.JoinableQueue()
-#         join_q = mp.JoinableQueue()
-#         q_pairs.append((fork_q, join_q))
-#     return q_pairs
-
-
 def partial_pipeline_worker(pipeline_segment, pipeline_module, worker_id):
     output_file = "pipeline_" + pipeline_module + '_' + worker_id + '.log'
     util.redirectOutput(output_file)
     # print pipeline_segment
     pipeline = create(pipeline_segment, pipeline_module, worker_id)
     pipeline[-1].dump()
+    print(' shutting down ' + worker_id)
+    sys.exit(0)
+
 
 def get_meta_segments(pipeline_meta):
     """Split a pipeline specification into parts following ParallelFork and ParallelJoin
@@ -217,8 +210,7 @@ def get_meta_segments(pipeline_meta):
             del parameters['active']
         segment.append(copy.deepcopy(filter_meta))
         if (label == 'ParallelFork') or (label == 'ParallelJoin'):
-            # queue_handles.append(mp.JoinableQueue())
-            queue_handles.append(mp.Queue())
+            queue_handles.append(mp.Queue(parpipe.QUEUE_MAXSIZE))
             segment[-1][label]['queue'] = queue_handles[-1]
             segment[-1][label]['side'] = parpipe.SIDE_UPSTREAM
             meta_segments.append(segment)

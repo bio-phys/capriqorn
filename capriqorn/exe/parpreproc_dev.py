@@ -99,5 +99,7 @@ def main(argparse_args):
         sys.stdout.flush()
         pipeline[-1].dump()
 
+        # wait until all the child processes have done their work
+
     print(" done.")
     print(util.SEP)

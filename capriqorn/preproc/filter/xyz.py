@@ -58,25 +58,28 @@ class XYZ(base.Filter):
         do_write = True
         util.md(self.output_directory)
         for frm_in in self.src.next():
-            assert isinstance(frm_in, base.Container)
-            # ---
-            if (do_write):
-                volCrds = []
-                volSpecies = []
-                elements = frm_in.get_keys(base.loc_coordinates, skip_keys='radii')
-                for el in elements:
-                    coord_set = frm_in.get_data(base.loc_coordinates + '/' + el)
-                    for ij in range(coord_set.shape[0]):
-                        triple = coord_set[ij, :]
-                        volCrds.append(triple)
-                        volSpecies.append(el)
-                file_name = self.output_directory + self.file_prefix + "%08d.xyz" % frm_in.i
-                util.write_xyzFile(volCrds, volSpecies, file_name)
-                if self.first_frame_only:
-                    do_write = False
-            # ---
-            frm_out = frm_in
-            frm_out.put_meta(self.get_meta())
-            if self.verb:
-                print "XYZ.next() :", frm_out.i
-            yield frm_out
+            if frm_in is not None:
+                assert isinstance(frm_in, base.Container)
+                # ---
+                if (do_write):
+                    volCrds = []
+                    volSpecies = []
+                    elements = frm_in.get_keys(base.loc_coordinates, skip_keys='radii')
+                    for el in elements:
+                        coord_set = frm_in.get_data(base.loc_coordinates + '/' + el)
+                        for ij in range(coord_set.shape[0]):
+                            triple = coord_set[ij, :]
+                            volCrds.append(triple)
+                            volSpecies.append(el)
+                    file_name = self.output_directory + self.file_prefix + "%08d.xyz" % frm_in.i
+                    util.write_xyzFile(volCrds, volSpecies, file_name)
+                    if self.first_frame_only:
+                        do_write = False
+                # ---
+                frm_out = frm_in
+                frm_out.put_meta(self.get_meta())
+                if self.verb:
+                    print "XYZ.next() :", frm_out.i
+                yield frm_out
+            else:
+                yield None

@@ -42,14 +42,17 @@ class MergeVirtualParticles(base.Filter):
 
     def next(self):
         for frm in self.src.next():
-            assert isinstance(frm, base.Container)
-            # ---
-            histos = frm.get_data(base.loc_histograms)
-            elements = util.get_elements(histos.keys())
-            if ('X1' in elements) and ('X2' in elements):
-                selection.merge_virtual_particles(frm)
-            # ---
-            frm.put_meta(self.get_meta())
-            if self.verb:
-                print "MergeVirtualParticles.next() :", frm.i
-            yield frm
+            if frm is not None:
+                assert isinstance(frm, base.Container)
+                # ---
+                histos = frm.get_data(base.loc_histograms)
+                elements = util.get_elements(histos.keys())
+                if ('X1' in elements) and ('X2' in elements):
+                    selection.merge_virtual_particles(frm)
+                # ---
+                frm.put_meta(self.get_meta())
+                if self.verb:
+                    print "MergeVirtualParticles.next() :", frm.i
+                yield frm
+            else:
+                yield None

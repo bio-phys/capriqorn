@@ -1,7 +1,7 @@
 """Capriqorn parallelization filter
 
 The parallel filter is used to exploit data parallelism in pipelines.  It uses
-the Python multiprocessing module.
+the Python multiprocessing module, see <pipeutil.py>.
 
 Say we would like to parallelize a pipeline consisting of
 
@@ -38,7 +38,6 @@ Algorithm:
 * prepare multiprocessing queues, arrange them in a list and pass the
   correct one to the respective worker
 * launch the worker, close any queues which are not needed
-
 """
 
 from __future__ import print_function
@@ -54,6 +53,8 @@ from cadishi import base
 SIDE_BOTH=0
 SIDE_UPSTREAM=1
 SIDE_DOWNSTREAM=2
+# max. elements before the queue.put() function blocks, see <pipeutil.py>
+QUEUE_MAXSIZE=32
 
 
 class ParallelFilter(base.Filter):
@@ -67,6 +68,9 @@ class ParallelFilter(base.Filter):
         while True:
             obj = self.queue.get()
             yield obj
+            # NOTE: The following 'break' condition is the terminal trigger for the parallel pipeline!
+            if obj is None:
+                break
 
     def dump(self):
         """Generator-style method which gets objects by calling the previous
@@ -76,6 +80,8 @@ class ParallelFilter(base.Filter):
             print(self.__class__.__name__ + ', dump(), ' + self.worker_id)
         for obj in self.src.next():
             self.queue.put(obj)
+        for i in range(self.n_workers):
+            self.queue.put(None)
 
 
 class ParallelFork(ParallelFilter):
@@ -94,7 +100,6 @@ class ParallelFork(ParallelFilter):
         side : int
             Integer indicating the side: SIDE_BOTH, SIDE_UPSTREAM, SIDE_DOWNSTREAM
         n_workers : int
-            Dummy variable, not used by the implementation.
         worker_id : string
             String to identify the present worker.
         """
@@ -102,6 +107,7 @@ class ParallelFork(ParallelFilter):
         self.verb = verbose
         self.queue = queue
         self.side = side
+        self.n_workers = n_workers
         self.worker_id = worker_id
 
     def get_meta(self):
@@ -122,7 +128,7 @@ class ParallelJoin(ParallelFilter):
     _conflicts = []
 
     def __init__(self, source=-1, verbose=False, queue=None, side=SIDE_BOTH,
-                 worker_id=''):
+                 n_workers=0, worker_id=''):
         """
         Parameters
         ----------
@@ -131,6 +137,7 @@ class ParallelJoin(ParallelFilter):
         queue : multiprocessing queue
         side : int
             Integer indicating the side: SIDE_BOTH, SIDE_UPSTREAM, SIDE_DOWNSTREAM
+        n_workers : int
         worker_id : string
             String to identify the present worker.
         """
@@ -138,6 +145,7 @@ class ParallelJoin(ParallelFilter):
         self.verb = verbose
         self.queue = queue
         self.side = side
+        self.n_workers = n_workers
         self.worker_id = worker_id
 
     def get_meta(self):

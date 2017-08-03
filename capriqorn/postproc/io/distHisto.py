@@ -222,40 +222,41 @@ class distHistoWriter(base.Writer):
         nbin = 0
         ncol = 0
         for obj in self.src.next():
-            if (self.count == 0):
-                header_lst = sorted(obj.get_keys(base.loc_histograms,
-                                                 skip_keys=['radii']))
-                header_lst.insert(0, '#')
-                header_str = ' '.join(header_lst)
-                #
-                filename = os.path.join(self.directory, self.header_file)
-                with open(filename, 'w') as fp:
-                    fp.write(header_str + '\n')
-                nbin = len(obj.get_data(base.loc_histograms + '/radii'))
-                ncol = len(obj.get_keys(base.loc_histograms, skip_keys=['radii'])) + 1
-            # build a 2D numpy array containing the radii and the histograms
-            assert (nbin == len(obj.get_data(base.loc_histograms + '/radii')))
-            assert (ncol == len(obj.get_keys(base.loc_histograms, skip_keys=['radii'])) + 1)
-            histo_array = np.ndarray((nbin, ncol))
-            histo_array[:, 0] = obj.get_data(base.loc_histograms + '/radii')[:]
-            idx = 1
-            for key in sorted(obj.get_keys(base.loc_histograms, skip_keys=['radii'])):
-                histo_array[:, idx] = obj.get_data(base.loc_histograms + '/' + key)
-                idx += 1
-            # write histograms to numpy files
-            filenum = str(obj.i)
-            if self.write_txt:
-                filename = self.histo_file_prefix + '.' + filenum + '.dat'
+            if obj is not None:
+                if (self.count == 0):
+                    header_lst = sorted(obj.get_keys(base.loc_histograms,
+                                                     skip_keys=['radii']))
+                    header_lst.insert(0, '#')
+                    header_str = ' '.join(header_lst)
+                    #
+                    filename = os.path.join(self.directory, self.header_file)
+                    with open(filename, 'w') as fp:
+                        fp.write(header_str + '\n')
+                    nbin = len(obj.get_data(base.loc_histograms + '/radii'))
+                    ncol = len(obj.get_keys(base.loc_histograms, skip_keys=['radii'])) + 1
+                # build a 2D numpy array containing the radii and the histograms
+                assert (nbin == len(obj.get_data(base.loc_histograms + '/radii')))
+                assert (ncol == len(obj.get_keys(base.loc_histograms, skip_keys=['radii'])) + 1)
+                histo_array = np.ndarray((nbin, ncol))
+                histo_array[:, 0] = obj.get_data(base.loc_histograms + '/radii')[:]
+                idx = 1
+                for key in sorted(obj.get_keys(base.loc_histograms, skip_keys=['radii'])):
+                    histo_array[:, idx] = obj.get_data(base.loc_histograms + '/' + key)
+                    idx += 1
+                # write histograms to numpy files
+                filenum = str(obj.i)
+                if self.write_txt:
+                    filename = self.histo_file_prefix + '.' + filenum + '.dat'
+                    fullname = os.path.join(self.directory, filename)
+                    util.savetxtHeader(fullname, header_str, histo_array)
+                filename = self.histo_file_prefix + '.' + filenum + '.npy'
                 fullname = os.path.join(self.directory, filename)
-                util.savetxtHeader(fullname, header_str, histo_array)
-            filename = self.histo_file_prefix + '.' + filenum + '.npy'
-            fullname = os.path.join(self.directory, filename)
-            np.save(fullname, histo_array)
-            del histo_array
-            # finally, append .npy filename to the list file
-            util.appendLineToFile(os.path.join(self.directory, self.list_file),
-                                     filename)
-            # ---
-            if self.verb:
-                print "distHistoWriter.dump() : " + fullname
-            self.count += 1
+                np.save(fullname, histo_array)
+                del histo_array
+                # finally, append .npy filename to the list file
+                util.appendLineToFile(os.path.join(self.directory, self.list_file),
+                                         filename)
+                # ---
+                if self.verb:
+                    print "distHistoWriter.dump() : " + fullname
+                self.count += 1

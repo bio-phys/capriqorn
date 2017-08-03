@@ -136,20 +136,22 @@ class VirtualParticles(base.Filter):
 
     def next(self):
         for frm in self.src.next():
-            assert isinstance(frm, base.Container)
-            # --- add virtual particles
-            if (self.method == "lattice"):
+            if frm is not None:
+                assert isinstance(frm, base.Container)
+                # --- add virtual particles
+                if (self.method == "lattice"):
+                    if self.verb:
+                        print "VirtualParticles : adding 2x " + str(self.x_box_length ** 3) \
+                                                    + " lattice particles"
+                    for i in [1, 2]:
+                        coords = _genLattice(self.x_box_length, self.xD, noise=self.noise)
+                        frm.put_data(base.loc_coordinates + '/' + self.label + str(i), coords)
+                elif (self.method == "gas"):
+                    coords = _genIdealGas(self.xN, self.x_box_length)
+                    frm.put_data(base.loc_coordinates + '/' + self.label, coords)
+                #
+                frm.put_meta(self.get_meta())
                 if self.verb:
-                    print "VirtualParticles : adding 2x " + str(self.x_box_length ** 3) \
-                                                + " lattice particles"
-                for i in [1, 2]:
-                    coords = _genLattice(self.x_box_length, self.xD, noise=self.noise)
-                    frm.put_data(base.loc_coordinates + '/' + self.label + str(i), coords)
-            elif (self.method == "gas"):
-                coords = _genIdealGas(self.xN, self.x_box_length)
-                frm.put_data(base.loc_coordinates + '/' + self.label, coords)
-            #
-            frm.put_meta(self.get_meta())
-            if self.verb:
-                print "VirtualParticles.next() :", frm.i
-            yield frm
+                    print "VirtualParticles.next() :", frm.i
+                yield frm
+            yield None

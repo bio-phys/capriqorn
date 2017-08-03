@@ -31,7 +31,9 @@ class Dummy(base.Filter):
 
     def next(self):
         for obj in self.src.next():
-            # obj.put_meta(self.get_meta())
-            if self.verb:
-                print "Dummy.next() :", obj.i
-            yield obj
+            if obj is not None:
+                if self.verb:
+                    print "Dummy.next() :", obj.i
+                yield obj
+            else:
+                yield None

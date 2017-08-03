@@ -39,12 +39,15 @@ class Step(base.Filter):
 
     def next(self):
         for frm in self.src.next():
-            if (self.count % self.step == 0):
-                assert isinstance(frm, base.Container)
-                frm.put_meta(self.get_meta())
-                if self.verb:
-                    print "Step.next() :", frm.i
-                yield frm
+            if frm is not None:
+                if (self.count % self.step == 0):
+                    assert isinstance(frm, base.Container)
+                    frm.put_meta(self.get_meta())
+                    if self.verb:
+                        print "Step.next() :", frm.i
+                    yield frm
+                else:
+                    pass
+                self.count += 1
             else:
-                pass
-            self.count += 1
+                yield None
