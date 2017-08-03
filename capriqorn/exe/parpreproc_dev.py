@@ -72,7 +72,7 @@ def main(argparse_args):
     else:
         # counting: reader, writer, parallel workers, workers between parallel regions
         n_workers = sum(n_workers_per_segment)
-        print(" Running parallel pipeline with " + str(n_workers) + " worker processes in total...", end='')
+        print(" Running parallel pipeline with " + str(n_workers) + " worker processes in total...")
         # split pipeline description into per-process parts, obtain queue handles
         meta_segments = pipeutil.get_meta_segments(pipeline_meta)
 
@@ -80,18 +80,24 @@ def main(argparse_args):
         for i, segment in enumerate(meta_segments):
             if (i == 0):
                 # run the first segment on the present process
-                pipeline = pipeutil.create(segment, pipeline_module)
+                worker_id = 'segment_' + str(i) + '_worker_main'
+                pipeline = pipeutil.create(segment, pipeline_module, worker_id)
             else:
                 # run all subsequent segments on child processes
                 for j in range(n_workers_per_segment[i]):
+                    worker_id = 'segment_' + str(i) + '_worker_' + str(j)
                     mp_worker = mp.Process(target=pipeutil.partial_pipeline_worker,
-                                           args=(segment, pipeline_module))
+                                           args=(segment, pipeline_module, worker_id))
                     mp_pool.append(mp_worker)
 
         for mp_worker in mp_pool:
             mp_worker.start()
-        # for mp_worker in mp_pool:
-        #     assert(mp_worker.is_alive())
+        for mp_worker in mp_pool:
+            assert(mp_worker.is_alive())
+
+        # feed data into the pipeline
+        sys.stdout.flush()
+        pipeline[-1].dump()
 
     print(" done.")
     print(util.SEP)

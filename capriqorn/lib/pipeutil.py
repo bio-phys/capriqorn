@@ -13,7 +13,7 @@ from cadishi import dict_util
 from . import parpipe
 
 
-def create(pipeline_meta, pipeline_module):
+def create(pipeline_meta, pipeline_module, worker_id=None):
     """Create pipeline by instantiating Python classes and putting them into a list.
 
     Parameters
@@ -40,7 +40,9 @@ def create(pipeline_meta, pipeline_module):
             if (parameters['active'] == False):
                 continue
             del parameters['active']
-        # ---
+        if (worker_id is not None) and \
+            ((label == 'ParallelFork') or (label == 'ParallelJoin')):
+                parameters['worker_id'] = worker_id
         pipeline_obj = util.load_class(pipeline_module, label)
         if (len(pipeline) > 0):
             parameters['source'] = pipeline[-1]
@@ -174,9 +176,12 @@ def get_parallel_configuration(pipeline_meta):
 #     return q_pairs
 
 
-def partial_pipeline_worker(pipeline_segment, pipeline_module):
-    pipeline = create(pipeline_segment, pipeline_module)
-
+def partial_pipeline_worker(pipeline_segment, pipeline_module, worker_id):
+    output_file = "pipeline_" + pipeline_module + '_' + worker_id + '.log'
+    util.redirectOutput(output_file)
+    # print pipeline_segment
+    pipeline = create(pipeline_segment, pipeline_module, worker_id)
+    pipeline[-1].dump()
 
 def get_meta_segments(pipeline_meta):
     """Split a pipeline specification into parts following ParallelFork and ParallelJoin
@@ -212,7 +217,8 @@ def get_meta_segments(pipeline_meta):
             del parameters['active']
         segment.append(copy.deepcopy(filter_meta))
         if (label == 'ParallelFork') or (label == 'ParallelJoin'):
-            queue_handles.append(mp.JoinableQueue())
+            # queue_handles.append(mp.JoinableQueue())
+            queue_handles.append(mp.Queue())
             segment[-1][label]['queue'] = queue_handles[-1]
             segment[-1][label]['side'] = parpipe.SIDE_UPSTREAM
             meta_segments.append(segment)
