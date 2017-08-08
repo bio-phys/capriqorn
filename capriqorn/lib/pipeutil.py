@@ -194,6 +194,7 @@ def get_meta_segments(pipeline_meta):
     ------
     RuntimeError
     """
+    n_workers = 0
     meta_segments = []
     queue_handles = []
     segment = []
@@ -209,6 +210,13 @@ def get_meta_segments(pipeline_meta):
                 continue
             del parameters['active']
         segment.append(copy.deepcopy(filter_meta))
+        # transfer the number of workers from the ParallelFork to the ParallelJoin filter
+        if (label == 'ParallelFork'):
+            n_workers = parameters['n_workers']
+        if (label == 'ParallelJoin'):
+            assert(n_workers > 0)
+            parameters['n_workers'] = n_workers
+            n_workers = 0
         if (label == 'ParallelFork') or (label == 'ParallelJoin'):
             queue_handles.append(mp.Queue(parpipe.QUEUE_MAXSIZE))
             segment[-1][label]['queue'] = queue_handles[-1]
