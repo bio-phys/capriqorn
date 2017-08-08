@@ -3,6 +3,7 @@
 # This file is part of the capriqorn package.  See README.rst,
 # LICENSE.txt, and the documentation for details.
 
+from __future__ import print_function
 import sys
 import numpy as np
 import copy
@@ -46,7 +47,7 @@ def create(pipeline_meta, pipeline_module, worker_id=None):
         pipeline_obj = util.load_class(pipeline_module, label)
         if (len(pipeline) > 0):
             parameters['source'] = pipeline[-1]
-        print "   " + label
+        print("   " + label)
         pipeline.append(pipeline_obj(**parameters))
     return pipeline
 
@@ -228,3 +229,46 @@ def get_meta_segments(pipeline_meta):
             segment[-1][label]['side'] = parpipe.SIDE_DOWNSTREAM
     meta_segments.append(segment)
     return meta_segments
+
+
+def run_pipeline(pipeline_meta, pipeline_module):
+    (n_parallel, n_workers_per_segment) = get_parallel_configuration(pipeline_meta)
+
+    if (n_parallel <= 0):
+        pipeline = create(pipeline_meta, pipeline_module)
+        check_dependencies(pipeline, pipeline_module)
+        check_conflicts(pipeline, pipeline_module)
+        print(" Running sequential pipeline ...", end='')
+        sys.stdout.flush()
+        pipeline[-1].dump()
+    else:
+        # counting: reader, writer, parallel workers, workers between parallel regions
+        n_workers = sum(n_workers_per_segment)
+        print(" Running parallel pipeline with " + str(n_workers) + " worker processes in total...")
+        # split pipeline description into per-process parts, obtain queue handles
+        meta_segments = get_meta_segments(pipeline_meta)
+
+        # launch child processes to work on the segmented pipeline
+        enumerated_segments = [pair for pair in enumerate(meta_segments)]
+        last, segment = enumerated_segments[-1]
+        mp_pool = []
+        for i, segment in enumerated_segments:
+            if (i == last):
+                # run the last pipeline segment on the present process
+                worker_id = 'segment_' + str(i) + '_worker_main'
+                pipeline = create(segment, pipeline_module, worker_id)
+            else:
+                # run any previous pipeline egments on child processes
+                for j in range(n_workers_per_segment[i]):
+                    worker_id = 'segment_' + str(i) + '_worker_' + str(j)
+                    mp_worker = mp.Process(target=partial_pipeline_worker,
+                                           args=(segment, pipeline_module, worker_id))
+                    mp_pool.append(mp_worker)
+        for mp_worker in mp_pool:
+            mp_worker.start()
+        sys.stdout.flush()
+        # launch the last segment of the pipeline
+        pipeline[-1].dump()
+        # all the child processes need to be finished until now, nevertheless we join() them
+        for mp_worker in mp_pool:
+            mp_worker.join()

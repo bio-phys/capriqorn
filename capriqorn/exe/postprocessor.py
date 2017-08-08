@@ -59,13 +59,7 @@ def main(argparse_args):
 
     pipeline_module = "capriqorn.postproc"
 
-    pipeline = pipeutil.create(pipeline_meta, pipeline_module)
-
-    pipeutil.check_dependencies(pipeline, pipeline_module)
-    pipeutil.check_conflicts(pipeline, pipeline_module)
-
-    print(" Running pipeline ...", end='')
-    sys.stdout.flush()
-    pipeline[-1].dump()
+    pipeutil.run_pipeline(pipeline_meta, pipeline_module)
+    
     print(" done.")
     print(util.SEP)
