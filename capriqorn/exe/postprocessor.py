@@ -60,6 +60,6 @@ def main(argparse_args):
     pipeline_module = "capriqorn.postproc"
 
     pipeutil.run_pipeline(pipeline_meta, pipeline_module)
-    
-    print(" done.")
+
+    print(" ... done.")
     print(util.SEP)

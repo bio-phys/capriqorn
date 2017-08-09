@@ -36,6 +36,12 @@ def instantiate_pipeline(pipeline_meta, pipeline_module, worker_id=None):
         List of instantiated classes forming the pipeline.
     """
     pipeline = []
+    print(util.SEP)
+    msg = " Pipeline configuration"
+    if worker_id is not None:
+        msg += " for worker `" + worker_id + "'"
+    msg += ":"
+    print(msg)
     for filter_meta in pipeline_meta:
         assert (len(filter_meta) == 1)
         label = ""
@@ -54,6 +60,7 @@ def instantiate_pipeline(pipeline_meta, pipeline_module, worker_id=None):
             parameters['source'] = pipeline[-1]
         print("   " + label)
         pipeline.append(pipeline_obj(**parameters))
+    print(util.SEP)
     return pipeline
 
 
@@ -197,13 +204,15 @@ def pipeline_segment_worker(pipeline_segment, pipeline_module, worker_id):
     -------
     Nothing, quits process with exit status "0" on success.
     """
-    output_file = "pipeline_" + pipeline_module + '_' + worker_id + '.log'
+    output_file = "./pipeline_log/" + pipeline_module + '_' + worker_id + '.log'
+    util.md(output_file)
     util.redirectOutput(output_file)
     pipeline = instantiate_pipeline(pipeline_segment, pipeline_module, worker_id)
     check_filter_dependencies(pipeline, pipeline_module)
     check_filter_conflicts(pipeline, pipeline_module)
     pipeline[-1].dump()
-    print(' shutting down ' + worker_id)
+    print(" Shutting down `" + worker_id + "'.")
+    print(util.SEP)
     sys.exit(0)
 
 
@@ -304,7 +313,7 @@ def run_pipeline(pipeline_meta, pipeline_module):
     else:
         # counting: reader, writer, parallel workers, workers between parallel regions
         n_workers = sum(n_workers_per_segment)
-        print(" Running parallel pipeline with " + str(n_workers) + " worker processes in total...")
+        print(" Running parallel pipeline with " + str(n_workers) + " worker processes in total ...")
         # split pipeline description into per-process parts, obtain queue handles
         meta_segments = get_pipeline_meta_segments(pipeline_meta)
         # print(" DBG: meta_segments:" + str(meta_segments))

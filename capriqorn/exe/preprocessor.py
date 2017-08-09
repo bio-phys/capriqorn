@@ -61,5 +61,5 @@ def main(argparse_args):
 
     pipeutil.run_pipeline(pipeline_meta, pipeline_module)
 
-    print(" done.")
+    print(" ... done.")
     print(util.SEP)
