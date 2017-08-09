@@ -247,11 +247,14 @@ class ReferenceStructure(base.Filter):
 
     def next(self):
         for frm_in in self.src.next():
-            assert isinstance(frm_in, base.Container)
-            frm_out = self._process_frame(frm_in)
-            if self.verb:
-                print "ReferenceStructure.next() :", frm_out.i
-            yield frm_out
+            if frm_in is not None:
+                assert isinstance(frm_in, base.Container)
+                frm_out = self._process_frame(frm_in)
+                if self.verb:
+                    print "ReferenceStructure.next() :", frm_out.i
+                yield frm_out
+            else:
+                yield None
 
 
 class MultiReferenceStructure(ReferenceStructure):
@@ -306,23 +309,26 @@ class MultiReferenceStructure(ReferenceStructure):
 
     def next(self):
         for frm_in in self.src.next():
-            assert isinstance(frm_in, base.Container)
-            # go to new frame to update self.atoms
-            try:
-                # Translate 1-based to 0-based indexing!
-                # TODO: carefully check if this is globally consistent throughout the code!!!
-                frm_idx_0 = frm_in.i - 1
-                # assert will likely fail at the first frame if sth is wrong with the indexing
-                assert(frm_idx_0 >= 0)
-                self.universe.trajectory[frm_idx_0]
-            except:
-                raise RuntimeError("Frame %d not available in reference trajectory" % frm_in.i)
-            # if self.qDetermineRMax==True:
-            d_max = maxInnerDistance(self.atoms.positions)
-            d_max += 3. * self.distance
-            if d_max > self.r_max:
-                self.r_max = d_max
-            frm_out = self._process_frame(frm_in)
-            if self.verb:
-                print "MultiReferenceStructure.next() :", frm_out.i
+            if frm_in is not None:
+                assert isinstance(frm_in, base.Container)
+                # go to new frame to update self.atoms
+                try:
+                    # Translate 1-based to 0-based indexing!
+                    # TODO: carefully check if this is globally consistent throughout the code!!!
+                    frm_idx_0 = frm_in.i - 1
+                    # assert will likely fail at the first frame if sth is wrong with the indexing
+                    assert(frm_idx_0 >= 0)
+                    self.universe.trajectory[frm_idx_0]
+                except:
+                    raise RuntimeError("Frame %d not available in reference trajectory" % frm_in.i)
+                # if self.qDetermineRMax==True:
+                d_max = maxInnerDistance(self.atoms.positions)
+                d_max += 3. * self.distance
+                if d_max > self.r_max:
+                    self.r_max = d_max
+                frm_out = self._process_frame(frm_in)
+                if self.verb:
+                    print "MultiReferenceStructure.next() :", frm_out.i
+            else:
+                frm_out = None
             yield frm_out

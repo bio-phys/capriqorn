@@ -106,34 +106,37 @@ class Ellipsoid(base.Filter):
 
     def next(self):
         for frm_in in self.src.next():
-            assert isinstance(frm_in, base.Container)
-            frm_out = copy.deepcopy(frm_in)
-            frm_out.del_data(base.loc_coordinates)
-            # ---
-            for spec_id in frm_in.get_keys(base.loc_coordinates, skip_keys='radii'):
-                coord_in = frm_in.get_data(base.loc_coordinates + '/' + spec_id)
-                if (self.shell_width > 0.0):
-                    # --- select core particles
-                    indices = self.selectCore(coord_in)
-                    coord_out = coord_in[indices]
-                    frm_out.put_data(base.loc_coordinates + '/' + spec_id,
-                                     coord_out)
-                    # --- select shell particles
-                    indices = self.selectShell(coord_in)
-                    coord_out = coord_in[indices]
-                    frm_out.put_data(base.loc_coordinates + '/' + spec_id + '.s',
-                                     coord_out)
-                else:
-                    indices = self.selectBody(coord_in)
-                    coord_out = coord_in[indices]
-                    frm_out.put_data(base.loc_coordinates + '/' + spec_id,
-                                     coord_out)
-            # ---
-            frm_out.i = frm_in.i
-            # ---
-            frm_out.put_data('log', frm_in.get_data('log'))
-            frm_out.put_meta(self.get_meta())
-            # ---
-            if self.verb:
-                print "Ellipsoid.next() :", frm_out.i
+            if frm_in is not None:
+                assert isinstance(frm_in, base.Container)
+                frm_out = copy.deepcopy(frm_in)
+                frm_out.del_data(base.loc_coordinates)
+                # ---
+                for spec_id in frm_in.get_keys(base.loc_coordinates, skip_keys='radii'):
+                    coord_in = frm_in.get_data(base.loc_coordinates + '/' + spec_id)
+                    if (self.shell_width > 0.0):
+                        # --- select core particles
+                        indices = self.selectCore(coord_in)
+                        coord_out = coord_in[indices]
+                        frm_out.put_data(base.loc_coordinates + '/' + spec_id,
+                                         coord_out)
+                        # --- select shell particles
+                        indices = self.selectShell(coord_in)
+                        coord_out = coord_in[indices]
+                        frm_out.put_data(base.loc_coordinates + '/' + spec_id + '.s',
+                                         coord_out)
+                    else:
+                        indices = self.selectBody(coord_in)
+                        coord_out = coord_in[indices]
+                        frm_out.put_data(base.loc_coordinates + '/' + spec_id,
+                                         coord_out)
+                # ---
+                frm_out.i = frm_in.i
+                # ---
+                frm_out.put_data('log', frm_in.get_data('log'))
+                frm_out.put_meta(self.get_meta())
+                # ---
+                if self.verb:
+                    print "Ellipsoid.next() :", frm_out.i
+            else:
+                frm_out = None
             yield frm_out

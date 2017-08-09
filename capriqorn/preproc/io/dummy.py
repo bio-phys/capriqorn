@@ -88,10 +88,7 @@ class DummyWriter(base.Writer):
 
     def dump(self):
         for frm in self.src.next():
-#             print '###'
-#             print '###', frm.i
-#             print '###', frm.data
-#             print '###'
-            if self.verb:
-                print "DummyWriter.dump() : ", frm.i
+            if frm is not None:
+                if self.verb:
+                    print "DummyWriter.dump() : ", frm.i
             pass

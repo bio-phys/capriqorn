@@ -38,8 +38,9 @@ class Dummy(base.Filter):
 
     def next(self):
         for frame in self.src.next():
-            assert isinstance(frame, base.Container)
-            frame.put_meta(self.get_meta())
-            if self.verb:
-                print "Dummy.next() :", frame.i
+            if frame is not None:
+                assert isinstance(frame, base.Container)
+                frame.put_meta(self.get_meta())
+                if self.verb:
+                    print "Dummy.next() :", frame.i
             yield frame

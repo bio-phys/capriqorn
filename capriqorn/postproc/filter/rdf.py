@@ -88,7 +88,7 @@ class RDF(base.Filter):
                 histo = np.copy(histograms[key])
                 for i in range(len(radii)):
                     histo[i] /= fac * nr_1 * nr_2 * coeff[i]
-                rdf[key] = 2*histo # Factor 2 because distances are only counted once in histograms (r_{ij} and r_{ji} are counted as a single distance) 
+                rdf[key] = 2*histo # Factor 2 because distances are only counted once in histograms (r_{ij} and r_{ji} are counted as a single distance)
                 if (species_1 == species_2):
                     rdf[key][0]=rho_1
             else:
@@ -105,8 +105,11 @@ class RDF(base.Filter):
 
     def next(self):
         for frm in self.src.next():
-            self._process_frame(frm)
-            frm.put_meta(self.get_meta())
-            if self.verb:
-                print "RDF.next() :", frm.i
-            yield frm
+            if frm is not None:
+                self._process_frame(frm)
+                frm.put_meta(self.get_meta())
+                if self.verb:
+                    print "RDF.next() :", frm.i
+                yield frm
+            else:
+                yield None

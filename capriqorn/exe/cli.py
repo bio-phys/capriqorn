@@ -28,7 +28,6 @@ def parse_args():
     parser.add_argument('-v', '--version', help='print version information',
                         action='version', version=version_string)
     subparsers = parser.add_subparsers(help='Commands')
-    # ---
     preprocessor.configure_cli(subparsers)
     histograms.configure_cli(subparsers)
     postprocessor.configure_cli(subparsers)

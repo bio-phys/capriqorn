@@ -4,6 +4,7 @@ This file is part of the capriqorn package.  See README.rst,
 LICENSE.txt, and the documentation for details.
 """
 
+import copy
 import numpy as np
 
 from cadishi import base
@@ -175,56 +176,60 @@ class Average(base.Filter):
 
     def next(self):
         frm_out = base.Container()
-        for frm_in in self.src.next():
-            self.geometry = frm_in.get_geometry()
-            # --- multiref: scale histograms containing virtual particles
-            virtual_param = frm_in.query_meta('VirtualParticles')
-            if (virtual_param is not None and self.geometry == 'MultiReferenceStructure'):
-                frm_in = scaleVirtualHistograms(frm_in)
-            # --- take into account the histogram sample parameter when averaging
-            if (self.count == 0):
-                histo_par = util.search_pipeline('histograms', frm_in.get_meta())
-                if (histo_par is not None) and (len(histo_par) > 0):
-                    histo_sample = histo_par['histogram']['sum']
-                    self.factor = self.factor / float(histo_sample)
-            # --- sum distance histograms
-            if not frm_out.has_key(base.loc_histograms + '/radii'):
-                frm_out.put_data(base.loc_histograms + '/radii',
-                                 frm_in.get_data(base.loc_histograms + '/radii'))
-            X = frm_out.get_data(base.loc_histograms)
-            Y = frm_in.get_data(base.loc_histograms)
-            dict_util.sum_values(X, Y)
-            # --- sum shell H_xx(r)
-            if (virtual_param is not None and self.geometry == 'MultiReferenceStructure'):
-                if not frm_out.has_key(base.loc_shell_Hxx):
-                    frm_out.put_data(base.loc_shell_Hxx, frm_in.get_data(base.loc_shell_Hxx))
-                X = frm_out.get_data(base.loc_shell_Hxx)
-                Y = frm_in.get_data(base.loc_shell_Hxx)
+        for frm_tmp in self.src.next():
+            # handle None correctly (used as a sign to abandon ship in parallel pipelines)
+            # in combination with the remainder treatment below (which needs the last frm_in)
+            if frm_tmp is not None:
+                frm_in = copy.deepcopy(frm_tmp)
+                self.geometry = frm_in.get_geometry()
+                # --- multiref: scale histograms containing virtual particles
+                virtual_param = frm_in.query_meta('VirtualParticles')
+                if (virtual_param is not None and self.geometry == 'MultiReferenceStructure'):
+                    frm_in = scaleVirtualHistograms(frm_in)
+                # --- take into account the histogram sample parameter when averaging
+                if (self.count == 0):
+                    histo_par = util.search_pipeline('histograms', frm_in.get_meta())
+                    if (histo_par is not None) and (len(histo_par) > 0):
+                        histo_sample = histo_par['histogram']['sum']
+                        self.factor = self.factor / float(histo_sample)
+                # --- sum distance histograms
+                if not frm_out.has_key(base.loc_histograms + '/radii'):
+                    frm_out.put_data(base.loc_histograms + '/radii',
+                                     frm_in.get_data(base.loc_histograms + '/radii'))
+                X = frm_out.get_data(base.loc_histograms)
+                Y = frm_in.get_data(base.loc_histograms)
                 dict_util.sum_values(X, Y)
-            # --- sum length histograms (only present with Sphere geometry)
-            if frm_in.has_key(base.loc_len_histograms):
-                if not frm_out.has_key(base.loc_len_histograms + '/radii'):
-                    frm_out.put_data(base.loc_len_histograms + '/radii',
-                                     frm_in.get_data(base.loc_len_histograms + '/radii'))
-                X = frm_out.get_data(base.loc_len_histograms)
-                Y = frm_in.get_data(base.loc_len_histograms)
-                dict_util.sum_values(X, Y)
-            # --- append particle numbers
-            if frm_in.has_key(base.loc_nr_particles):
-                frm_out.append_data(frm_in, base.loc_nr_particles)
-            # --- append periodic box volumes
-            if frm_in.has_key(base.loc_volumes):
-                frm_out.append_data(frm_in, base.loc_volumes)
-            # ---
-            self.count += 1
-            # deliver a frame averaged over n_avg frames
-            if (not self.all) and (self.count % self.n_avg == 0):
-                self.apply_rescaling(frm_in, frm_out, self.n_avg, virtual_param)
-                if self.verb:
-                    print "Average.next() :", frm_in.i
-                yield frm_out
-                del frm_out
-                frm_out = base.Container()
+                # --- sum shell H_xx(r)
+                if (virtual_param is not None and self.geometry == 'MultiReferenceStructure'):
+                    if not frm_out.has_key(base.loc_shell_Hxx):
+                        frm_out.put_data(base.loc_shell_Hxx, frm_in.get_data(base.loc_shell_Hxx))
+                    X = frm_out.get_data(base.loc_shell_Hxx)
+                    Y = frm_in.get_data(base.loc_shell_Hxx)
+                    dict_util.sum_values(X, Y)
+                # --- sum length histograms (only present with Sphere geometry)
+                if frm_in.has_key(base.loc_len_histograms):
+                    if not frm_out.has_key(base.loc_len_histograms + '/radii'):
+                        frm_out.put_data(base.loc_len_histograms + '/radii',
+                                         frm_in.get_data(base.loc_len_histograms + '/radii'))
+                    X = frm_out.get_data(base.loc_len_histograms)
+                    Y = frm_in.get_data(base.loc_len_histograms)
+                    dict_util.sum_values(X, Y)
+                # --- append particle numbers
+                if frm_in.has_key(base.loc_nr_particles):
+                    frm_out.append_data(frm_in, base.loc_nr_particles)
+                # --- append periodic box volumes
+                if frm_in.has_key(base.loc_volumes):
+                    frm_out.append_data(frm_in, base.loc_volumes)
+                # ---
+                self.count += 1
+                # deliver a frame averaged over n_avg frames
+                if (not self.all) and (self.count % self.n_avg == 0):
+                    self.apply_rescaling(frm_in, frm_out, self.n_avg, virtual_param)
+                    if self.verb:
+                        print "Average.next() :", frm_in.i
+                    yield frm_out
+                    del frm_out
+                    frm_out = base.Container()
         # rescale and deliver a single frame if averaging over all frames is desired
         # OR
         # treat a remainder properly
@@ -239,3 +244,6 @@ class Average(base.Filter):
             if self.verb:
                 print "Average.next() :", frm_in.i
             yield frm_out
+        # yiel a potentially pending None
+        if frm_tmp is None:
+            yield None

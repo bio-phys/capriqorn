@@ -8,6 +8,10 @@
     last: null
     selection: all  # species selection (expert)
     verbose: false
+- ParallelFork:  # EXPERIMENTAL: parallel pipeline, region extends until ParallelJoin
+    active: false  # set to true in tandem with the ParallelJoin filter below
+    n_workers: 2  # number of processes used to process the pipeline in parallel
+    verbose: false
 - VirtualParticles:
     active: true
     label: X
@@ -61,6 +65,8 @@
     file_prefix: null  # optional file prefix string before frame number
     output_directory: ./preprocessor_output
     first_frame_only: true  # only dump the first frame, then disable XYZ writer
+    verbose: false
+- ParallelJoin: # EXPERIMENTAL: parallel pipeline, region extends starting from ParallelFork
     verbose: false
 - H5Writer:
     active: true

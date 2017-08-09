@@ -90,6 +90,7 @@ class DummyWriter(base.Writer):
 
     def dump(self):
         for obj in self.src.next():
-            if self.verb:
-                print "DummyWriter.dump() : ", obj.i
-            pass
+            if obj is not None:
+                if self.verb:
+                    print "DummyWriter.dump() : ", obj.i
+                pass
