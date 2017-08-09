@@ -153,5 +153,5 @@ class VirtualParticles(base.Filter):
                 frm.put_meta(self.get_meta())
                 if self.verb:
                     print "VirtualParticles.next() :", frm.i
-                yield frm
-            yield None
+            # yield modified frame, or simply pass through None
+            yield frm

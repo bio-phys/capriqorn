@@ -329,6 +329,6 @@ class MultiReferenceStructure(ReferenceStructure):
                 frm_out = self._process_frame(frm_in)
                 if self.verb:
                     print "MultiReferenceStructure.next() :", frm_out.i
-                yield frm_out
             else:
-                yield None
+                frm_out = None
+            yield frm_out

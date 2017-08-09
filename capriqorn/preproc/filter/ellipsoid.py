@@ -137,6 +137,6 @@ class Ellipsoid(base.Filter):
                 # ---
                 if self.verb:
                     print "Ellipsoid.next() :", frm_out.i
-                yield frm_out
             else:
-                yield None
+                frm_out = None
+            yield frm_out

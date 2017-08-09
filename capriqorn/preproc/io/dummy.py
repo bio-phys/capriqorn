@@ -91,4 +91,4 @@ class DummyWriter(base.Writer):
             if frm is not None:
                 if self.verb:
                     print "DummyWriter.dump() : ", frm.i
-                pass
+            pass

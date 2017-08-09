@@ -140,6 +140,6 @@ class Sphere(base.Filter):
                 frm_out.put_meta(self.get_meta())
                 if self.verb:
                     print "Sphere.next() :", frm_out.i
-                yield frm_out
             else:
-                yield None
+                frm_out = None
+            yield frm_out
