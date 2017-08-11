@@ -116,7 +116,7 @@ class DeltaH(base.Filter):
                 assert (self.geometry is not None)
                 geometry_param = hs.query_meta(self.geometry)
                 assert (geometry_param is not None)
-                if (self.geometry == 'Sphere'):
+                if (self.geometry == 'Sphere' or self.geometry == 'Cuboid' or self.geometry == 'Ellipsoid'):
                     V = geometry_param['volume']
                     assert (V is not None)
                     # VAvg is neede below for MultiReference, where V=1 for histograms
@@ -254,11 +254,8 @@ class DeltaH(base.Filter):
                     # --- virtual particle method branch
                     # print "delta_h "
                     nx = np.mean(hs_full.get_data(base.loc_nr_particles + '/X'), dtype=np.float64)
-                    if (xrho > 0.0):
+                    if not (self.geometry == 'Sphere' or self.geometry == 'Cuboid' or self.geometry == 'Ellipsoid'):
                         V = nx / xrho
-                    else:
-                        # we use the volume calculated earlier by the geometry filter
-                        pass
                     VAvg = V
                     if (self.geometry == 'MultiReferenceStructure'):
                         V = 1.
