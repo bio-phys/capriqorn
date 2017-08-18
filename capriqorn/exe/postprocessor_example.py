@@ -31,7 +31,7 @@ def main(argparse_args):
                                     + "/../data/postprocessor_template.yaml")
 
     yaml_file = "postprocessor.yaml"
-    data_dir = testing.testcase().rstrip('/')
+    data_dir = testing.get_test_data_file_path().rstrip('/')
 
     with open(template_file, 'r') as fp_in, open(yaml_file, 'w') as fp_out:
         template_lines = fp_in.readlines()

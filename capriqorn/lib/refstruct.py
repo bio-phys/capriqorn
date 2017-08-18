@@ -1,10 +1,18 @@
 """Library for the Capriqorn reference structure filter.
 
+Includes naive particle cutout functions as well as more sophisticated ones
+based on cell lists (by Juergen Koefinger).
+
+The cell list implementation uses dictionaries (hashes). The number of particles
+considered is given by the cutoff distance and approximately d^3*27, where d is
+the cutout distance. d is usually 10 Angstrom.
+
 This file is part of the capriqorn package.  See README.rst,
 LICENSE.txt, and the documentation for details.
 """
 
 import numpy as np
+import copy
 from scipy.spatial.distance import cdist
 # use Cython-accelerated functions, if possible
 try:
@@ -169,3 +177,170 @@ def maxInnerDistance(xyz):
         maximal distance
     """
     return cdist(xyz, xyz).max()
+
+
+# --- cell list implementation by Juergen Koefinger below ---
+
+
+def get_neighbours():
+    """"Helper function. Initializes components of relative locations of neighbouring cells."""
+    neighbours = []
+    for i in [-1, 0, 1]:
+        for j in [-1, 0, 1]:
+            for k in [-1, 0, 1]:
+                if i != 0 or j != 0 or k != 0:
+                    # print i,j,k
+                    neighbours.append([i, j, k])
+    neighbours = np.asarray(neighbours)
+    return neighbours
+
+
+def get_cell_indices(positions, distance):
+    """
+    Returns array of indices of cells to which particles with coordinates 'positions' belong to.
+
+    Indices of a cell are given by three integer numbers, e.g., [1,0,-2] denotes a single cell.
+    """
+    return np.asarray(np.rint(positions / distance), dtype=np.int64)
+
+
+def get_cell_strings(indices):
+    """
+    Converts lists of indices to strings for use as dictionary keys.
+
+    Indices of a cell are given by three integer numbers, e.g., [1,0,-2] denotes a single cell,
+    which results in the string "+1+0-2".
+    """
+    strings = []
+    for inds in indices:
+        strng = "%+d%+d%+d" % tuple(inds)
+        strings.append(strng)
+    return strings
+
+
+def get_neighbour_indices(indices, neighbours):
+    """
+    Returns cell indices of neighbouring cells of a given cell ('indices').
+
+    Indices of a cell are given by three integer numbers, e.g., [1,0,-2] denotes a single cell.
+    """
+    neighbour_indices = indices[np.newaxis, :] + neighbours
+    return neighbour_indices
+
+
+def get_particle_indices(cell_indices_strings, uniq_cell_indices_strings):
+    """
+    Returns a dicionary of lists of particle indices.
+
+    Each key corresponds to one cell the list contains the indices of the particles this cell.
+    This indices are used to retrieve the coordinates from the corresponding array (e.g., 'positions').
+    """
+    particle_indices = {}
+    for k in uniq_cell_indices_strings:
+        particle_indices[k] = []
+    for i, k in enumerate(cell_indices_strings):
+        particle_indices[k].append(i)
+    return particle_indices
+
+
+def get_particle_indices_within_neighbours(ref_particle_indices, particle_indices, cell_indices, neighbours):
+    """
+    For each cell occupied by at least one particle of the reference structure (central cell),
+    this function returns the indices of all particles of the full structure,
+    which belong either to this central cell or its neighbours.
+    """
+    neigh_particle_indices = {}
+    for k in ref_particle_indices:
+        # add particle indices of the cells themselves
+        neigh_particle_indices[k] = copy.deepcopy(particle_indices[k])
+
+        # get index of cell corresponding to key 'k' (cell indices of first particle in list)
+        ind = cell_indices[particle_indices[k][0]]
+        # get indices of neighbour cells
+        neighs = get_neighbour_indices(ind, neighbours)
+        # get keys of neighbour cells
+        neigh_particle_strings = get_cell_strings(neighs)
+        # add indices of neighbour cells to list
+        for kk in neigh_particle_strings:
+            # Check if neighbouring cell is not empty. If so, we shoudl raise an exception as
+            # it indicates that the simulation box is too small for the currently used cutoff distance.
+            if kk in particle_indices:
+                neigh_particle_indices[k] = neigh_particle_indices[k] + particle_indices[kk]
+    return neigh_particle_indices
+
+
+def get_observation_volume_particle_indices(ref_positions, positions, ref_particle_indices, particle_indices_within_neighbours, distance):
+    """
+    Returns indices (i_out) of particles within cutout distance of reference structure using cell lists.
+
+    ref_postions: array of coordinates of particles of the reference structure
+    postions:  array of coordinates of particles of the full system
+    ref_particle_indices: Dictionary with keys corresponding to cells containing at least
+        a single particle of the reference structure. Each entry contains a list of indices of
+        all particles of the reference structure belonging to this cell.
+    particle_indices_within_neighbours: Dictionary with same keys as 'ref_particle_indices' above.
+        Contains lists of indices of all particles of full system belonging to central cell, refernced by key,
+        and its neighbouring cells
+    distance: cutout distance
+    """
+    distanceSqr = distance**2
+    mask = np.zeros(len(positions), dtype=np.int64)
+    num_distances_calc = 0
+    for k in ref_particle_indices:
+        ref = ref_positions[ref_particle_indices[k]]
+        xyz = positions[particle_indices_within_neighbours[k]]
+        tmp = queryDistance(np.asanyarray(xyz, dtype=np.float64), np.asanyarray(ref, dtype=np.float64), distance)
+        num_distances_calc += len(ref) * len(xyz)
+        dummy_indices = np.asanyarray(particle_indices_within_neighbours[k])[np.where(tmp)[0]]
+        mask[dummy_indices] = 1
+    i_out = np.where(mask == 1)[0]
+
+    # alternative implemenation using python loops
+    #    for iref in ref_particle_indices[k]:
+    #       for i in particle_indices_within_neighbours[k]:
+    #            refx=ref_positions[iref]
+    #            x=positions[i]
+    #            dSqr=((refx-x)**2).sum()
+    #            if dSqr<distanceSqr:
+    #                mask[i]=1
+
+    return i_out, num_distances_calc
+
+
+def cutout_using_cell_lists(positions, ref_positions, distance):
+    """
+    Returns indices of observation volume, which is defined by
+    all particles with coordinates 'positions' within a distance 'distance' of the
+    reference structure with particle coordinates 'ref_postions'.
+    """
+    # determine to which cell each particle belongs
+    # for the full structure
+    cell_indices = get_cell_indices(positions, distance)
+    cell_indices_strings = get_cell_strings(cell_indices)
+    uniq_cell_indices_strings = set(cell_indices_strings)
+    print " number of cells for full structure =", len(uniq_cell_indices_strings)
+    # for the reference structure
+    ref_cell_indices = get_cell_indices(ref_positions, distance)
+    ref_cell_indices_strings = get_cell_strings(ref_cell_indices)
+    ref_uniq_cell_indices_strings = set(ref_cell_indices_strings)
+    print " number of cells for ref. structure =", len(ref_uniq_cell_indices_strings)
+
+    # calling helper function. 'neighbours' contains relative locations of neighbouring cells.
+    neighbours = get_neighbours()
+
+    # collecting all particle indices belonging to one cell in a single dictionary entry
+    particle_indices = get_particle_indices(cell_indices_strings, uniq_cell_indices_strings)
+    ref_particle_indices = get_particle_indices(ref_cell_indices_strings, ref_uniq_cell_indices_strings)
+
+    neighbours = get_neighbours()
+
+    # collecting all particle indices within a cell and its neighbours in a single dictionary entry
+    particle_indices_within_neighbours = get_particle_indices_within_neighbours(
+        ref_particle_indices, particle_indices, cell_indices, neighbours)
+
+    # Determine indices of particles in observation volume using cell lists.
+    i_out, num_distances_calc = get_observation_volume_particle_indices(ref_positions, positions, ref_particle_indices,
+                                                                        particle_indices_within_neighbours, distance)
+    return i_out, num_distances_calc
+
+# --- end of cell lists implementation ---

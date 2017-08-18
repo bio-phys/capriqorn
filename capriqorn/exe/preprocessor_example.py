@@ -30,7 +30,7 @@ def main(argparse_args):
     template_file = os.path.abspath(os.path.dirname(os.path.abspath(__file__))
                                     + "/../data/preprocessor_template.yaml")
     yaml_file = "preprocessor.yaml"
-    data_dir = testing.testcase().rstrip('/')
+    data_dir = testing.get_test_data_file_path().rstrip('/')
 
     with open(template_file, 'r') as fp_in, open(yaml_file, 'w') as fp_out:
         template_lines = fp_in.readlines()

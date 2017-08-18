@@ -94,14 +94,20 @@ class KeepLastFrame(base.Filter):
 # --- legacy code below ---
 
 
-def testcase():
+def get_test_data_file_path(test_data_file_name=''):
     """Try to locate the test case that comes with capriqorn.
 
-    Returns the full path to the testcase including a trailing slash, or None.
+    Returns the full path to the test data directory including a trailing slash,
+    if 'test_data_file_name' is given, the full path to the file is returned,
+    or None in case the directory and/or file does not exist.
     """
+    # get path to the current Python file
     file_path = os.path.dirname(os.path.abspath(__file__))
-    testcase_path = os.path.abspath(file_path + "/tests/data")
+    # construct relative test data file path
+    testcase_path = os.path.abspath(file_path + "/tests/data/" + test_data_file_name)
     if (os.path.isdir(testcase_path)):
         return testcase_path + "/"
+    if (os.path.isfile(testcase_path)):
+        return testcase_path
     else:
         return None

@@ -3,6 +3,7 @@
 This file is part of the capriqorn package.  See README.rst,
 LICENSE.txt, and the documentation for details.
 """
+
 import MDAnalysis as mda
 import numpy as np
 import copy
