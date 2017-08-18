@@ -2,7 +2,7 @@
 
 import time
 import numpy as np
-from capriqorn.preproc.filter import refstruct
+from capriqorn.lib import refstruct
 from capriqorn.kernel import c_refstruct
 
 n_xyz = 10000

@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-from capriqorn.preproc.filter import refstruct
+from capriqorn.lib import refstruct
 
 
 @pytest.fixture
