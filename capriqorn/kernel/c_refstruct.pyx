@@ -25,10 +25,10 @@ ctypedef np.int_t ITYPE_t
 def queryDistance(np.ndarray[DTYPE_t, ndim=2] xyz, np.ndarray[DTYPE_t, ndim=2] ref, double R):
     """Check which atoms in xyz lie within a radius R of any reference
     atom.
-    
+
     Reimplementation of the queryDistance() function from preproc_filter_refstruct.py.
     Much faster. Use <perf_preproc_filter_refstruct.py> to measure the performance.
-    
+
     Parameters
     ----------
     xyz : array_like (n_atoms, n_dim)
@@ -37,7 +37,7 @@ def queryDistance(np.ndarray[DTYPE_t, ndim=2] xyz, np.ndarray[DTYPE_t, ndim=2] r
         Reference atoms positions
     R : float
         distance to any atoms
-    
+
     Returns
     -------
     query : ndarray (n_atoms)
@@ -51,14 +51,18 @@ def queryDistance(np.ndarray[DTYPE_t, ndim=2] xyz, np.ndarray[DTYPE_t, ndim=2] r
     cdef ITYPE_t k
     cdef DTYPE_t d
     cdef DTYPE_t dx
-    
+    cdef DTYPE_t Rsq
+
+    Rsq = R*R
+
     for i in range(n_xyz):
         for j in range(n_ref):
             d = 0.0
             for k in range(3):
                 dx = xyz[i,k] - ref[j,k]
                 d = d + dx*dx
-            if (sqrt(d) < R):
+            #if (sqrt(d) < R):
+            if (d < Rsq):
                 mask[i] = True
                 break
     return mask

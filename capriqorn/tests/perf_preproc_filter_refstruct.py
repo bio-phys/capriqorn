@@ -5,7 +5,7 @@ import numpy as np
 from capriqorn.lib import refstruct
 from capriqorn.kernel import c_refstruct
 
-n_xyz = 10000
+n_xyz = 50000
 n_ref = 5000
 
 xyz = np.random.rand(n_xyz, 3)
