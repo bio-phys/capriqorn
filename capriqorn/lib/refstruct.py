@@ -23,8 +23,22 @@ except:
     print(" Note: capriqorn.lib.refstruct: could not import c_refstruct")
 
 
+# use cell lists instead of the brute force queryDistance* functions
+use_cell_lists=True
+
+
+def get_selection(xyz, ref, R):
+    """Uppermost entry point to the reference structure selection functions.
+    """
+    if use_cell_lists:
+        return cutout_using_cell_lists(xyz, ref, R, return_mask=True)
+    else:
+        return queryDistance(xyz, ref, R)
+
+
 def queryDistance(xyz, ref, R):
-    """Lightweight wrapper of the queryDistance function."""
+    """Lightweight wrapper of the simple queryDistance functions.
+    """
     # the cython kernel needs double precision input
     xyz = np.asanyarray(xyz, dtype=np.float64)
     ref = np.asanyarray(ref, dtype=np.float64)
@@ -109,7 +123,7 @@ def selectBody(ref_coords, coords, R):
     array
         particle indices within reference
     """
-    return np.where(queryDistance(coords, ref_coords, R))
+    return np.where(get_selection(coords, ref_coords, R))
 
 
 def selectShell(ref_coords, coords, R, sw):
@@ -133,8 +147,8 @@ def selectShell(ref_coords, coords, R, sw):
     """
     if R < sw:
         raise RuntimeError("selection radius smaller then shell width")
-    body_query = queryDistance(coords, ref_coords, R=R)
-    core_query = queryDistance(coords, ref_coords, R=R - sw)
+    body_query = get_selection(coords, ref_coords, R=R)
+    core_query = get_selection(coords, ref_coords, R=R - sw)
     query = np.logical_xor(body_query, core_query)
     return np.where(query)
 
@@ -160,7 +174,7 @@ def selectCore(ref_coords, coords, R, sw):
     """
     if R < sw:
         raise RuntimeError("selection radius smaller then shell width")
-    return selectBody(ref_coords, coords, R=R - sw)
+    return get_selection(ref_coords, coords, R=R - sw)
 
 
 def maxInnerDistance(xyz):
@@ -269,9 +283,11 @@ def get_particle_indices_within_neighbours(ref_particle_indices, particle_indice
     return neigh_particle_indices
 
 
-def get_observation_volume_particle_indices(ref_positions, positions, ref_particle_indices, particle_indices_within_neighbours, distance):
+def get_observation_volume_particle_indices(ref_positions, positions, ref_particle_indices,
+                                            particle_indices_within_neighbours, distance, return_mask=False):
     """
-    Returns indices (i_out) of particles within cutout distance of reference structure using cell lists.
+    Returns indices (i_out) of particles within cutout distance of reference structure using cell lists,
+    or the index-mask of these particles if return_mask is set to True.
 
     ref_postions: array of coordinates of particles of the reference structure
     postions:  array of coordinates of particles of the full system
@@ -293,8 +309,6 @@ def get_observation_volume_particle_indices(ref_positions, positions, ref_partic
         num_distances_calc += len(ref) * len(xyz)
         dummy_indices = np.asanyarray(particle_indices_within_neighbours[k])[np.where(tmp)[0]]
         mask[dummy_indices] = 1
-    i_out = np.where(mask == 1)[0]
-
     # alternative implemenation using python loops
     #    for iref in ref_particle_indices[k]:
     #       for i in particle_indices_within_neighbours[k]:
@@ -303,27 +317,33 @@ def get_observation_volume_particle_indices(ref_positions, positions, ref_partic
     #            dSqr=((refx-x)**2).sum()
     #            if dSqr<distanceSqr:
     #                mask[i]=1
+    if return_mask:
+        return mask
+    else:
+        i_out = np.where(mask == 1)[0]
+        return i_out, num_distances_calc
 
-    return i_out, num_distances_calc
 
 
-def cutout_using_cell_lists(positions, ref_positions, distance):
+def cutout_using_cell_lists(positions, ref_positions, distance, return_mask=False):
     """
     Returns indices of observation volume, which is defined by
     all particles with coordinates 'positions' within a distance 'distance' of the
     reference structure with particle coordinates 'ref_postions'.
+
+    In case return_mask is True, only the particle index mask is returned.
     """
     # determine to which cell each particle belongs
     # for the full structure
     cell_indices = get_cell_indices(positions, distance)
     cell_indices_strings = get_cell_strings(cell_indices)
     uniq_cell_indices_strings = set(cell_indices_strings)
-    print " number of cells for full structure =", len(uniq_cell_indices_strings)
+    # print " number of cells for full structure =", len(uniq_cell_indices_strings)
     # for the reference structure
     ref_cell_indices = get_cell_indices(ref_positions, distance)
     ref_cell_indices_strings = get_cell_strings(ref_cell_indices)
     ref_uniq_cell_indices_strings = set(ref_cell_indices_strings)
-    print " number of cells for ref. structure =", len(ref_uniq_cell_indices_strings)
+    # print " number of cells for ref. structure =", len(ref_uniq_cell_indices_strings)
 
     # calling helper function. 'neighbours' contains relative locations of neighbouring cells.
     neighbours = get_neighbours()
@@ -339,8 +359,10 @@ def cutout_using_cell_lists(positions, ref_positions, distance):
         ref_particle_indices, particle_indices, cell_indices, neighbours)
 
     # Determine indices of particles in observation volume using cell lists.
-    i_out, num_distances_calc = get_observation_volume_particle_indices(ref_positions, positions, ref_particle_indices,
-                                                                        particle_indices_within_neighbours, distance)
-    return i_out, num_distances_calc
+    result = get_observation_volume_particle_indices(ref_positions, positions, ref_particle_indices,
+                                                     particle_indices_within_neighbours, distance,
+                                                     return_mask)
+    return result
+
 
 # --- end of cell lists implementation ---
