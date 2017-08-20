@@ -293,13 +293,11 @@ def get_particle_indices_within_neighbours(ref_particle_indices, particle_indice
         # add particle indices of the cells themselves
         if k in particle_indices:
             neigh_particle_indices[k] = copy.deepcopy(particle_indices[k])
+            # get index of cell corresponding to key 'k' (cell indices of first particle in list)
+            ind = cell_indices[particle_indices[k][0]]
         else:
             neigh_particle_indices[k] = []
-
-        # get index of cell corresponding to key 'k' (cell indices of first particle in list)
-        #ind = cell_indices[particle_indices[k][0]]
-        # print "+++", k, ind
-        ind = get_cell_index_from_string(k)
+            ind = get_cell_index_from_string(k)
 
         # get indices of neighbour cells
         neighs = get_neighbour_indices(ind, neighbours)
