@@ -26,6 +26,8 @@ except:
 
 # cell lists are disabled for the moment due to non-optimum performance
 q_cell_lists = False
+
+
 def set_algorithm(algo):
     """Selects the algorithm to be used for the neighbour search.
     """
@@ -250,7 +252,7 @@ def get_cell_index_from_string(string):
     tokens = re.split('(\d+)', string)
     index = []
     for i in xrange(3):
-        index.append(int(tokens[2*i] + tokens[2*i+1]))
+        index.append(int(tokens[2 * i] + tokens[2 * i + 1]))
     return np.asarray(index)
 
 
@@ -296,7 +298,7 @@ def get_particle_indices_within_neighbours(ref_particle_indices, particle_indice
 
         # get index of cell corresponding to key 'k' (cell indices of first particle in list)
         #ind = cell_indices[particle_indices[k][0]]
-        #print "+++", k, ind
+        # print "+++", k, ind
         ind = get_cell_index_from_string(k)
 
         # get indices of neighbour cells
@@ -352,7 +354,6 @@ def get_observation_volume_particle_indices(ref_positions, positions, ref_partic
     else:
         i_out = np.where(mask == 1)[0]
         return i_out, num_distances_calc
-
 
 
 def cutout_using_cell_lists(positions, ref_positions, distance, return_mask=False):

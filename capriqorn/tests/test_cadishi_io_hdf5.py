@@ -41,6 +41,7 @@ def test_h5reader_file_list():
     writer = dummy.DummyWriter(source=reader, verbose=True)
     writer.dump()
 
+
 def test_h5reader_shuffle():
     file_list = [h5file]
     reader = hdf5.H5Reader(file=file_list, shuffle=True,
@@ -48,12 +49,14 @@ def test_h5reader_shuffle():
     writer = dummy.DummyWriter(source=reader, verbose=True)
     writer.dump()
 
+
 def test_h5reader_shuffle_reproducible():
     file_list = [h5file]
     reader = hdf5.H5Reader(file=file_list, shuffle=True,
                            shuffle_reproducible=True, verbose=True)
     writer = dummy.DummyWriter(source=reader, verbose=True)
     writer.dump()
+
 
 if do_cleanup:
     def test_final_cleanup():

@@ -55,12 +55,12 @@ else:
                 for k in range(gridLength):
                     vec = np.asarray([i, j, k], dtype=np.float) - l_half
                     lattice[counter] = vec[0] * baseNew[0, :] \
-                                     + vec[1] * baseNew[1, :] \
-                                     + vec[2] * baseNew[2, :]
+                        + vec[1] * baseNew[1, :] \
+                        + vec[2] * baseNew[2, :]
                     if noise is True:
                         lattice[counter] += 0.5 * (ran.uniform(-1, 1) * baseNew[0, :]
-                                                 + ran.uniform(-1, 1) * baseNew[1, :]
-                                                 + ran.uniform(-1, 1) * baseNew[2, :])
+                                                   + ran.uniform(-1, 1) * baseNew[1, :]
+                                                   + ran.uniform(-1, 1) * baseNew[2, :])
                     counter += 1
         offset = ran.uniform(-latticeConstant / 2., latticeConstant / 2., 3)
         lattice[:] += offset
@@ -116,7 +116,6 @@ class VirtualParticles(base.Filter):
         if (random_seed > 0):
             np.random.seed(random_seed)
 
-
     def get_meta(self):
         """
         Return information on the present filter,
@@ -142,7 +141,7 @@ class VirtualParticles(base.Filter):
                 if (self.method == "lattice"):
                     if self.verb:
                         print "VirtualParticles : adding 2x " + str(self.x_box_length ** 3) \
-                                                    + " lattice particles"
+                            + " lattice particles"
                     for i in [1, 2]:
                         coords = _genLattice(self.x_box_length, self.xD, noise=self.noise)
                         frm.put_data(base.loc_coordinates + '/' + self.label + str(i), coords)

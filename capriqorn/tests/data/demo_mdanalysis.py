@@ -13,4 +13,3 @@ print "n_frames = ", n_frames
 
 for ts in universe.trajectory:
     print ts.frame
-

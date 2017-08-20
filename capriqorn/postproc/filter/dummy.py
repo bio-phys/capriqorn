@@ -6,6 +6,7 @@ LICENSE.txt, and the documentation for details.
 
 from cadishi import base
 
+
 class Dummy(base.Filter):
     """a filter that does nothing"""
     _depends = []

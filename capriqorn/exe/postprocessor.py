@@ -24,7 +24,8 @@ from .. import version
 def configure_cli(subparsers):
     """Attach a parser (specifying command name and flags) to the argparse subparsers object."""
     parser = subparsers.add_parser('postproc', help='run postprocessor')
-    parser.add_argument('input', nargs=argparse.REMAINDER, help='postprocessor parameter file (optional)', metavar='postprocessor.yaml')
+    parser.add_argument('input', nargs=argparse.REMAINDER,
+                        help='postprocessor parameter file (optional)', metavar='postprocessor.yaml')
     parser.set_defaults(func=main)
 
 

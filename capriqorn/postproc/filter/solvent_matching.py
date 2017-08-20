@@ -26,7 +26,8 @@ class Solvent(base.Filter):
                  g_match='O,O',
                  g_scaled_file=None,  # optional: HDF5 file to read g_scaled from
                  g_plateau_fraction=0.3,  # fraction of the distance range of the rdfs, where the rdfs are flat
-                 g_noise_fraction=1.,  # noise is reduced to g_noise_fraction at largest distance over a distance determined by g_plateau_fraction.
+                 # noise is reduced to g_noise_fraction at largest distance over a distance determined by g_plateau_fraction.
+                 g_noise_fraction=1.,
                  debug=False,
                  verbose=False):
         self.src = source
@@ -128,7 +129,8 @@ class Solvent(base.Filter):
                     g_dr = (g_table_0[1:, 0] - g_table_0[:-1, 0]).mean()
                     # print g_dr
                     # Tapers noise for self.g_noise_fraction<1. Determines and set ginfty in last bins.
-                    g_table_0_smooth = rdf.smooth(g_table_0, g_dr, self.g_plateau_fraction, self.g_noise_fraction, verb=False)
+                    g_table_0_smooth = rdf.smooth(g_table_0, g_dr, self.g_plateau_fraction,
+                                                  self.g_noise_fraction, verb=False)
 
     #                 np.savetxt("g_table_0_smooth.dat", g_table_0_smooth)
                     if (self.debug):

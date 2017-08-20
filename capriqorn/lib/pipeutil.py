@@ -54,7 +54,7 @@ def instantiate_pipeline(pipeline_meta, pipeline_module, worker_id=None):
                 continue
             del parameters['active']
         if (worker_id is not None) and ((label == 'ParallelFork') or (label == 'ParallelJoin')):
-                parameters['worker_id'] = worker_id
+            parameters['worker_id'] = worker_id
         pipeline_obj = util.load_class(pipeline_module, label)
         if (len(pipeline) > 0):
             parameters['source'] = pipeline[-1]

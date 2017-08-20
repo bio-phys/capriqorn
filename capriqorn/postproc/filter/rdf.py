@@ -54,7 +54,7 @@ class RDF(base.Filter):
         for key in nr_particles:
             assert(n_samples == (nr_particles[key]).shape[0])
         histograms = frm.get_data(base.loc_histograms)
-        dr=frm.query_meta('histograms/histogram/dr')
+        dr = frm.query_meta('histograms/histogram/dr')
         # consistency check if the histogram labels match with the particle numbers
         _species_h = set(util.get_elements(histograms.keys()))
         _species_p = set(nr_particles.keys())
@@ -75,11 +75,11 @@ class RDF(base.Filter):
         rdf = {}
         for key in histogram_keys:
             species_1, species_2 = tuple(key.split(','))
-            nr_1 = np.sum(nr_particles[species_1])/float(n_samples)
-            nr_2 = np.sum(nr_particles[species_2])/float(n_samples)
-            #the particle number in the box is constant, therefor densities are calculated as
-            rho_1 = nr_1*vol_inv
-            rho_2 = nr_2*vol_inv
+            nr_1 = np.sum(nr_particles[species_1]) / float(n_samples)
+            nr_2 = np.sum(nr_particles[species_2]) / float(n_samples)
+            # the particle number in the box is constant, therefor densities are calculated as
+            rho_1 = nr_1 * vol_inv
+            rho_2 = nr_2 * vol_inv
             if (nr_1 * nr_2 > 0):
                 if (species_1 == species_2):
                     fac = 1.0
@@ -88,9 +88,10 @@ class RDF(base.Filter):
                 histo = np.copy(histograms[key])
                 for i in range(len(radii)):
                     histo[i] /= fac * nr_1 * nr_2 * coeff[i]
-                rdf[key] = 2*histo # Factor 2 because distances are only counted once in histograms (r_{ij} and r_{ji} are counted as a single distance)
+                # Factor 2 because distances are only counted once in histograms (r_{ij} and r_{ji} are counted as a single distance)
+                rdf[key] = 2 * histo
                 if (species_1 == species_2):
-                    rdf[key][0]=rho_1
+                    rdf[key][0] = rho_1
             else:
                 if self.verb:
                     print " RDF: skipping " + key

@@ -37,11 +37,11 @@ from cadishi import base
 
 
 # integer constants to be used to specify the side we're on
-SIDE_UNDEFINED=0
-SIDE_UPSTREAM=1
-SIDE_DOWNSTREAM=2
+SIDE_UNDEFINED = 0
+SIDE_UPSTREAM = 1
+SIDE_DOWNSTREAM = 2
 # max. elements before the queue.put() function blocks, see <pipeutil.py>
-QUEUE_MAXSIZE=32
+QUEUE_MAXSIZE = 32
 
 
 class ParallelFork(base.Filter):

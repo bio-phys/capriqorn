@@ -30,4 +30,3 @@ reader = preproc_io.MDReader(pdbName=pdb_in, trajName=traj_in,
 writer = preproc_io.H5Writer(h5_out, source=reader,
                              compression="gzip", verbose=True)
 writer.dump()
-

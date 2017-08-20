@@ -25,6 +25,8 @@ h5name = util.scratch_dir() + "test_preproc_io_hdf5.h5"
 h5tmp = util.scratch_dir() + "test_preproc_io_hdf5_tmp.h5"
 
 # --- tests below ---
+
+
 def test_H5Writer():
     reader = preproc_io.DummyReader(n_frames=5, n_elems=7, n_atoms=2048)
     writer = preproc_io.H5Writer(h5name, source=reader)

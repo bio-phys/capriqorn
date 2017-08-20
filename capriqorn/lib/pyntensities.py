@@ -36,7 +36,7 @@ def intensitiesFFFaster(nq, dq, dIntegrand, keys, ffDict, dr):
         for k in range(1, len(dIntegrand[0])):
             # print k
             formFacProd[i, k] = ff.fiveGaussian(ffDict[nameList[k - 1][0]], qList[i])\
-                              * ff.fiveGaussian(ffDict[nameList[k - 1][1]], qList[i])
+                * ff.fiveGaussian(ffDict[nameList[k - 1][1]], qList[i])
             partInt[i, k] += (sincList[:] * dIntegrand[:, k]
                               ).sum() * formFacProd[i, k]
     for i in range(nq):

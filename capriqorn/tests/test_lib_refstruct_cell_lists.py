@@ -15,15 +15,16 @@ from capriqorn.testing import get_test_data_file_path
 
 write_xyz = False
 
+
 def test_refstuct_cell_list():
     # cut out distance with respect to reference structure
     distance = 10.
     topology_file = {}
     selection_strg = {}
-    topology_file['lsz'] = get_test_data_file_path("lsz.pdb.gz")  #"./data/lsz.pdb"
+    topology_file['lsz'] = get_test_data_file_path("lsz.pdb.gz")  # "./data/lsz.pdb"
     selection_strg['lsz'] = 'name C* and not name CL'
 
-    topology_file['F1'] = get_test_data_file_path("F1ATPase.pdb.gz")  #"./data/F1ATPase.pdb"
+    topology_file['F1'] = get_test_data_file_path("F1ATPase.pdb.gz")  # "./data/F1ATPase.pdb"
     selection_strg['F1'] = 'name C* and not name Cl*'
 
     system = 'lsz'
@@ -41,7 +42,6 @@ def test_refstuct_cell_list():
     ref_selection = selection_strg[system]
     ref_atoms = universe.atoms.select_atoms(ref_selection)
     ref_positions = ref_atoms.positions
-
 
     print " number of particles of full system: ", positions.shape[0]
     print " number of particles of reference system:", ref_positions.shape[0]
@@ -87,7 +87,6 @@ def test_refstuct_cell_list():
     print " relative to all-to-all: %3.2f" % (num_distances_calc / float(all2all_num_distance_calc))
     print
 
-
     # # Brute force method (highly optimized by Klaus)
 
     # For comparison, without cell list. Method scales like [# particles in full system]x[#particles in reference system])
@@ -116,14 +115,15 @@ def test_refstuct_cell_list():
 
     # Write observation volume to xyz for visualization with vmd.
     if write_xyz:
-        fp=open("out.%s.xyz" % system, 'w')
+        fp = open("out.%s.xyz" % system, 'w')
         fp.write("%d\n" % num_particles)
         fp.write("cell_list.ipynb\n")
-        coords=atoms.positions[i_out]
-        names=atoms.names[i_out]
+        coords = atoms.positions[i_out]
+        names = atoms.names[i_out]
         for i in range(num_particles):
-            fp.write("%s " % names[i]+ "%6.3f %6.3f %6.3f\n" % tuple(coords[i]))
+            fp.write("%s " % names[i] + "%6.3f %6.3f %6.3f\n" % tuple(coords[i]))
         fp.close()
+
 
 if __name__ == "__main__":
     test_refstuct_cell_list()

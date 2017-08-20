@@ -241,12 +241,12 @@ class DeltaH(base.Filter):
                             fac = 2.0
                         # ---
                         (dHs[key])[:] = fac * ((rdf_expanded[key])[:] - 2.0) \
-                                      * rho[el1] * rho[el2] * V * V * pSphere[:, 1] * dr  # Hx[:,ixx]
+                            * rho[el1] * rho[el2] * V * V * pSphere[:, 1] * dr  # Hx[:,ixx]
                         # ---
                         if (fac == 1):
                             (dHp[key])[:] = (H[key])[:] - V * rho[el1] * (h_dict[el1])[:]  # *Hx[:,ix1]
                         else:
-                            (dHp[key])[:] = (H[key])[:] - V * (rho[el2] * (h_dict[el1])[:] + \
+                            (dHp[key])[:] = (H[key])[:] - V * (rho[el2] * (h_dict[el1])[:] +
                                                                rho[el1] * (h_dict[el2])[:])
                         # ---
                         (dH[key])[:] = (dHp[key])[:] - (dHs[key])[:]
@@ -298,12 +298,12 @@ class DeltaH(base.Filter):
                             fac = 2.0
                         # ---
                         (dHs[key])[:] = fac * ((rdf_expanded[key])[:] - 2.0) \
-                                        * rho[el1] * rho[el2] * V * V * Hx['X,X']
+                            * rho[el1] * rho[el2] * V * V * Hx['X,X']
                         # ---
                         if (fac == 1):
                             (dHp[key])[:] = (H[key])[:] - V * rho[el1] * (Hx[el1 + ',X'])[:]
                         else:
-                            (dHp[key])[:] = (H[key])[:] - V * (rho[el2] * (Hx[el1 + ',X'])[:] + \
+                            (dHp[key])[:] = (H[key])[:] - V * (rho[el2] * (Hx[el1 + ',X'])[:] +
                                                                rho[el1] * (Hx[el2 + ',X'])[:])
                         # ---
                         (dH[key])[:] = (dHp[key])[:] - (dHs[key])[:]
@@ -345,8 +345,8 @@ class DeltaH(base.Filter):
                 if (self.debug):
                     hs.put_data(base.loc_delta_h + '/debug/dH_2d', dH_2d)
                 # ---
-                _pIntInter, dInter = pynt.intensitiesFFFaster(self.nq, self.dq, \
-                                            dH_2d, dH_2d_keys, ff_dict, 1)
+                _pIntInter, dInter = pynt.intensitiesFFFaster(self.nq, self.dq,
+                                                              dH_2d, dH_2d_keys, ff_dict, 1)
                 # # --- prepare input
                 # nr_part_keys = sorted(nr_part_diff.keys())
                 # nr_part_vals = []
@@ -390,10 +390,10 @@ class DeltaH(base.Filter):
                 bulkH = pynt.getBulkIntegrand(rdf_org_2d, rho_list)
                 bulkH_keys = dH_2d_keys
                 # print "bulkH_keys", bulkH_keys
-                _pIntInter, dIntensityInter = pynt.intensitiesFFFaster(self.nq, \
-                                                self.dq, bulkH, bulkH_keys, ff_dict, dr)
-                _pIntIntra, dIntensityIntra = pynt.intensitiesFFIntraAtom(self.nq, \
-                                                self.dq, rho_list, rho_keys, ff_dict)
+                _pIntInter, dIntensityInter = pynt.intensitiesFFFaster(self.nq,
+                                                                       self.dq, bulkH, bulkH_keys, ff_dict, dr)
+                _pIntIntra, dIntensityIntra = pynt.intensitiesFFIntraAtom(self.nq,
+                                                                          self.dq, rho_list, rho_keys, ff_dict)
                 dIntensity = dIntensityInter.copy()
                 dIntensity[:, 1] += dIntensityIntra[:, 1]
                 # ---

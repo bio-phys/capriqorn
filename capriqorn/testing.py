@@ -17,6 +17,7 @@ class TestDataDir(object):
     """
     Simple class to access a directory with test data
     """
+
     def __init__(self, folder, data_folder):
         self.folder = pjoin(folder, data_folder)
 

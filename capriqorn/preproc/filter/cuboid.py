@@ -14,6 +14,7 @@ class Cuboid(base.Filter):
     """a filter that selects particles within an cuboidal volume"""
     _depends = []
     _conflicts = []
+
     def __init__(self, half_lengths=[1.e6, 1.e6, 1.e6], shell_width=-1, source=-1,
                  verbose=False):
         assert (len(half_lengths) == 3)

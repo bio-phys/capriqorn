@@ -60,7 +60,7 @@ class MDReader(base.Reader):
         # --- alias.dat needed to assign element names to atom names in pdb
         self.alias_file = alias_file
         self.selection = selection
-                # ---
+        # ---
         self._depends.extend(super(base.Reader, self)._depends)
         self._conflicts.extend(super(base.Reader, self)._conflicts)
 

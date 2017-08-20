@@ -67,20 +67,20 @@ class ReferenceStructure(base.Filter):
             if (self.shell_width > 0.0):
                 # --- select core particles
                 indices = librefstruct.selectCore(self.atoms.positions, coord_in,
-                                     self.distance, self.shell_width)
+                                                  self.distance, self.shell_width)
                 coord_out = coord_in[indices]
                 frm_out.put_data(base.loc_coordinates + '/' + spec_id,
                                  coord_out)
                 # --- select shell particles
                 indices = librefstruct.selectShell(self.atoms.positions, coord_in,
-                                      self.distance, self.shell_width)
+                                                   self.distance, self.shell_width)
                 coord_out = coord_in[indices]
                 frm_out.put_data(base.loc_coordinates + '/' + spec_id + '.s',
                                  coord_out)
             else:
                 indices = librefstruct.selectBody(self.atoms.positions,
-                                     coord_in,
-                                     R=self.distance)
+                                                  coord_in,
+                                                  R=self.distance)
                 coord_out = coord_in[indices]
                 frm_out.put_data(base.loc_coordinates + '/' + spec_id,
                                  coord_out)

@@ -28,7 +28,7 @@ class DummyReader(base.Reader):
         self.random = random
         self.shell = shell
         self.verb = verbose
-                # ---
+        # ---
         self._depends.extend(super(base.Reader, self)._depends)
         self._conflicts.extend(super(base.Reader, self)._conflicts)
 

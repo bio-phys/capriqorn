@@ -82,7 +82,7 @@ class DummyWriter(base.Writer):
     def __init__(self, source, verbose=False):
         self.src = source
         self.verb = verbose
-                # ---
+        # ---
         self._depends.extend(super(base.Writer, self)._depends)
         self._conflicts.extend(super(base.Writer, self)._conflicts)
 

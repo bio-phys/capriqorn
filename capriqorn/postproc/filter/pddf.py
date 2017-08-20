@@ -26,7 +26,7 @@ class PDDF(base.Filter):
     _conflicts = []
 
     def __init__(self,
-                # --- parameters were taken from SCalc/example/ePDDF/bulk.par
+                 # --- parameters were taken from SCalc/example/ePDDF/bulk.par
                  form_factor_file='atomsf.dat',  # atomSFName
                  nbin_coarse=10,  # nBin
                  nq=300,  # nq
@@ -118,7 +118,7 @@ class PDDF(base.Filter):
 
                 dHistoOrg = copy.deepcopy(dHisto)
 
-                geom=frm.get_geometry()
+                geom = frm.get_geometry()
                 R = frm.query_meta('%s/r_max' % geom)
                 assert(R is not None)
 
@@ -162,12 +162,12 @@ class PDDF(base.Filter):
                     partDHistoOrg[key] = np.column_stack((dHistoOrg['radii'], dHistoOrg[key]))
                     (el1, el2) = key.split(',')
                     if (el1 == el2):
-                      if el1 in dN:
-                        partDHisto[key][0, 1] = dN[el1]
-                      else:
-                        partDHisto[key][0, 1] = 0.0
+                        if el1 in dN:
+                            partDHisto[key][0, 1] = dN[el1]
+                        else:
+                            partDHisto[key][0, 1] = 0.0
                     else:
-                      partDHisto[key][0, 1] = 0.0
+                        partDHisto[key][0, 1] = 0.0
 
                 # import sys
                 # sys.exit(1)
@@ -187,11 +187,11 @@ class PDDF(base.Filter):
                 for i, key in enumerate(keyList):
                     print("   %3d%% (%s)" % (int(100.0 * float(i) / float(i_mx)), key))
                     partCFSingle[key] = pddf.getPartCharFunc1(partDHisto, key,
-                                            self.paramProd, rArraySingle, self.dr_intra, 0)
+                                                              self.paramProd, rArraySingle, self.dr_intra, 0)
                     partCF[key] = pddf.getPartCharFunc2(partDHisto, key,
-                                        self.paramProd, rArray, drPrime, self.delta)
+                                                        self.paramProd, rArray, drPrime, self.delta)
                     partCF[key] = pddf.partCharFuncAdd(partCF[key], partDHistoOrg,
-                                        key, self.paramProd, rArray, drPrimeOrg)
+                                                       key, self.paramProd, rArray, drPrimeOrg)
                     partCFArray[:, i + 1] = partCF[key][:, 1].copy()
                     partCFArraySingle[:, i + 1] = partCFSingle[key][:, 1].copy()
                 print(" PDDF: done")
@@ -227,7 +227,7 @@ class PDDF(base.Filter):
                     frm.put_data(base.loc_pddf + '/partInt_cf', partInt)
                     # ---
                     intensitySingle, partIntSingle = pddf.FTCharFunc(partCFArraySingle,
-                                                              self.dr_intra, qList)
+                                                                     self.dr_intra, qList)
                     frm.put_data(base.loc_pddf + '/intensity_pddf_single', intensitySingle)
                     frm.put_data(base.loc_pddf + '/partInt_cf_single', partIntSingle)
                     # ---

@@ -255,7 +255,7 @@ class distHistoWriter(base.Writer):
                 del histo_array
                 # finally, append .npy filename to the list file
                 util.appendLineToFile(os.path.join(self.directory, self.list_file),
-                                         filename)
+                                      filename)
                 # ---
                 if self.verb:
                     print "distHistoWriter.dump() : " + fullname

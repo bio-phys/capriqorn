@@ -35,7 +35,7 @@ def j0(x):
     if x == 0:
         return 1.
     else:
-       return math.sin(x) / x
+        return math.sin(x) / x
 
 
 def binning(data, n, dr, distQ=False):
@@ -138,6 +138,7 @@ def getPartCharFunc1_Python(partDHisto, key, paramProd, rArray, drPrime, delta):
         partCF[i + 1, 1] += NMean * tmp
     return partCF
 
+
 def getPartCharFunc1(partDHisto, key, paramProd, rArray, drPrime, delta):
     """Calculates intra-atom contributions.
     """
@@ -170,7 +171,8 @@ def getPartCharFunc2Org(partDHisto, key, paramProd, rArray, drPrime, delta):
     b = np.asarray(param[1][1:])
     dr = drPrime  # DANGER
     for i, [r, valCF] in enumerate(partCF[1:]):
-        if (i % 100 == 0): print " r =", r
+        if (i % 100 == 0):
+            print " r =", r
         tmp = 0.
         for [rPrime, val] in partDHisto[key][1:]:
             if val != 0:
@@ -201,8 +203,8 @@ def getPartCharFunc2_Python(partDHisto, key, paramProd, rArray, drPrime, delta):
     # print "NMean("+key+") =", NMean
     a = np.asarray(param[0][1:])
     b = np.asarray(param[1][1:])
-    fac = a / (2.*np.sqrt(b * np.pi))
-    facEx = 1. / (4.*b)
+    fac = a / (2. * np.sqrt(b * np.pi))
+    facEx = 1. / (4. * b)
     dr = drPrime  # DANGER
     for i, [r, valCF] in enumerate(partCF[1:]):
         # if (i % 100 == 0): print " r =", r
@@ -212,9 +214,11 @@ def getPartCharFunc2_Python(partDHisto, key, paramProd, rArray, drPrime, delta):
                 if val != 0:
                     val *= r * delta / drPrime
                     for rr in np.arange(rPrime - 0.5 * (drPrime - delta), rPrime + 0.5 * drPrime, delta):
-                        tmp += val / rr * (fac * (np.exp(-(r - rr) ** 2 * facEx) - np.exp(-(r + rr) ** 2 * facEx))).sum()
+                        tmp += val / rr * (fac * (np.exp(-(r - rr) ** 2 * facEx) -
+                                                  np.exp(-(r + rr) ** 2 * facEx))).sum()
         partCF[i + 1, 1] += tmp
     return partCF
+
 
 def getPartCharFunc2(partDHisto, key, paramProd, rArray, drPrime, delta):
     """
@@ -309,6 +313,7 @@ def partCharFuncAdd_Python(partCF, partDHisto, key, paramProd, rArray, drPrime):
         partCF[i + 1, 1] += tmp
     return partCF
 
+
 def partCharFuncAdd(partCF, partDHisto, key, paramProd, rArray, drPrime):
     """
     Adds contributions \f$ \int H(r') \delta(r-r') a_{i\nu}a_{j\mu} d r'\f$ to
@@ -328,7 +333,6 @@ def partCharFuncAdd(partCF, partDHisto, key, paramProd, rArray, drPrime):
         return c_pddf.partCharFuncAdd(partCF, partDHisto, key, paramProd, rArray, drPrime)
     else:
         return partCharFuncAdd_Python(partCF, partDHisto, key, paramProd, rArray, drPrime)
-
 
 
 # --- original function before any Cython work
@@ -371,9 +375,6 @@ def partCharFuncAdd(partCF, partDHisto, key, paramProd, rArray, drPrime):
 #     return partCF
 
 
-
-
-
 def FTCharFunc(partCFArray, dr, qList):
     """
     Fourier transform of the characteristic function.
@@ -411,7 +412,7 @@ def bulkSolvHistogram(g, dr):
     print " indexPairs =", indexPairs
     elPairs = rdf.getElementPairs(indexPairs, elCol)
     print " elPairs =", elPairs
-    tmp = 4.*math.pi * g[1:, 0] * g[1:, 0] * dr
+    tmp = 4. * math.pi * g[1:, 0] * g[1:, 0] * dr
     for i in range(1, nProd + 1):
         print indexPairs[i]
         i0 = elPairs[i][0]
@@ -426,7 +427,7 @@ def bulkSolvHistogram_dict(g, dr):
     """Generate partial pair-distance histograms of bulk solvent from partial radial distribution functions.
     Dictionary-based re-implementation of bulkSolvHistogram(g, dr), to be compatible with Capriqorn.
     """
-    tmp = 4.*math.pi * g['radii'][1:] * g['radii'][1:] * dr
+    tmp = 4. * math.pi * g['radii'][1:] * g['radii'][1:] * dr
     for key in g:
         if (key == 'radii'):
             continue

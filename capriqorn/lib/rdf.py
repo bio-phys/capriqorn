@@ -44,6 +44,7 @@ def savetxtHeader(name, header, array, fmt="%le"):
         fp.write(header)
         np.savetxt(fp, array, fmt=fmt)
 
+
 def SSphere(r):
     """
     Surface of a sphere of radius r.
@@ -321,6 +322,7 @@ def getElementPairsAtOnce(histo):
     elPairs = getElementPairs(indexPairs, elCol)
     return elPairs, nrEl, elCol
 
+
 def fade(xval, yval, ginfty, l):
     """ 
     Decrease noise in plateau of rdf.
@@ -338,10 +340,11 @@ def fade(xval, yval, ginfty, l):
     newVal: array_like
         New rdf values with tapered noise.
     """
-    temp=(xval)/l
-    temp*=temp
-    newVal=ginfty+(yval-ginfty)*math.exp(-temp)
+    temp = (xval) / l
+    temp *= temp
+    newVal = ginfty + (yval - ginfty) * math.exp(-temp)
     return newVal
+
 
 def getRDFCumu(histo, delta):
     """
@@ -350,19 +353,20 @@ def getRDFCumu(histo, delta):
     histoCumu: array_like
         Integrated rdfs from large to small distances. 
     """
-    #Leave out last bin, which later is set to ginfty. Thus, reapplying this function won't change ginfty.
-    histoCumu=histo[:-2,:].copy()
+    # Leave out last bin, which later is set to ginfty. Thus, reapplying this function won't change ginfty.
+    histoCumu = histo[:-2, :].copy()
     for j in range(1, len(histoCumu[-1])):
-        histoCumu[-1,j]*=delta
+        histoCumu[-1, j] *= delta
 
-    for i in range(len(histo[:-2,:])-2,1,-1):
+    for i in range(len(histo[:-2, :]) - 2, 1, -1):
         for j in range(1, len(histo[i])):
-            histoCumu[i,j]*=delta
-            histoCumu[i,j]+=histoCumu[i+1,j]
+            histoCumu[i, j] *= delta
+            histoCumu[i, j] += histoCumu[i + 1, j]
 
     for j in range(1, len(histoCumu[0])):
-        histoCumu[0,j]=0.
+        histoCumu[0, j] = 0.
     return histoCumu
+
 
 def getStartingBin(histo, fitFraction):
     """
@@ -371,41 +375,45 @@ def getStartingBin(histo, fitFraction):
     index: int
         Index of bin at approximately 'fitFraction'*(maximal distance) from the end. 
     """
-    index=len(histo)-int(len(histo)*fitFraction)
+    index = len(histo) - int(len(histo) * fitFraction)
     return index
+
 
 def getPlateauValue(histoCumu, index):
     """
     Estimates plateau values by fitting linear function to integral of rdfs (integrated started from maximum distance).
     """
-    ginfty=[]
+    ginfty = []
     for j in range(1, len(histoCumu[0])):
-        par=np.polyfit(histoCumu[index:-1,0], histoCumu[index:-1,j],1)
+        par = np.polyfit(histoCumu[index:-1, 0], histoCumu[index:-1, j], 1)
         ginfty.append(-par[0])
     return ginfty
 
-def taperNoise(histo, index, ginfty, noiseFraction=0.01, verb=False): 
+
+def taperNoise(histo, index, ginfty, noiseFraction=0.01, verb=False):
     """
     Tapers noise by subtracting ginfty from rdf, multiplying the resulting residuals with rapidly decaying function, and adding back ginfty. 
     If noiseFraction is set to 1 then no tapering of the noise takes place.  
     """
-    histo_out=histo.copy()
-    if 0<noiseFraction and noiseFraction<1:
-        dR=histo[-1,0]-histo[index,0]
-        l=math.sqrt(-dR**2/math.log(noiseFraction))
-        rStart=histo[index,0]
-        if verb==True:
-            print " Smoothening rdfs from bin", index, "at distance r =", rStart, "to bin", len(histo), "at distance r =", histo[-1,0],".\n" 
+    histo_out = histo.copy()
+    if 0 < noiseFraction and noiseFraction < 1:
+        dR = histo[-1, 0] - histo[index, 0]
+        l = math.sqrt(-dR**2 / math.log(noiseFraction))
+        rStart = histo[index, 0]
+        if verb == True:
+            print " Smoothening rdfs from bin", index, "at distance r =", rStart, "to bin", len(histo), "at distance r =", histo[-1, 0], ".\n"
         for i in range(index, len(histo)):
-            r=math.sqrt(histo[i,0]*histo[i,0])
-            for j in range(1,len(histo[i])):
-                histo_out[i,j]=fade((r-rStart), histo[i,j], ginfty[j-1], l)
+            r = math.sqrt(histo[i, 0] * histo[i, 0])
+            for j in range(1, len(histo[i])):
+                histo_out[i, j] = fade((r - rStart), histo[i, j], ginfty[j - 1], l)
     return histo_out
 
+
 def setGinfty(histo, ginfty):
-    for j in range(1,len(histo[-1])):
-        histo[-1,j]=ginfty[j-1]
+    for j in range(1, len(histo[-1])):
+        histo[-1, j] = ginfty[j - 1]
     return histo
+
 
 def smooth(histo, delta, fitFraction,  noiseFraction, verb=False):
     """
@@ -417,9 +425,9 @@ def smooth(histo, delta, fitFraction,  noiseFraction, verb=False):
     'fitFraction' should not be larger than the shortest plateau of the partial rdfs.
     """
     histoCumu = getRDFCumu(histo, delta)
-    index = getStartingBin(histo, fitFraction) 
+    index = getStartingBin(histo, fitFraction)
     ginfty = getPlateauValue(histoCumu, index)
-    index = getStartingBin(histo, fitFraction) 
+    index = getStartingBin(histo, fitFraction)
     histo_smooth = taperNoise(histo, index, ginfty, noiseFraction, verb=verb)
     histo_smooth = setGinfty(histo_smooth, ginfty)
     return histo_smooth

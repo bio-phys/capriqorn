@@ -98,6 +98,8 @@ def SFParamProd(newParam):
     return paramProd
 
 # NOTE: reimplementation in kernel/c_pddf.pyx
+
+
 def FT1Func(a, b, rSqr):
     """
     Calculate: 2/pi Int[ f^2(q) sin(qr) (qr) dq = a r^2/(2 sqrt(pi b^3)) exp(-r^2/(4b))
@@ -112,6 +114,8 @@ def FT1Func(a, b, rSqr):
         return 0.
 
 # NOTE:  reimplementation in kernel/c_pddf.pyx
+
+
 def FT1(paramList, rSqr):
     """ paramList
     """

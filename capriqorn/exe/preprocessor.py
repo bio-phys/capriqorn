@@ -24,7 +24,8 @@ from .. import version
 def configure_cli(subparsers):
     """Attach a parser (specifying command name and flags) to the argparse subparsers object."""
     parser = subparsers.add_parser('preproc', help='run preprocessor')
-    parser.add_argument('input', nargs=argparse.REMAINDER, help='preprocessor parameter file (optional)', metavar='preprocessor.yaml')
+    parser.add_argument('input', nargs=argparse.REMAINDER,
+                        help='preprocessor parameter file (optional)', metavar='preprocessor.yaml')
     parser.set_defaults(func=main)
 
 

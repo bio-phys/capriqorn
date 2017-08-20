@@ -21,6 +21,7 @@ def scaleFactorXX(nx, xrho):
     """
     return (nx / xrho ** 2 / (nx - 1.))
 
+
 def scaleFactorX1X2(nx1, nx2, xrho):
     """
     For the 'lattice' virtual particle method, the normalization constant is
@@ -29,6 +30,7 @@ def scaleFactorX1X2(nx1, nx2, xrho):
     multiplied by two in the DeltaH filter.
     """
     return 0.5 * ((nx1 + nx2) / xrho) ** 2 / float(nx1 * nx2)
+
 
 def scaleVirtualHistograms(frm):
     """
@@ -67,7 +69,7 @@ def scaleVirtualHistograms(frm):
         # print " nx =", nx
         if meta['shell_width'] > 0:
             shell_Hxx = frm.get_data(base.loc_histograms + "/X.s,X.s")
-            frm.put_data(base.loc_shell_Hxx, {'X.s,X.s':shell_Hxx})
+            frm.put_data(base.loc_shell_Hxx, {'X.s,X.s': shell_Hxx})
             nXs = (frm.get_data(base.loc_nr_particles))['X.s'][0]
             shell_Hxx = frm.get_data(base.loc_shell_Hxx)
             dict_util.scale_values(shell_Hxx, scaleFactorXX(nXs, xrho))
@@ -94,7 +96,7 @@ def scaleVirtualHistograms(frm):
 
         if meta['shell_width'] > 0:
             shell_Hxx = frm.get_data(base.loc_histograms + "/X1.s,X2.s")
-            frm.put_data(base.loc_shell_Hxx, {'X.s,X.s':shell_Hxx})
+            frm.put_data(base.loc_shell_Hxx, {'X.s,X.s': shell_Hxx})
             nXs1 = nrPart['X1.s'][0]
             nXs2 = nrPart['X2.s'][0]
             shell_Hxx = frm.get_data(base.loc_shell_Hxx)
