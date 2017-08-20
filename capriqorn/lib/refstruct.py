@@ -24,7 +24,8 @@ except:
     print(" Note: capriqorn.lib.refstruct: could not import c_refstruct")
 
 
-q_cell_lists = True
+# cell lists are disabled for the moment due to non-optimum performance
+q_cell_lists = False
 def set_algorithm(algo):
     """Selects the algorithm to be used for the neighbour search.
     """
@@ -33,7 +34,7 @@ def set_algorithm(algo):
         # print("   refstruct uses cell list for neighbor search")
         q_cell_lists = True
     else:
-        print("     (refstruct uses brute-force neighbor search)")
+        # print("     (refstruct uses brute-force neighbor search)")
         q_cell_lists = False
 
 
@@ -184,7 +185,7 @@ def selectCore(ref_coords, coords, R, sw):
     """
     if R < sw:
         raise RuntimeError("selection radius smaller then shell width")
-    return np.where(get_selection(ref_coords, coords, R=R - sw))
+    return selectBody(ref_coords, coords, R=R - sw)
 
 
 def maxInnerDistance(xyz):

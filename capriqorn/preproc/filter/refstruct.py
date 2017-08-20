@@ -24,7 +24,7 @@ class ReferenceStructure(base.Filter):
                  selection='all',
                  distance=10,  # distance from reference structure
                  shell_width=-1,
-                 algorithm="cell_lists",
+                 algorithm="brute_force",
                  source=-1,
                  verbose=False):
         self.topology_file = topology_file
@@ -120,7 +120,7 @@ class MultiReferenceStructure(ReferenceStructure):
                  distance=10,  # distance from reference structure
                  r_max=-1,
                  shell_width=-1,
-                 algorithm="cell_lists",
+                 algorithm="brute_force",
                  source=-1,
                  verbose=False):
         self.topology_file = topology_file
