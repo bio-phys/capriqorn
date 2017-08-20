@@ -50,6 +50,7 @@
     selection: all
     distance: null
     shell_width: -1
+    algorithm: cell_lists  # (expert)
     verbose: false
 - MultiReferenceStructure:
     active: false
@@ -59,6 +60,7 @@
     distance: null  # explanation
     r_max: -1  # TODO explanation, see math in implementation
     shell_width: -1
+    algorithm: cell_lists  # (expert)
     verbose: false
 - XYZ:  # XYZ file writer --- may harm performance significantly
     active: false

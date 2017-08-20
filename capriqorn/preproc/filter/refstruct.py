@@ -22,14 +22,17 @@ class ReferenceStructure(base.Filter):
     def __init__(self,
                  topology_file=None,  # reference structure PDB file
                  selection='all',
-                 distance=None,  # distance from reference structure
+                 distance=10,  # distance from reference structure
                  shell_width=-1,
+                 algorithm="cell_lists",
                  source=-1,
                  verbose=False):
         self.topology_file = topology_file
         self.selection = selection
         self.distance = distance
         self.shell_width = shell_width
+        self.algorithm = algorithm
+        librefstruct.set_algorithm(algorithm)
         # ---
         universe = mda.Universe(topology_file)
         self.atoms = universe.atoms.select_atoms(selection)
@@ -51,6 +54,7 @@ class ReferenceStructure(base.Filter):
         """
         return {'ReferenceStructure': {'shell_width': self.shell_width,
                                        'r_max': self.r_max,
+                                       'algorithm': self.algorithm,
                                        'topology_file': self.topology_file,
                                        'selection': self.selection,
                                        'distance': self.distance}}
@@ -113,9 +117,10 @@ class MultiReferenceStructure(ReferenceStructure):
                  topology_file=None,  # reference topology
                  trajectory_file=None,
                  selection='all',
-                 distance=None,  # distance from reference structure
+                 distance=10,  # distance from reference structure
                  r_max=-1,
                  shell_width=-1,
+                 algorithm="cell_lists",
                  source=-1,
                  verbose=False):
         self.topology_file = topology_file
@@ -124,6 +129,8 @@ class MultiReferenceStructure(ReferenceStructure):
         self.distance = distance
         self.shell_width = shell_width
         self.r_max = r_max
+        self.algorithm = algorithm
+        librefstruct.set_algorithm(algorithm)
         # ---
         self.universe = mda.Universe(topology_file, trajectory_file)
         self.atoms = self.universe.atoms.select_atoms(selection)
@@ -142,6 +149,7 @@ class MultiReferenceStructure(ReferenceStructure):
         """
         return {'MultiReferenceStructure': {'shell_width': self.shell_width,
                                             'r_max': self.r_max,
+                                            'algorithm': self.algorithm,
                                             'topology_file': self.topology_file,
                                             'trajectory_file': self.trajectory_file,
                                             'selection': self.selection,
