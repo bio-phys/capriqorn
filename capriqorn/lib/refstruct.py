@@ -15,6 +15,7 @@ import numpy as np
 import copy
 import re
 from scipy.spatial.distance import cdist
+from . import idxcode
 # use Cython-accelerated functions, if possible
 try:
     from capriqorn.kernel import c_refstruct
@@ -235,12 +236,14 @@ def get_cell_strings(indices):
     """
     Converts lists of indices to strings for use as dictionary keys.
 
-    Indices of a cell are given by three integer numbers, e.g., [1,0,-2] denotes a single cell,
-    which results in the string "+1+0-2".
+    Indices of a cell are given by three integer numbers, e.g., [1,0,-2] denotes
+    a single cell, which results in the string "+1+0-2".
+
+    Update: Use get_cell_idxcodes() instead.
     """
     strings = []
-    for inds in indices:
-        strng = "%+d%+d%+d" % tuple(inds)
+    for idx in indices:
+        strng = "%+d%+d%+d" % tuple(idx)
         strings.append(strng)
     return strings
 
@@ -248,12 +251,33 @@ def get_cell_strings(indices):
 def get_cell_index_from_string(string):
     """
     Converts a the string index representation to an integer triple representation.
+
+    Update: Use get_cell_index_from_idxcode() instead.
     """
     tokens = re.split('(\d+)', string)
     index = []
     for i in xrange(3):
         index.append(int(tokens[2 * i] + tokens[2 * i + 1]))
     return np.asarray(index)
+
+
+def get_cell_idxcodes(indices):
+    """Converts lists of indices to idxcodes for use as dictionary keys. Indices
+    of a cell are given by three integer numbers.
+    """
+    idx_codes = []
+    for idx in indices:
+        # NOTE: using tuple(idx) is slower than
+        idx_codes.append(idxcode.encode_triple(idx))
+    return idx_codes
+
+
+def get_cell_index_from_idxcode(idx_code):
+    """
+    Converts the idxcode index representation to an integer triple representation.
+    """
+    triple = idxcode.decode_indices(idx_code)
+    return np.asarray(triple)
 
 
 def get_neighbour_indices(indices, neighbours):
@@ -297,12 +321,14 @@ def get_particle_indices_within_neighbours(ref_particle_indices, particle_indice
             ind = cell_indices[particle_indices[k][0]]
         else:
             neigh_particle_indices[k] = []
-            ind = get_cell_index_from_string(k)
+            # ind = get_cell_index_from_string(k)
+            ind = get_cell_index_from_idxcode(k)
 
         # get indices of neighbour cells
         neighs = get_neighbour_indices(ind, neighbours)
         # get keys of neighbour cells
-        neigh_particle_strings = get_cell_strings(neighs)
+        #neigh_particle_strings = get_cell_strings(neighs)
+        neigh_particle_strings = get_cell_idxcodes(neighs)
         # add indices of neighbour cells to list
         for kk in neigh_particle_strings:
             # Check if neighbouring cell is not empty. If so, we should raise an exception as
@@ -365,12 +391,14 @@ def cutout_using_cell_lists(positions, ref_positions, distance, return_mask=Fals
     # determine to which cell each particle belongs
     # for the full structure
     cell_indices = get_cell_indices(positions, distance)
-    cell_indices_strings = get_cell_strings(cell_indices)
+    #cell_indices_strings = get_cell_strings(cell_indices)
+    cell_indices_strings = get_cell_idxcodes(cell_indices)
     uniq_cell_indices_strings = set(cell_indices_strings)
     # print " number of cells for full structure =", len(uniq_cell_indices_strings)
     # for the reference structure
     ref_cell_indices = get_cell_indices(ref_positions, distance)
-    ref_cell_indices_strings = get_cell_strings(ref_cell_indices)
+    #ref_cell_indices_strings = get_cell_strings(ref_cell_indices)
+    ref_cell_indices_strings = get_cell_idxcodes(ref_cell_indices)
     ref_uniq_cell_indices_strings = set(ref_cell_indices_strings)
     # print " number of cells for ref. structure =", len(ref_uniq_cell_indices_strings)
 
