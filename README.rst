@@ -26,9 +26,7 @@ The package is installed in the Pythonic way e.g. as follows::
 
 $ python setup.py install --user  # install into the user's homedirectory
 
-The `install_all_local.sh` file in the repository root may be used to perform
-the local installation.  Make sure to add `$HOME/.local/bin` to your PATH
-environment variable.
+Make sure to add `$HOME/.local/bin` to your PATH environment variable.
 
 
 Quick start guide
@@ -41,17 +39,12 @@ and options.
 To run an example calculation based on the data set included in Capriqorn
 proceed as follows::
 
-1. Run `capriq preproc-example` to generate the input file
-   `preprocessor.yaml`.  Optionally, adapt the parameter file.
+1. Run `capriq preproc` to generate the necessary YAML input files for the preprocessor, the histogram calculation, and the postprocessor. Optionally, inspect and adapt the parameter files.
 2. Run the preprocessor `capriq preproc`.
-3. Run `capriq histo-example` to generate the input file
-   `histograms.yaml`.  Optionally, adapt the parameter file.
 4. Run `capriq histo`
-5. Run `capriq postproc-example` to generate the input file
-   `postprocessor.yaml`.  Optionally, adapt the parameter file.
 6. Run `capriq postproc`
 
-Note that the steps 3. and 4. are equivalent to the `cadishi` commands.
+Note that the step 2 is equivalent to the `cadishi` commands.
 
 
 Licensing
