@@ -6,7 +6,7 @@ Capriqorn
 Introduction
 ------------
 
-Capriqorn (CAlculation of P(R) and I(Q) Of macRomolecules in solutioN) is a MD
+Capriqorn (CAlculation of P(R) and I(Q) Of macRomolecules in solutioN) is a molecular dynamics (MD)
 data analysis package written in Python.  It calculates the radial particle-pair
 distribution function p(r) and the intensity I(q) from MD frames.
 
@@ -24,7 +24,7 @@ Installation
 
 The package is installed in the Pythonic way e.g. as follows::
 
-$ python setup.py install --user  # install into the user's homedirectory
+$ python setup.py install --user  # install into the user's home directory
 
 Make sure to add `$HOME/.local/bin` to your PATH environment variable.
 
@@ -50,16 +50,20 @@ Note that the step 2 is equivalent to the `cadishi` commands.
 Licensing
 ---------
 
-For questions regarding a license or permission to use this software package
-for own work, please contact the main author and project leader:
+Capriqorn is released under the GPLv2 license. See the file 
+`LICENSE.txt` for details.
 
-   Juergen Koefinger
-   Max Planck Institute of Biophysics
-   Theoretical Biophysics
-   Max-von-Laue Str. 3
-   D-60438 Frankfurt am Main, Germany
-   juergen.koefinger@biophys.mpg.de
+Copyright 2015 - 2017: Juergen Koefinger, Klaus Reuter, Max Linke
 
-Unauthorized copying and use is prohibited. All rights reserved.
 
-Copyright 2015 - 2016: Juergen Koefinger, Klaus Reuter, Max Linke
+CITATION
+--------
+
+Please cite 
+
+Atomic-resolution structural information from scattering experiments on
+macromolecules in solution
+Jürgen Köfinger and Gerhard Hummer
+Phys. Rev. E 87, 052712 (2013).
+
+For your convenience, please find this citation in the bibtex and endnote formats in the subfolder `./doc/citations/`.

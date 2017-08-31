@@ -1,3 +1,6 @@
+#Based on 
+#http://www.ks.uiuc.edu/Research/vmd/script_library/scripts/orient/
+#by Paul Grayson pgrayson@ks.uiuc.edu
 package require Orient
 namespace import Orient::orient
 
@@ -17,4 +20,3 @@ for {set i 0} {$i < [molinfo top get numframes]} {incr i} {
     $mv move $A
     set I [draw principalaxes $sel]
 }
-#mol addfile protein.xtc type xtc first 0 last -1 step 1 waitfor all 0

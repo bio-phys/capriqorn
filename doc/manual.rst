@@ -1,6 +1,6 @@
 
-Theoretical Background
-======================
+Background
+==========
 
 **Macromolecules in solution**
 
@@ -8,7 +8,7 @@ To calculate the **scattering intensities** and **pair-distance distribution fun
 
 **Pure solvent simulations**
 
-In experiments, the **difference intensity** between the macromolecule in solution and pure solvent is determined. We therefore also have to simulate pure solvent. In our method, we only need the **particle densities** and **partial radial distribution functions** calculated from these pure solvent simulations. This is in contrast to other methods, where the same observation volume as it is used for the macromolecule in solution, has to be cut out from the solvent trajectory. 
+In experiments, the **difference intensity** between the macromolecule in solution and pure solvent is determined. We therefore also have to simulate pure solvent. In our method, we only need the **particle densities** and **partial radial distribution functions** calculated from these pure solvent simulations. This approach is in contrast to other methods, where the same observation volume as it is used for the macromolecule in solution, has to be cut out from the solvent trajectory. 
 
 **Self-consistent solvent matching**
 
@@ -63,7 +63,7 @@ We suggest to use it to get started. You can pick the parameter files for the ge
         **!!!YOU HAVE TO EDIT THIS FILE BY HAND AND MAKE CORRECTIONS!!!**  
 
 #. **Pure solvent**
-    * We suggest to use orthorombic (cubic) boxes of similar size (or larger) as the simulation box used for the macromolecule in solution.  
+    * We suggest to use orthorhombic (cubic) boxes of similar size (or larger) as the simulation box used for the macromolecule in solution.  
     * The force field and composition of the pure solvent should be the same as in the simulation of the macromolecule.  
 
 #. **Macromolecule in solution**
@@ -73,7 +73,7 @@ We suggest to use it to get started. You can pick the parameter files for the ge
         The macromolecule has to be centered in the box, ideally maximizing the solvent thickness around the macromolecule, i.e., maximizing the minimum distance of atoms of the macromolecule to the box borders: 
     
         * Sphere:   Center macromolecule at origin.
-        * Cuboid:   Center macromolecule at origin nd align principal axis with VMD (tcl script :download:`orient.tcl <./scripts/orient.tcl>`) 
+        * Cuboid:   Center macromolecule at origin and align principal axis with VMD (tcl script :download:`orient.tcl <./scripts/orient.tcl>`) 
         * Ellipsoid: Center macromolecule at origin and align principal axis with VMD (tcl script :download:`orient.tcl <./scripts/orient.tcl>`)
         * Reference: RMSD alignment of the macromolecule with chosen reference structure. 
         * MultiReference: When using the same trajectories as input and reference, no alignment is necessary.
@@ -82,14 +82,13 @@ We suggest to use it to get started. You can pick the parameter files for the ge
         *trjconv* (*gmx trjconv* in newer versions Gromacs).
     
     * Preprocessing: capriq preproc -f preprocessor.yaml 
-        * Run the preprocessor for each trajectory separately. As a note, splitting up a trajectory in multiple files facilitates trivial parallelizaiton of the preprocessor. 
+        * Run the preprocessor for each trajectory separately. The preprocessor can be run in parallel over a single node.  Also note that splitting the trajectory in multiple files facilitates further trivial parallelization of the preprocessor. 
     
     * Histogram calculation: capriq histo -f histograms.yaml 
-        * Multiple trajectory h5-files (preprocessor output) can be read in. 
+        * Multiple trajectory h5-files (preprocessor output) can be read in. We use Cadishi to efficiently calculate histograms on CPUs and/or GPUs.
     
     * Postprocessing: capriq postproc -f postprocessor.yaml 
-        
-        * Multiple histogram h5-files can be read in at once for postprocessing
+        * Multiple histogram h5-files can be read in at once for postprocessing.
         * The output is stored in an hdf5 file, which can be unpacked using "capriq unpack" such that the output files are available in ASCII format.  
     
 #. **Analysis**
@@ -103,6 +102,38 @@ Tips and tricks
     Using selection strings, you can choose representation in VMD which visualize various geometries. 
     Note that the selection string syntax in VMD is different to the one used in Capriqorn (Capriqorn using MD Analysis which uses CHARMM syntax).
 * The preprocessor can write out xyz files which you can visualize using VMD to check that the macromolecule has been cut out correctly. 
+* Capriqorn offers a plethora of methods and modules. 
+  See the example parameter files for an overview. 
+  The files can be written via the command capriq example [--expert]
+  The `--expert` switch adds additional options which allow to override some default values.  Some hints on the parameter choices, the general usage, and the file handling are given in the following.  
+
+    * For various reasons Capriqorn uses HDF5 files. To inspect a HDF5 file, use
+      a viewer software or extract the HDF5 file using the Capriqorn command
+      ``capriq unpack``.
+    * Compression of the HDF5 output datasets using the LZF algorithm is usually
+      beneficial regarding performance and file size. LZF comes with h5py by default.
+      Other installations and tools may lack LZF, so use no compression or
+      gzip compression in case you need to interact with such software.  You can use
+      the ``capriq merge`` tool to change the compression of a file.
+
+* An essential part of the Capriqorn pipeline consists of the distance histogram
+  calculation performed by the Cadishi package.  Cadishi offers many parameters
+  which allow to tune and optimize the performance.  As a quick start one may try
+  the following configuration via the parameter file:
+
+    * adapt the number of CPU workers to the number of CPU sockets you have in your
+      system;
+    * adapt the number of threads per CPU worker to the number of cores you have per
+      socket, however, consider the following point:
+    * when choosing the thread numbers reserve one core each for the input and output
+      processes and for the GPU processes (if applicable);
+    * pinning the processes to NUMA domains is usually a good idea;
+    * example: On a dual socket system with 8 cores per socket and two GPUs one may
+      start with the following configuration: 2 CPU workers, 6 threads per CPU worker,
+      2 GPU workers.
+
+  By default Cadishi uses a reasonable process and thread configuration.
+
 
 Notes
 =====

@@ -6,20 +6,22 @@ Introduction
 
 **CAPRIQORN**: **CA**\ lculation of **P**\(**R**) and **I**\(**Q**\) **O**\f mac\ **R**\ omolecules in solutio\ **N**. 
 
+.. image:: ./img/capriqorn.png
+
 Capriqorn is a software suite designed to facilitate the calculation of
 quantities such as **pair-distance distribution functions** and **scattering
 intensities** directly from the output trajectories of **molecular dynamics
 simulations**. In particular, Capriqorn implements the methods published in the
 following publication:
 
-Atomic-resolution structural information from scattering experiments on
-macromolecules in solution, Jürgen Köfinger and Gerhard Hummer, Phys. Rev. E 87,
-052712 (2013).
-https://journals.aps.org/pre/pdf/10.1103/PhysRevE.87.052712
+| `Atomic-resolution structural information from scattering experiments on macromolecules in solution <https://journals.aps.org/pre/pdf/10.1103/PhysRevE.87.052712>`_ 
+| Jürgen Köfinger and Gerhard Hummer
+| Phys. Rev. E 87, 052712 (2013)
 
+For your convenience, we provide the citation in :download:`bibtex <./citations/PhysRevE.87.052712.bibtex>` format and :download:`endnote  <./citations/PhysRevE.87.052712.ris>` format.
 
 Additionally, a novel method for **non-spherical observation volumes** using **virtual
-particles** has been implemented. 
+particles** has been implemented (manuscript in preparation). 
 
 Capriqorn is mostly implemented in Python with
 time-critical kernels accelerated using compiled Cython code. The distance
@@ -75,40 +77,8 @@ the following sequence of commands::
    capriq postproc  # run postprocessor
 
 
-Documentation
--------------
-
-.. toctree::
-   :maxdepth: 2
-
-   manual.rst
-
-
-Tips and Tricks
-~~~~~~~~~~~~~~~
-
-Some tips and tricks regarding the use of Capriqorn and Cadishi are available.
-
-.. toctree::
-  :maxdepth: 2
-
-  tips.rst
-
-Technical Features
-~~~~~~~~~~~~~~~~~~
-
-Capriqorn provides -- but is not restricted to -- the following functionalities:
-
-* versatile read-in of MD trajectories in various formats
-* trajectory preprocessing
-* high-performance parallel distance histogram calculation on CPUs and GPUs using
-  the Cadishi package
-* histogram postprocessing
-* efficient data handling using HDF5 files
-
-
-Workflow
-~~~~~~~~
+Basic workflow
+~~~~~~~~~~~~~~
 
 Capriqorn implements the concept of a data processing pipeline. A typical workflow
 consists of three stages.
@@ -121,6 +91,28 @@ consists of three stages.
 
 The data processing pipeline is implemented using Python generators.  Methods
 (computations, geometry and data modifications, etc.) are considered 'filters'.
+
+
+Documentation
+-------------
+
+.. toctree::
+   :maxdepth: 2
+
+   manual.rst
+
+
+Technical Features
+------------------
+
+Capriqorn provides -- but is not restricted to -- the following functionalities:
+
+* versatile read-in of MD trajectories in various formats
+* trajectory preprocessing
+* high-performance parallel distance histogram calculation on CPUs and GPUs using
+  the Cadishi package
+* histogram postprocessing
+* efficient data handling using HDF5 files
 
 
 Source documentation
@@ -139,20 +131,14 @@ To be done via docstrings after re-structuring of the code base.
 License and Citation
 --------------------
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-All rights reserved. For questions regarding a license or permission to use this
-software package, please contact Jürgen Köfinger.
+Capriqorn is released under the GPLv2 license. See the file 
+:download:`LICENSE.txt <../LICENSE.txt>` for details.
 
 Copyright 2015-2017
 
 * Jürgen Köfinger,
   Max Planck Institute of Biophysics,
+  Department of Theoretical Biophysics,
   Max-von-Laue-Straße 3,
   60438 Frankfurt am Main,
   Germany,
@@ -165,17 +151,11 @@ Copyright 2015-2017
   klaus.reuter@mpcdf.mpg.de
 * Max Linke,
   Max Planck Institute of Biophysics,
+  Department of Theoretical Biophysics,
   Max-von-Laue-Straße 3,
   60438 Frankfurt am Main,
   Germany,
   max.linke@biophys.mpg.de
-
-We kindly request that you cite Capriqorn in your publications and
-presentations:
-
-*  Atomic-resolution structural information from scattering experiments on
-   macromolecules in solution, Jürgen Köfinger and Gerhard Hummer, Phys. Rev. E 87,
-   052712 (2013). https://journals.aps.org/pre/pdf/10.1103/PhysRevE.87.052712
 
 .. TODO: Add code paper reference(s) once it is on the arxiv and/or published!
 
