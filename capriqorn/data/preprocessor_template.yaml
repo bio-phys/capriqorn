@@ -1,77 +1,121 @@
 # Capriqorn preprocessor YAML template
 - MDReader:  # MDAnalysis-based trajectory reader
     active: true
+    # file containing atom names as in pdb_file below (first column) and element names (second column)
     alias_file: __DATA_DIR__/alias.dat
+    # pdb file of single frame of simulation box. Used to determin atom types (elements).
     pdb_file: __DATA_DIR__/protein.pdb.gz
+    # contains simulation trajectory
     trajectory_file: __DATA_DIR__/protein.crdbox.gz
+    # first frame to be analyzed
     first: null
+    # last frame to be analyzed
     last: null
-    selection: all  # species selection (expert)
+    # allows to select part of the structure using a selection string (MDAnalysis) [expert]
+    selection: all  # [expert]
     verbose: false
-- ParallelFork:  # EXPERIMENTAL: parallel pipeline, region extends until ParallelJoin
-    active: false  # set to true in tandem with the ParallelJoin filter below
-    n_workers: 2  # number of processes used to process the pipeline in parallel
+- ParallelFork:  # parallel pipeline, region extends until ParallelJoin
+    # set to true in tandem with the ParallelJoin filter below
+    active: false  
+    # number of processes used to process the pipeline in parallel
+    n_workers: 2 
     verbose: false
-- VirtualParticles:
-    active: true
-    label: X
-    method: lattice
-    noise: true  # (expert)
-    verbose: false
-    x_box_length: 80.0
-    x_density: 0.1
-    random_seed: 0  # set >0 to achieve reproducibility
-- Sphere:
-    active: true
-    radius: 35.0
-    shell_width: 3.0
-    do_len_histo: true  # (expert)
-    len_histo_dr: 0.01  # (expert)
-    verbose: false
-- Ellipsoid:
+- VirtualParticles: # using uniformly distributed point particles (virtual particles) for non-spherical observation volumes
     active: false
+    # label used for virtual particles (should not be an element name)
+    label: X
+    # method to distribute virtual particles uniformly
+    method: lattice
+    # lattice grid points are shifted randomly and uniformly within uniti cell [expert]
+    noise: true  # [expert]
+    # more detailed output if true 
+    verbose: false
+    # size of the box containing virtual particles. Has to be smaller than largest distance of oberservation volume.
+    x_box_length: 80.0
+    # density of virtual particles 
+    x_density: 0.1
+    # set >0 to achieve reproducibility 
+    random_seed: 0  
+- Sphere: # spherical observation volume (centered at origin) 
+    active: true
+    # radius of sphere
+    radius: 35.0
+    # width of shell of bulk solvent used for solvent matching (not to be confused with solvation layer surrounding macromolecules)
+    # set to -1 if no shell is needed, e.g., if you use previously matched rdfs
+    shell_width: 3.0
+    # calculate distance-from-center histograms [expert]
+    do_len_histo: true  # [expert]
+    # bin size [Angsgtrom] for distance-from-center histograms [expert]
+    len_histo_dr: 0.01  # [expert]
+    verbose: false
+- Ellipsoid: # ellipsoidal observation volume (centered at origin and axis aligned with coordinate system) 
+    active: false
+    # length of the half-axis of the ellipsoid
     semi_principal_axes:
     - 1000000.0
     - 1000000.0
     - 1000000.0
-    shell_width: -1
+    # width of shell of bulk solvent used for solvent matching (not to be confused with solvation layer surrounding macromolecules)
+    # set to -1 if no shell is needed, e.g., if you use previously matched rdfs
+    shell_width: 3.0
     verbose: false
-- Cuboid:
+- Cuboid: #cuboid as observation volume (centered at origin and box edges aligned with coordinate system)
     active: false
     half_lengths:
     - 1000000.0
     - 1000000.0
     - 1000000.0
-    shell_width: -1
+    # width of shell of bulk solvent used for solvent matching (not to be confused with solvation layer surrounding macromolecules)
+    # set to -1 if no shell is needed, e.g., if you use previously matched rdfs
+    shell_width: 3.0
     verbose: false
-- ReferenceStructure:
+- ReferenceStructure: # observation volume consists of all particles within 'distance' of single reference structure
     active: false
+    # file containing reference structure
     topology_file: null
+    # selection string to select parts of reference structure (using MDAnalysis)
     selection: all
+    # cut out all particles withinin 'distance' from selected particles of reference structure 
     distance: null
-    shell_width: -1
-    algorithm: brute_force  # (expert)
+    # width of shell of bulk solvent used for solvent matching (not to be confused with solvation layer surrounding macromolecules)
+    # set to -1 if no shell is needed, e.g., if you use previously matched rdfs
+    shell_width: 3.0
+    # algorithm for cutting out observation volume (brute_force or cell_lists) [expert]
+    algorithm: brute_force  # [expert]
     verbose: false
 - MultiReferenceStructure:
     active: false
+    # file containing topolgy/structure of reference trajectory
     topology_file: null
+    # file containing coordinates of reference trajectory
     trajectory_file: null
+    # selection string to select parts of reference structure (using MDAnalysis)
     selection: all
-    distance: null  # explanation
-    r_max: -1  # TODO explanation, see math in implementation
-    shell_width: -1
-    algorithm: brute_force  # (expert)
+    # cut out all particles withinin 'distance' from selected particles ('selection') of reference structure of given frame 
+    distance: null  
+    # if -1, maximum distance within observation volume is determined automatically
+    r_max: -1   
+    # width of shell of bulk solvent used for solvent matching (not to be confused with solvation layer surrounding macromolecules)
+    # set to -1 if no shell is needed, e.g., if you use previously matched rdfs
+    shell_width: 3.0    
+    # algorithm for cutting out observation volume (brute_force or cell_lists) [expert]
+    algorithm: brute_force  # [expert]
     verbose: false
-- XYZ:  # XYZ file writer --- may harm performance significantly
+- XYZ:  # XYZ file writer --- writing out every frame harms performance significantly
     active: false
-    file_prefix: null  # optional file prefix string before frame number
+    # optional file prefix string before frame number
+    file_prefix: null  
+    # output directory for xyz files
     output_directory: ./preprocessor_output
-    first_frame_only: true  # only dump the first frame, then disable XYZ writer
+    # only dump the first frame, then disable XYZ writer
+    first_frame_only: true 
     verbose: false
-- ParallelJoin: # EXPERIMENTAL: parallel pipeline, region extends starting from ParallelFork
+- ParallelJoin: # parallel pipeline, region extends starting from ParallelFork
     verbose: false
 - H5Writer:
     active: true
-    file: ./preprocessor_output/trajectory.h5  # output file, optionally including a relative or absolute directories
-    compression: lzf  # 'null' no compression, 'gzip' gzip compression, 'lzf' LZF compression, comes by default with H5PY
+    # output file, optionally including a relative or absolute directories
+    file: ./preprocessor_output/trajectory.h5
+    # 'null' no compression, 'gzip' gzip compression, 'lzf' LZF compression, comes by default with H5PY
+    compression: lzf
     verbose: false

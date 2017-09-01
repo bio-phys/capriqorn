@@ -98,10 +98,11 @@ We suggest to use it to get started. You can pick the parameter files for the ge
 Tips and tricks
 ===============
 
-* Use VMD to choose geometry. 
-    Using selection strings, you can choose representation in VMD which visualize various geometries. 
-    Note that the selection string syntax in VMD is different to the one used in Capriqorn (Capriqorn using MD Analysis which uses CHARMM syntax).
-* The preprocessor can write out xyz files which you can visualize using VMD to check that the macromolecule has been cut out correctly. 
+* Use VMD (http://www.ks.uiuc.edu/Research/vmd/) to choose and check geometry of observation volume. 
+    * Using selection strings, you can choose representation in VMD which visualize various geometries. 
+      Note that the selection string syntax in VMD is different to the one used in Capriqorn (Capriqorn using MD Analysis which uses CHARMM syntax).
+    * The preprocessor can write out xyz files which you can visualize using VMD to check that the macromolecule has been cut out correctly. 
+    * To cite VMD, please visit http://www.ks.uiuc.edu/Research/vmd/allversions/cite.html.
 * Capriqorn offers a plethora of methods and modules. 
   See the example parameter files for an overview. 
   The files can be written via the command capriq example [--expert]
@@ -137,8 +138,12 @@ Tips and tricks
 
 Notes
 =====
-
 * Efficiency: 
+
     * In the current version of the code, the histogram calculation in Cadishi has been highly optimized. Compared to the histogram calculation, the preprocessor, however, can take a significant amount of time as it has not been fully optimized yet.
     * The preprocessor pipeline can be parallelized using the ParallelFork() and ParallelJoin() filters.
 
+* Capriqorn uses MDAnalysis (http://www.mdanalysis.org) for reading in trajectories. 
+
+    * From their website: "MDAnalysis is an object-oriented Python library to analyze trajectories from molecular dynamics (MD) simulations in many popular formats. It can write most of these formats, too, together with atom selections suitable for visualization or native analysis tools." 
+    * To cite MDAnalysis, please visit http://www.mdanalysis.org/pages/citations/. 

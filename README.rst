@@ -18,6 +18,11 @@ Capriqorn was developed, built, and tested on SUSE Linux Enterprise Server 11 SP
 Anaconda Python distribution.  It requires NumPy, SciPy, h5py, MDAnalysis and
 Cadishi.
 
+Documentation
+-------------
+
+Please visit `local site <doc/html/index.html>`_.
+
 
 Installation
 ------------
@@ -61,9 +66,8 @@ CITATION
 
 Please cite 
 
-Atomic-resolution structural information from scattering experiments on
-macromolecules in solution
-Jürgen Köfinger and Gerhard Hummer
-Phys. Rev. E 87, 052712 (2013).
+| `Atomic-resolution structural information from scattering experiments on macromolecules in solution <https://journals.aps.org/pre/pdf/10.1103/PhysRevE.87.052712>`_
+| Jürgen Köfinger and Gerhard Hummer
+| Phys. Rev. E 87, 052712 (2013)
 
-For your convenience, please find this citation in the bibtex and endnote formats in the subfolder `./doc/citations/`.
+For your convenience, we provide citations in :download:`bibtex <./citations/PhysRevE.87.052712.bibtex>` format and :download:`endnote  <./citations/PhysRevE.87.052712.ris>` format.

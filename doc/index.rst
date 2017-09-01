@@ -18,7 +18,7 @@ following publication:
 | Jürgen Köfinger and Gerhard Hummer
 | Phys. Rev. E 87, 052712 (2013)
 
-For your convenience, we provide the citation in :download:`bibtex <./citations/PhysRevE.87.052712.bibtex>` format and :download:`endnote  <./citations/PhysRevE.87.052712.ris>` format.
+For your convenience, we provide citations in :download:`bibtex <./citations/PhysRevE.87.052712.bibtex>` format and :download:`endnote  <./citations/PhysRevE.87.052712.ris>` format.
 
 Additionally, a novel method for **non-spherical observation volumes** using **virtual
 particles** has been implemented (manuscript in preparation).

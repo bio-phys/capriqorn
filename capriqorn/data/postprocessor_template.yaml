@@ -1,55 +1,80 @@
 # Capriqorn postprocessor YAML template
 - H5Reader:
     active: true
+    # h5 files produced by cadish (capriq histo). Multiple files can be added in separate lines starting with '-'
     file: ./histograms_output/histograms.h5
+    # first histogram block to be read in 
     first: null
+    # last histogram block to be read in 
     last: null
+    # only read every `step`th histogram block
     step: 1
-    shuffle: false  # put the frames in random order (expert)
-    shuffle_reproducible: false  # put the frames in random order but use a constant random seed (expert)
+    # put the frames in random order  [expert]
+    shuffle: false  # [expert]
+    # put the frames in random order but use a constant random seed [expert]
+    shuffle_reproducible: false  # [expert]
     verbose: false
-- StripVirtualParticles:
-    active: true
+- StripVirtualParticles: # use if VirtualParticles filter in preprocessor has been activated 
+    active: false
     verbose: false
 - Average:
     active: true
     factor: 1.0
     n_avg: 1  # perform averaging over n_avg frames, the keyword 'all' indicates to average over all frames
     verbose: false
-- RDF:
+- RDF: # calculate partial radial distribution functions for bulk solvent 
     active: false
     verbose: false
-- Solvent:
+- Solvent: # reading in of partial radial distribution function and optional matching of solvent properties 
     active: true
     debug: false
-    g_ascii_file: __DATA_DIR__/rdf.extended.dat  # ASCII file containing ???
-    g_plateau_fraction: 0.3  # fraction of the distance, where the rdfs have a plateau. Used to determine ginfty and for noise tapering.
-    g_noise_fraction: 0.01  # noise tapering if <1. If set to 1, no noise tapering takes place.
+    # file containing partial radial distribution functions
+    g_ascii_file: __DATA_DIR__/rdf.extended.dat  
+    # fraction of the distance, where the rdfs have a plateau. Used to determine limiting value and for noise tapering.
+    g_plateau_fraction: 0.3  
+    # noise tapering if <1. If set to 1, no noise tapering takes place.
+    g_noise_fraction: 0.01  
+    # matching oxygen-oxygen rdf
     g_match: O,O
+    # alternative file containing already matched sovlent rdfs and densities
     g_scaled_file: null  # HDF5 file containing g_scaled
     verbose: false
-- DeltaH:
+- DeltaH: # calculates difference histograms (also needed for pdddfs) and difference intensities
     active: true
     debug: false
+    # file containing atomic X-ray form factors 
     form_factor_file: __DATA_DIR__/atomsf.dat
+    # bin size in q (momentum transfer [1/Angstrom]) for intensities
     dq: 0.01
+    # number q-bins
     nq: 300
     verbose: false
 - PDDF:
     active: true
     debug: false
+    # if true, calculates intensities of solvent 
     do_bulk: false
+    # if true, calculates difference intensities as sinc-transforms of pddfs (check of consistency)
     do_intensity: false
+    # interval size for convolution of histograms with electron-electron correlation functions  [Angstrom]
     delta: 0.01
+    # bin size in q (momentum transfer [1/Angstrom]) for intensities
     dq: 0.01
-    dr_intra: 0.001  # (expert)
-    nr_intra: 10000  # (expert)
-    form_factor_file: __DATA_DIR__/atomsf.dat
-    nbin_coarse: 10
+    # number q-bins
     nq: 300
+    # file containing atomic X-ray form factors used for compuation of electron-electron pair-distance distribution funcitons
+    form_factor_file: __DATA_DIR__/atomsf.dat
+    # number of bins lumped into single bin for output of pddf  
+    nbin_coarse: 10
+    # bin size for histograms of intra-atom scattering [expert]
+    dr_intra: 0.001  # [expert]
+    # number of bins for histograms for intra-atom scattering [expert]
+    nr_intra: 10000  # [expert]
     verbose: false
 - H5Writer:
     active: true
+    # 'null' no compression, 'gzip' gzip compression, 'lzf' LZF compression, comes by default with H5PY
     compression: lzf
+    # output file, optionally including a relative or absolute directories
     file: ./postprocessor_output/postprocessor.h5
     verbose: false
