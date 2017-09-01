@@ -6,6 +6,10 @@
 .project
 .pydevproject
 .settings
+doc/doctrees
+doc/latex
+doc/html/.buildinfo
+.cache
 build
 *egg-info/
 capriqorn/githash.py
