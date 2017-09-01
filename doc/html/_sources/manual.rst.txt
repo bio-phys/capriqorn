@@ -48,9 +48,9 @@ How to use Capriqorn
 ====================
 **Example: Hen egg-white lysozyme**
 
-We provide example input and output files at 
+We provide example input files and plots of the results at 
 http://ftp.biophys.mpg.de/tbhummer/Capriqorn. 
-We suggest to use it to get started. You can pick the parameter files for the geometry of your choice and adapt them accordingly to your problem at hand.
+We suggest to use it to get started. You can pick the parameter files for the geometry of your choice and adapt them accordingly to your problem at hand. Additionally, you can use `capriq example` to generate commented parameter files.
 
 #. **Prerequisites**
 
