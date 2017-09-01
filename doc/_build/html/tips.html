@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Capriqorn tips and tricks &#8212; Capriqorn 0.99.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.99.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Capriqorn modules" href="modules.html" />
+    <link rel="prev" title="Capriqorn tutorial" href="tutorial.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modules.html" title="Capriqorn modules"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Capriqorn tutorial"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Capriqorn 0.99.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="capriqorn-tips-and-tricks">
+<h1>Capriqorn tips and tricks<a class="headerlink" href="#capriqorn-tips-and-tricks" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="capriqorn">
+<h2>Capriqorn<a class="headerlink" href="#capriqorn" title="Permalink to this headline">¶</a></h2>
+<p>Capriqorn offers a plethora of methods and modules. See the example parameter
+file for an overview. The file can be written via the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">capriq</span> <span class="n">example</span> <span class="o">--</span><span class="n">expert</span>
+</pre></div>
+</div>
+<p>The following rules of thumb apply:</p>
+<ul class="simple">
+<li>Compression of the HDF5 output datasets using the LZF algorithm is usually
+beneficial regarding performance and file size. LZF comes with h5py by default.
+Other installations and tools may lack LZF, so better use no compression or
+gzip compression in case you need to interact with such software.  You can use
+the <cite>capriq merge</cite> tool to change the compression of a file.</li>
+</ul>
+</div>
+<div class="section" id="cadishi-distance-histogram-calculation">
+<h2>Cadishi &#8212; Distance histogram calculation<a class="headerlink" href="#cadishi-distance-histogram-calculation" title="Permalink to this headline">¶</a></h2>
+<p>An essential part of the Capriqorn pipeline consists of the distance histogram
+calculation performed by the Cadishi package.  Cadishi offers many parameters
+which allow to tune and optimize the performance.  As a quick start one may try
+the following configuration via the parameter file:</p>
+<ul class="simple">
+<li>adapt the number of CPU workers to the number of CPU sockets you have in your
+system;</li>
+<li>adapt the number of threads per CPU worker to the number of cores you have per
+socket, however, consider the following point:</li>
+<li>when choosing the thread numbers reserve one core each for the input and output
+processes and for the GPU processes (if applicable);</li>
+<li>pinning the processes to NUMA domains is usually a good idea;</li>
+<li>example: On a dual socket system with 8 cores per socket and two GPUs one may
+start with the following configuration: 2 CPU workers, 6 threads per CPU worker,
+2 GPU workers.</li>
+</ul>
+<p>By default Cadishi uses a reasonable process and thread configuration.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Capriqorn tips and tricks</a><ul>
+<li><a class="reference internal" href="#capriqorn">Capriqorn</a></li>
+<li><a class="reference internal" href="#cadishi-distance-histogram-calculation">Cadishi &#8212; Distance histogram calculation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="previous chapter">Capriqorn tutorial</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="next chapter">Capriqorn  modules</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tips.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modules.html" title="Capriqorn modules"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Capriqorn tutorial"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Capriqorn 0.99.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Juergen Koefinger, Klaus Reuter.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.5.
+    </div>
+  </body>
+</html>
