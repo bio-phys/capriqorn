@@ -37,6 +37,6 @@ test_job:
 
 # Clean up remnants.
 after_script:
-  - python setup.py develop --user --uninstall
+  - python setup.py develop --user --uninstall || true
   - rm -f ~/.local/lib/python2.7/site-packages/cadishi.egg-link
   - rm -f ~/.local/lib/python2.7/site-packages/capriqorn.egg-link
