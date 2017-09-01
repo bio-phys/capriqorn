@@ -21,6 +21,7 @@ Cadishi.
 Documentation
 -------------
 
+Please visit `doc/html/index.html`.
 Please visit `local site <doc/html/index.html>`_.
 
 
@@ -70,4 +71,4 @@ Please cite
 | Jürgen Köfinger and Gerhard Hummer
 | Phys. Rev. E 87, 052712 (2013)
 
-For your convenience, we provide citations in :download:`bibtex <./citations/PhysRevE.87.052712.bibtex>` format and :download:`endnote  <./citations/PhysRevE.87.052712.ris>` format.
+For your convenience, we provide citations in the bibtex format and the endnote format in the folder `doc/citations`.

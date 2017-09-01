@@ -1,0 +1,329 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Background &#8212; Capriqorn 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Capriqorn modules" href="modules.html" />
+    <link rel="prev" title="Capriqorn documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modules.html" title="Capriqorn modules"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Capriqorn documentation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Capriqorn 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Background</a></li>
+<li><a class="reference internal" href="#method-details">Method Details</a></li>
+<li><a class="reference internal" href="#how-to-use-capriqorn">How to use Capriqorn</a></li>
+<li><a class="reference internal" href="#tips-and-tricks">Tips and tricks</a></li>
+<li><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Capriqorn documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="next chapter">Capriqorn  modules</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/manual.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="background">
+<h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
+<p><strong>Macromolecules in solution</strong></p>
+<p>To calculate the <strong>scattering intensities</strong> and <strong>pair-distance distribution functions</strong> of macromolecules in solution from a molecular dynamics trajectory using explicit solvent, we have to account for the finite size and shape of the simulation box to avoid artifacts in the scattering intensity.  To do so, we cut out an <strong>observation volume</strong> containing the macromolecule and a sufficiently thick layer of solvent.</p>
+<p><strong>Pure solvent simulations</strong></p>
+<p>In experiments, the <strong>difference intensity</strong> between the macromolecule in solution and pure solvent is determined. We therefore also have to simulate pure solvent. In our method, we only need the <strong>particle densities</strong> and <strong>partial radial distribution functions</strong> calculated from these pure solvent simulations. This approach is in contrast to other methods, where the same observation volume as it is used for the macromolecule in solution, has to be cut out from the solvent trajectory.</p>
+<p><strong>Self-consistent solvent matching</strong></p>
+<p>Small differences in the solvent densities and structure at the border of the observation volume can lead to artifacts in the small angle regime. To avoid such artifacts, we match solvent properties of the system containing the macromolecule and pure solvent in a layer at the boundary of the observation volume by properly scaling particle densities and partial radial distribution functions.</p>
+</div>
+<div class="section" id="method-details">
+<h1>Method Details<a class="headerlink" href="#method-details" title="Permalink to this headline">¶</a></h1>
+<p><strong>Pure solvent</strong></p>
+<p>We describe pure solvent by its <strong>particle densities</strong> and <strong>partial radial distribution functions</strong>. These quantities are calculated using <strong>Capriqorn</strong> from a pure solvent simulation in a separate calculation and then provided as input to Capriqorn when analyzing the trajectory of the macromolecule in solution.</p>
+<p><strong>Macromolecule in solution</strong></p>
+<p>We we can choose various <strong>geometries (observation volumes)</strong> to cut the macromolecule and sufficient solvent out of the simulation box.</p>
+<p>Choosing the <strong>geometry</strong> we want to</p>
+<ul class="simple">
+<li>increase the signal-to-noise ratio and increase performance by minimizing the amount of bulk solvent while</li>
+<li>including sufficient bulk solvent to avoid finite size effects and to facilitate solvent matching.</li>
+</ul>
+<p>Each of the geometries listed below has its own merits. A sphere is the most efficient geometry for globular macromolecules. For all other geometries, we have to use <strong>virtual particles</strong> (&#8220;ideal gas&#8221; particles) to account for the geometry of the observation volume which comes with additional computational costs.</p>
+<p>Overview of <strong>observation volume geometries</strong>:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Sphere</dt>
+<dd>A sphere centered at the origin is cut out. No virtual particles are needed.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Cuboid and Ellipsoid</dt>
+<dd>Cuboids and ellipsoids are centered at the origin. Their faces/axes are aligned with the coordinate system. The box should be rotated such that the macromolecule is aligned correspondingly (tcl script <a class="reference download internal" href="_downloads/orient.tcl" download=""><code class="xref download docutils literal"><span class="pre">orient.tcl</span></code></a> used with VMD).</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Single reference structure</dt>
+<dd>A single reference structure is used for all frames to cut out particles within a distance of this reference structure. Minimum number of solvent particles are added, resulting in a better signal to noise ratio. Only a subset of the atoms has to be selected in the reference structure, e.g., select only carbon atoms for a protein. Uses virtual particles. Reference structure should be RMSD aligned with trajectory.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Multiple reference structures (i.e., a reference trajectory)</dt>
+<dd>A trajectory is providing reference structures for each frame individually to cut out particles within a distance of the reference structures. Usually, the trajectory used for reference is the same trajectory we want to calculate scattering intensities for. Only a subset of the atoms has to be selected in the reference structure, e.g., select only carbon atoms for a protein. Uses virtual particles. No alignment with coordinate system necessary.</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="how-to-use-capriqorn">
+<h1>How to use Capriqorn<a class="headerlink" href="#how-to-use-capriqorn" title="Permalink to this headline">¶</a></h1>
+<p><strong>Example: Hen egg-white lysozyme</strong></p>
+<p>We provide example input and output files at
+<a class="reference external" href="http://ftp.biophys.mpg.de/tbhummer/Capriqorn">http://ftp.biophys.mpg.de/tbhummer/Capriqorn</a>.
+We suggest to use it to get started. You can pick the parameter files for the geometry of your choice and adapt them accordingly to your problem at hand.</p>
+<ol class="arabic">
+<li><p class="first"><strong>Prerequisites</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="first docutils">
+<dt>Input trajectories</dt>
+<dd><ul class="first last">
+<li>PDB file (provides atom names)</li>
+<li>Trajectory file</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Mapping of atom names to element names</dt>
+<dd>Different force fields use different atom names. We have to map these names onto the corresponding element names, which determine the form factors for each element. This information is saved in a file we usually call <em>alias.dat</em>. This file contains the atom name provided by the force field in the first column and the element name in the second column.
+The bash script <a class="reference download internal" href="_downloads/get_aliases_initial_guess_from_pdb.sh" download=""><code class="xref download docutils literal"><span class="pre">get_aliases_initial_guess_from_pdb.sh</span></code></a> extracts atom names from a pdb and provides a first guess of the element names.
+<strong>!!!YOU HAVE TO EDIT THIS FILE BY HAND AND MAKE CORRECTIONS!!!</strong></dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Pure solvent</strong></dt>
+<dd><ul class="first last simple">
+<li>We suggest to use orthorhombic (cubic) boxes of similar size (or larger) as the simulation box used for the macromolecule in solution.</li>
+<li>The force field and composition of the pure solvent should be the same as in the simulation of the macromolecule.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><strong>Macromolecule in solution</strong></p>
+<blockquote>
+<div><ul>
+<li><p class="first">Preparation of the trajectory</p>
+<blockquote>
+<div><p>The macromolecule has to be centered in the box, ideally maximizing the solvent thickness around the macromolecule, i.e., maximizing the minimum distance of atoms of the macromolecule to the box borders:</p>
+<ul class="simple">
+<li>Sphere:   Center macromolecule at origin.</li>
+<li>Cuboid:   Center macromolecule at origin and align principal axis with VMD (tcl script <a class="reference download internal" href="_downloads/orient.tcl" download=""><code class="xref download docutils literal"><span class="pre">orient.tcl</span></code></a>)</li>
+<li>Ellipsoid: Center macromolecule at origin and align principal axis with VMD (tcl script <a class="reference download internal" href="_downloads/orient.tcl" download=""><code class="xref download docutils literal"><span class="pre">orient.tcl</span></code></a>)</li>
+<li>Reference: RMSD alignment of the macromolecule with chosen reference structure.</li>
+<li>MultiReference: When using the same trajectories as input and reference, no alignment is necessary.</li>
+</ul>
+<p>Trajectories can be prepared with VMD (wrapping of the box: <a class="reference external" href="http://www.ks.uiuc.edu/Research/vmd/plugins/pbctools/">http://www.ks.uiuc.edu/Research/vmd/plugins/pbctools/</a> ) or if you use Gromacs using
+<em>trjconv</em> (<em>gmx trjconv</em> in newer versions Gromacs).</p>
+</div></blockquote>
+</li>
+<li><dl class="first docutils">
+<dt>Preprocessing: capriq preproc -f preprocessor.yaml</dt>
+<dd><ul class="first last simple">
+<li>Run the preprocessor for each trajectory separately. The preprocessor can be run in parallel over a single node.  Also note that splitting the trajectory in multiple files facilitates further trivial parallelization of the preprocessor.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Histogram calculation: capriq histo -f histograms.yaml</dt>
+<dd><ul class="first last simple">
+<li>Multiple trajectory h5-files (preprocessor output) can be read in. We use Cadishi to efficiently calculate histograms on CPUs and/or GPUs.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Postprocessing: capriq postproc -f postprocessor.yaml</dt>
+<dd><ul class="first last simple">
+<li>Multiple histogram h5-files can be read in at once for postprocessing.</li>
+<li>The output is stored in an hdf5 file, which can be unpacked using &#8220;capriq unpack&#8221; such that the output files are available in ASCII format.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Analysis</strong></dt>
+<dd><ul class="first last simple">
+<li>Reading in hdf5 files with python (template is coming soon!)</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+<div class="section" id="tips-and-tricks">
+<h1>Tips and tricks<a class="headerlink" href="#tips-and-tricks" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><dl class="first docutils">
+<dt>Use VMD (<a class="reference external" href="http://www.ks.uiuc.edu/Research/vmd/">http://www.ks.uiuc.edu/Research/vmd/</a>) to choose and check geometry of observation volume.</dt>
+<dd><ul class="first last simple">
+<li>Using selection strings, you can choose representation in VMD which visualize various geometries.
+Note that the selection string syntax in VMD is different to the one used in Capriqorn (Capriqorn using MD Analysis which uses CHARMM syntax).</li>
+<li>The preprocessor can write out xyz files which you can visualize using VMD to check that the macromolecule has been cut out correctly.</li>
+<li>To cite VMD, please visit <a class="reference external" href="http://www.ks.uiuc.edu/Research/vmd/allversions/cite.html">http://www.ks.uiuc.edu/Research/vmd/allversions/cite.html</a>.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Capriqorn offers a plethora of methods and modules.
+See the example parameter files for an overview.
+The files can be written via the command capriq example [&#8211;expert]
+The <cite>&#8211;expert</cite> switch adds additional options which allow to override some default values.  Some hints on the parameter choices, the general usage, and the file handling are given in the following.</p>
+<blockquote>
+<div><ul class="simple">
+<li>For various reasons Capriqorn uses HDF5 files. To inspect a HDF5 file, use
+a viewer software or extract the HDF5 file using the Capriqorn command
+<code class="docutils literal"><span class="pre">capriq</span> <span class="pre">unpack</span></code>.</li>
+<li>Compression of the HDF5 output datasets using the LZF algorithm is usually
+beneficial regarding performance and file size. LZF comes with h5py by default.
+Other installations and tools may lack LZF, so use no compression or
+gzip compression in case you need to interact with such software.  You can use
+the <code class="docutils literal"><span class="pre">capriq</span> <span class="pre">merge</span></code> tool to change the compression of a file.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">An essential part of the Capriqorn pipeline consists of the distance histogram
+calculation performed by the Cadishi package.  Cadishi offers many parameters
+which allow to tune and optimize the performance.  As a quick start one may try
+the following configuration via the parameter file:</p>
+<blockquote>
+<div><ul class="simple">
+<li>adapt the number of CPU workers to the number of CPU sockets you have in your
+system;</li>
+<li>adapt the number of threads per CPU worker to the number of cores you have per
+socket, however, consider the following point:</li>
+<li>when choosing the thread numbers reserve one core each for the input and output
+processes and for the GPU processes (if applicable);</li>
+<li>pinning the processes to NUMA domains is usually a good idea;</li>
+<li>example: On a dual socket system with 8 cores per socket and two GPUs one may
+start with the following configuration: 2 CPU workers, 6 threads per CPU worker,
+2 GPU workers.</li>
+</ul>
+</div></blockquote>
+<p>By default Cadishi uses a reasonable process and thread configuration.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="notes">
+<h1>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p class="first">Efficiency:</p>
+<blockquote>
+<div><ul class="simple">
+<li>In the current version of the code, the histogram calculation in Cadishi has been highly optimized. Compared to the histogram calculation, the preprocessor, however, can take a significant amount of time as it has not been fully optimized yet.</li>
+<li>The preprocessor pipeline can be parallelized using the ParallelFork() and ParallelJoin() filters.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Capriqorn uses MDAnalysis (<a class="reference external" href="http://www.mdanalysis.org">http://www.mdanalysis.org</a>) for reading in trajectories.</p>
+<blockquote>
+<div><ul class="simple">
+<li>From their website: &#8220;MDAnalysis is an object-oriented Python library to analyze trajectories from molecular dynamics (MD) simulations in many popular formats. It can write most of these formats, too, together with atom selections suitable for visualization or native analysis tools.&#8221;</li>
+<li>To cite MDAnalysis, please visit <a class="reference external" href="http://www.mdanalysis.org/pages/citations/">http://www.mdanalysis.org/pages/citations/</a>.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modules.html" title="Capriqorn modules"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Capriqorn documentation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Capriqorn 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Juergen Koefinger, Klaus Reuter.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.5.
+    </div>
+  </body>
+</html>

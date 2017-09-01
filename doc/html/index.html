@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Capriqorn documentation &#8212; Capriqorn 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Background" href="manual.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="manual.html" title="Background"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Capriqorn 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Capriqorn documentation</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li><a class="reference internal" href="#basic-workflow">Basic workflow</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#documentation">Documentation</a></li>
+<li><a class="reference internal" href="#technical-features">Technical Features</a></li>
+<li><a class="reference internal" href="#source-documentation">Source documentation</a></li>
+<li><a class="reference internal" href="#license-and-citation">License and Citation</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="manual.html"
+                        title="next chapter">Background</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="capriqorn-documentation">
+<h1>Capriqorn documentation<a class="headerlink" href="#capriqorn-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p><strong>CAPRIQORN</strong>: <strong>CA</strong>lculation of <strong>P</strong>(<strong>R</strong>) and <strong>I</strong>(<strong>Q</strong>) <strong>O</strong>f mac<strong>R</strong>omolecules in solutio<strong>N</strong>.</p>
+<img alt="_images/capriqorn.png" src="_images/capriqorn.png" />
+<p>Capriqorn is a software suite designed to facilitate the calculation of
+quantities such as <strong>pair-distance distribution functions</strong> and <strong>scattering
+intensities</strong> directly from the output trajectories of <strong>molecular dynamics
+simulations</strong>. In particular, Capriqorn implements the methods published in the
+following publication:</p>
+<div class="line-block">
+<div class="line"><a class="reference external" href="https://journals.aps.org/pre/pdf/10.1103/PhysRevE.87.052712">Atomic-resolution structural information from scattering experiments on macromolecules in solution</a></div>
+<div class="line">Jürgen Köfinger and Gerhard Hummer</div>
+<div class="line">Phys. Rev. E 87, 052712 (2013)</div>
+</div>
+<p>For your convenience, we provide citations in <a class="reference download internal" href="_downloads/PhysRevE.87.052712.bibtex" download=""><code class="xref download docutils literal"><span class="pre">bibtex</span></code></a> format and <a class="reference download internal" href="_downloads/PhysRevE.87.052712.ris" download=""><code class="xref download docutils literal"><span class="pre">endnote</span></code></a> format.</p>
+<p>Additionally, a novel method for <strong>non-spherical observation volumes</strong> using <strong>virtual
+particles</strong> has been implemented (manuscript in preparation).</p>
+<p>Capriqorn is mostly implemented in Python with
+time-critical kernels accelerated using compiled Cython code. The distance
+histogram calculation is done via the Cadishi package which offers
+high-performance parallel implementations for the CPU and the GPU.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>Capriqorn runs on Linux and OS X platforms. In particular, the following software
+packages are required.</p>
+<ul class="simple">
+<li>Capriqorn requires a Python 2.7 installation including the NumPy, SciPy, Cython,
+h5py, and PyYAML modules. We have successfully used the Anaconda Python
+Distribution which provides all these modules out of the box. Moreover, to
+compile the Cython kernels, a recent GCC installation is required.</li>
+<li>Capriqorn requires the Cadishi Python package to perform fast distance histogram
+calculations on CPUs and GPUs.</li>
+<li>Capriqorn requires the MDAnalysis Python library, in particular its data reader which
+supports various file formats from molecular dynamics simulation codes.</li>
+<li>Optionally and for convenience, a HDF5 viewer (such as HDFView or HDF Compass) is
+useful to be able to quickly inspect the HDF5 files generated by Capriqorn.</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>The package comes with a standard Python setup.py installer. It is installed
+e.g. as follows into the user&#8217;s homedirectory:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span>
+</pre></div>
+</div>
+<p>In this case, setup.py copies the Cadishi files into the directory <code class="docutils literal"><span class="pre">~/.local</span></code>.
+Make sure that your <code class="docutils literal"><span class="pre">PATH</span></code> environment variable contains the directory
+<code class="docutils literal"><span class="pre">~/.local/bin</span></code>. To perform a system-wide installation omit the <code class="docutils literal"><span class="pre">--user</span></code>
+flag (and prefix the command with <code class="docutils literal"><span class="pre">sudo</span></code> to gain administrative privileges on
+a typical Linux system).</p>
+<div class="section" id="quick-start">
+<h3>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h3>
+<p>To run the example analysis pipeline that comes with Capriqorn please issue
+the following sequence of commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">capriq</span> <span class="n">example</span>  <span class="c1"># generate example parameter files</span>
+<span class="n">capriq</span> <span class="n">preproc</span>  <span class="c1"># run preprocessor</span>
+<span class="n">capriq</span> <span class="n">histo</span>  <span class="c1"># run distance histogram calculation</span>
+<span class="n">capriq</span> <span class="n">postproc</span>  <span class="c1"># run postprocessor</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="basic-workflow">
+<h3>Basic workflow<a class="headerlink" href="#basic-workflow" title="Permalink to this headline">¶</a></h3>
+<p>Capriqorn implements the concept of a data processing pipeline. A typical workflow
+consists of three stages.</p>
+<ol class="arabic simple">
+<li>preprocessor run: Read MD trajectory, apply methods, write to single HDF5 file.</li>
+<li>distance histogram calculation: Read frames from HDF5 file, compute histograms,
+write to HDF5 file.</li>
+<li>postprocessor run: Read histograms from HDF5 file, perform computations (PDDF),
+write to HDF5 file.</li>
+</ol>
+<p>The data processing pipeline is implemented using Python generators.  Methods
+(computations, geometry and data modifications, etc.) are considered &#8216;filters&#8217;.</p>
+</div>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="manual.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manual.html#method-details">Method Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manual.html#how-to-use-capriqorn">How to use Capriqorn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manual.html#tips-and-tricks">Tips and tricks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manual.html#notes">Notes</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="technical-features">
+<h2>Technical Features<a class="headerlink" href="#technical-features" title="Permalink to this headline">¶</a></h2>
+<p>Capriqorn provides &#8211; but is not restricted to &#8211; the following functionalities:</p>
+<ul class="simple">
+<li>versatile read-in of MD trajectories in various formats</li>
+<li>trajectory preprocessing</li>
+<li>high-performance parallel distance histogram calculation on CPUs and GPUs using
+the Cadishi package</li>
+<li>histogram postprocessing</li>
+<li>efficient data handling using HDF5 files</li>
+</ul>
+</div>
+<div class="section" id="source-documentation">
+<h2>Source documentation<a class="headerlink" href="#source-documentation" title="Permalink to this headline">¶</a></h2>
+<p>To be done via docstrings after re-structuring of the code base.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Capriqorn  modules</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="executables.html">Capriqorn executables</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="license-and-citation">
+<h2>License and Citation<a class="headerlink" href="#license-and-citation" title="Permalink to this headline">¶</a></h2>
+<p>Capriqorn is released under the GPLv2 license. See the file
+<a class="reference download internal" href="_downloads/LICENSE.txt" download=""><code class="xref download docutils literal"><span class="pre">LICENSE.txt</span></code></a> for details.</p>
+<p>Copyright 2015-2017</p>
+<ul class="simple">
+<li>Jürgen Köfinger,
+Max Planck Institute of Biophysics,
+Department of Theoretical Biophysics,
+Max-von-Laue-Straße 3,
+60438 Frankfurt am Main,
+Germany,
+<a class="reference external" href="mailto:juergen&#46;koefinger&#37;&#52;&#48;biophys&#46;mpg&#46;de">juergen<span>&#46;</span>koefinger<span>&#64;</span>biophys<span>&#46;</span>mpg<span>&#46;</span>de</a></li>
+<li>Klaus Reuter,
+Max Planck Computing and Data Facility,
+Gießenbachstraße 2,
+85748 Garching,
+Germany,
+<a class="reference external" href="mailto:klaus&#46;reuter&#37;&#52;&#48;mpcdf&#46;mpg&#46;de">klaus<span>&#46;</span>reuter<span>&#64;</span>mpcdf<span>&#46;</span>mpg<span>&#46;</span>de</a></li>
+<li>Max Linke,
+Max Planck Institute of Biophysics,
+Department of Theoretical Biophysics,
+Max-von-Laue-Straße 3,
+60438 Frankfurt am Main,
+Germany,
+<a class="reference external" href="mailto:max&#46;linke&#37;&#52;&#48;biophys&#46;mpg&#46;de">max<span>&#46;</span>linke<span>&#64;</span>biophys<span>&#46;</span>mpg<span>&#46;</span>de</a></li>
+</ul>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="manual.html" title="Background"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Capriqorn 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Juergen Koefinger, Klaus Reuter.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.5.
+    </div>
+  </body>
+</html>
