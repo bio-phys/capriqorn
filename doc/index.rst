@@ -4,7 +4,7 @@ Capriqorn documentation
 Introduction
 ------------
 
-**CAPRIQORN**: **CA**\ lculation of **P**\(**R**) and **I**\(**Q**\) **O**\f mac\ **R**\ omolecules in solutio\ **N**. 
+**CAPRIQORN**: **CA**\ lculation of **P**\(**R**) and **I**\(**Q**\) **O**\f mac\ **R**\ omolecules in solutio\ **N**.
 
 .. image:: ./img/capriqorn.png
 
@@ -14,14 +14,14 @@ intensities** directly from the output trajectories of **molecular dynamics
 simulations**. In particular, Capriqorn implements the methods published in the
 following publication:
 
-| `Atomic-resolution structural information from scattering experiments on macromolecules in solution <https://journals.aps.org/pre/pdf/10.1103/PhysRevE.87.052712>`_ 
+| `Atomic-resolution structural information from scattering experiments on macromolecules in solution <https://journals.aps.org/pre/pdf/10.1103/PhysRevE.87.052712>`_
 | Jürgen Köfinger and Gerhard Hummer
 | Phys. Rev. E 87, 052712 (2013)
 
 For your convenience, we provide the citation in :download:`bibtex <./citations/PhysRevE.87.052712.bibtex>` format and :download:`endnote  <./citations/PhysRevE.87.052712.ris>` format.
 
 Additionally, a novel method for **non-spherical observation volumes** using **virtual
-particles** has been implemented (manuscript in preparation). 
+particles** has been implemented (manuscript in preparation).
 
 Capriqorn is mostly implemented in Python with
 time-critical kernels accelerated using compiled Cython code. The distance
@@ -131,7 +131,7 @@ To be done via docstrings after re-structuring of the code base.
 License and Citation
 --------------------
 
-Capriqorn is released under the GPLv2 license. See the file 
+Capriqorn is released under the GPLv2 license. See the file
 :download:`LICENSE.txt <../LICENSE.txt>` for details.
 
 Copyright 2015-2017
