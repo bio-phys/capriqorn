@@ -22,7 +22,6 @@ Documentation
 -------------
 
 Please visit `doc/html/index.html`.
-Please visit `local site <doc/html/index.html>`_.
 
 
 Installation
