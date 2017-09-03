@@ -18,6 +18,7 @@ Capriqorn was developed, built, and tested on SUSE Linux Enterprise Server 11 SP
 Anaconda Python distribution.  It requires NumPy, SciPy, h5py, MDAnalysis and
 Cadishi.
 
+
 Documentation
 -------------
 
@@ -44,10 +45,12 @@ and options.
 To run an example calculation based on the data set included in Capriqorn
 proceed as follows::
 
-1. Run `capriq preproc` to generate the necessary YAML input files for the preprocessor, the histogram calculation, and the postprocessor. Optionally, inspect and adapt the parameter files.
+1. Run `capriq example` to generate the necessary YAML input files for the
+   preprocessor, the histogram calculation, and the postprocessor.
+   Optionally, inspect and adapt the parameter files.
 2. Run the preprocessor `capriq preproc`.
-4. Run `capriq histo`
-6. Run `capriq postproc`
+3. Run `capriq histo`
+4. Run `capriq postproc`
 
 Note that the step 2 is equivalent to the `cadishi` commands.
 
@@ -55,7 +58,7 @@ Note that the step 2 is equivalent to the `cadishi` commands.
 Licensing
 ---------
 
-Capriqorn is released under the GPLv2 license. See the file 
+Capriqorn is released under the GPLv2 license. See the file
 `LICENSE.txt` for details.
 
 Copyright 2015 - 2017: Juergen Koefinger, Klaus Reuter, Max Linke
@@ -64,7 +67,7 @@ Copyright 2015 - 2017: Juergen Koefinger, Klaus Reuter, Max Linke
 CITATION
 --------
 
-Please cite 
+Please cite
 
 | `Atomic-resolution structural information from scattering experiments on macromolecules in solution <https://journals.aps.org/pre/pdf/10.1103/PhysRevE.87.052712>`_
 | Jürgen Köfinger and Gerhard Hummer
