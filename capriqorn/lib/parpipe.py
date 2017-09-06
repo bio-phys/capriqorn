@@ -42,6 +42,8 @@ SIDE_UPSTREAM = 1
 SIDE_DOWNSTREAM = 2
 # max. elements before the queue.put() function blocks, see <pipeutil.py>
 QUEUE_MAXSIZE = 32
+# seconds before the queue.get() function raises QueueEmpty(), see <pipeutil.py>
+#QUEUE_TIMEOUT = 300.0
 
 
 class ParallelFork(base.Filter):

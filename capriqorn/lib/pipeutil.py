@@ -4,10 +4,13 @@
 # LICENSE.txt, and the documentation for details.
 
 from __future__ import print_function
+import os
 import sys
-import numpy as np
+import time
+import signal
 import copy
 import multiprocessing as mp
+import numpy as np
 from cadishi import base
 from cadishi import util
 from cadishi import dict_util
@@ -210,10 +213,19 @@ def pipeline_segment_worker(pipeline_segment, pipeline_module, worker_id):
     pipeline = instantiate_pipeline(pipeline_segment, pipeline_module, worker_id)
     check_filter_dependencies(pipeline, pipeline_module)
     check_filter_conflicts(pipeline, pipeline_module)
-    pipeline[-1].dump()
-    print(" Shutting down `" + worker_id + "'.")
-    print(util.SEP)
-    sys.exit(0)
+    try:
+        pipeline[-1].dump()
+    except:
+        print(" Exception detected in `" + worker_id + "'.")
+        print(" Sending shutdown signal to master process. Goodbye.")
+        print(util.SEP)
+        os.kill(os.getppid(), signal.SIGUSR1)
+        raise
+        sys.exit(1)
+    else:
+        print(" Shutting down `" + worker_id + "'.")
+        print(util.SEP)
+        sys.exit(0)
 
 
 def get_pipeline_meta_segments(pipeline_meta):
@@ -283,6 +295,30 @@ def get_pipeline_meta_segments(pipeline_meta):
     return meta_segments
 
 
+# List containing the multiprocessing workers.
+mp_pool = []
+# flag to avoid the signal handler act multiple times
+mp_shutdown_recv = False
+# We define a signal handler here to be able to catch errors from child
+# processes, the parameters of signal handlers don't allow to pass values,
+# but we need 'mp_pool' from outside.
+def pipeline_master_unexpectedShutdownHandler(signum, frame):
+    """Singnal handler to catch SIGUSR1 and SIGTERM sent by child processes."""
+    global mp_shutdown_recv
+    print(" Master: Shutdown signal received from child process!")
+    if not mp_shutdown_recv:
+        mp_shutdown_recv = True
+        # give bogus child time to re-raise the exception
+        time.sleep(1.0)
+        print(" Master: Emergency shotdown, killing all child processes.")
+        print(" Master: See the files in './pipeline_log/' to learn about the cause.")
+        for mp_worker in mp_pool:
+            mp_worker.terminate()
+        print(" Master: Killing master process. Goodbye.")
+        print(util.SEP)
+        os.kill(os.getpid(), signal.SIGTERM)
+        os.kill(os.getpid(), signal.SIGKILL)
+
 def run_pipeline(pipeline_meta, pipeline_module):
     """Run pipeline by dividing the pipeline into segments, setting up the
     actual pipeline segments and running them on multiprocessing workers.
@@ -320,7 +356,6 @@ def run_pipeline(pipeline_meta, pipeline_module):
         # launch child processes to work on the segmented pipeline
         enumerated_segments = [pair for pair in enumerate(meta_segments)]
         last, segment = enumerated_segments[-1]
-        mp_pool = []
         for i, segment in enumerated_segments:
             if (i == last):
                 # run the last pipeline segment on the present process
@@ -336,8 +371,19 @@ def run_pipeline(pipeline_meta, pipeline_module):
         for mp_worker in mp_pool:
             mp_worker.start()
         sys.stdout.flush()
+        # install the shutdown handler for SIGUSR1 events received from child processes
+        signal.signal(signal.SIGUSR1, pipeline_master_unexpectedShutdownHandler)
         # launch the last segment of the pipeline
-        pipeline[-1].dump()
-        # all the child processes need to be finished until now, nevertheless we join() them
-        for mp_worker in mp_pool:
-            mp_worker.join()
+        try:
+            pipeline[-1].dump()
+        except:
+            print(" Master: Exception detected in master process.")
+            print(" Master: Sending shutdown signal to all processes. Goodbye.")
+            for mp_worker in mp_pool:
+                mp_worker.terminate()
+            print(util.SEP)
+            raise
+        else:
+            # all the child processes should be finished until now, nevertheless we join() them
+            for mp_worker in mp_pool:
+                mp_worker.join()

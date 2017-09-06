@@ -15,10 +15,9 @@
     selection: all  # [expert]
     verbose: false
 - ParallelFork:  # parallel pipeline, region extends until ParallelJoin
-    # set to true in tandem with the ParallelJoin filter below
-    active: false  
+    active: false
     # number of processes used to process the pipeline in parallel
-    n_workers: 2 
+    n_workers: 2
     verbose: false
 - VirtualParticles: # using uniformly distributed point particles (virtual particles) for non-spherical observation volumes
     active: false
@@ -28,15 +27,15 @@
     method: lattice
     # lattice grid points are shifted randomly and uniformly within uniti cell [expert]
     noise: true  # [expert]
-    # more detailed output if true 
+    # more detailed output if true
     verbose: false
     # size of the box containing virtual particles. Has to be smaller than largest distance of oberservation volume.
     x_box_length: 80.0
-    # density of virtual particles 
+    # density of virtual particles
     x_density: 0.1
-    # set >0 to achieve reproducibility 
-    random_seed: 0  
-- Sphere: # spherical observation volume (centered at origin) 
+    # set >0 to achieve reproducibility
+    random_seed: 0
+- Sphere: # spherical observation volume (centered at origin)
     active: true
     # radius of sphere
     radius: 35.0
@@ -48,7 +47,7 @@
     # bin size [Angsgtrom] for distance-from-center histograms [expert]
     len_histo_dr: 0.01  # [expert]
     verbose: false
-- Ellipsoid: # ellipsoidal observation volume (centered at origin and axis aligned with coordinate system) 
+- Ellipsoid: # ellipsoidal observation volume (centered at origin and axis aligned with coordinate system)
     active: false
     # length of the half-axis of the ellipsoid
     semi_principal_axes:
@@ -75,7 +74,7 @@
     topology_file: null
     # selection string to select parts of reference structure (using MDAnalysis)
     selection: all
-    # cut out all particles withinin 'distance' from selected particles of reference structure 
+    # cut out all particles withinin 'distance' from selected particles of reference structure
     distance: null
     # width of shell of bulk solvent used for solvent matching (not to be confused with solvation layer surrounding macromolecules)
     # set to -1 if no shell is needed, e.g., if you use previously matched rdfs
@@ -91,24 +90,24 @@
     trajectory_file: null
     # selection string to select parts of reference structure (using MDAnalysis)
     selection: all
-    # cut out all particles withinin 'distance' from selected particles ('selection') of reference structure of given frame 
-    distance: null  
+    # cut out all particles withinin 'distance' from selected particles ('selection') of reference structure of given frame
+    distance: null
     # if -1, maximum distance within observation volume is determined automatically
-    r_max: -1   
+    r_max: -1
     # width of shell of bulk solvent used for solvent matching (not to be confused with solvation layer surrounding macromolecules)
     # set to -1 if no shell is needed, e.g., if you use previously matched rdfs
-    shell_width: 3.0    
+    shell_width: 3.0
     # algorithm for cutting out observation volume (brute_force or cell_lists) [expert]
     algorithm: brute_force  # [expert]
     verbose: false
 - XYZ:  # XYZ file writer --- writing out every frame harms performance significantly
     active: false
     # optional file prefix string before frame number
-    file_prefix: null  
+    file_prefix: null
     # output directory for xyz files
     output_directory: ./preprocessor_output
     # only dump the first frame, then disable XYZ writer
-    first_frame_only: true 
+    first_frame_only: true
     verbose: false
 - ParallelJoin: # parallel pipeline, region extends starting from ParallelFork
     verbose: false

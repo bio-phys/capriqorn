@@ -1,0 +1,23 @@
+# Capriqorn parallel preprocessor setup which shall fail in a child process.
+- DummyReader:
+    active: true
+    n_frames: 10
+    verbose: false
+- ParallelFork:  # parallel pipeline, region extends until ParallelJoin
+    active: true
+    n_workers: 2
+    verbose: false
+- Dummy:
+    active: true
+    verbose: false
+    sleep_seconds: 0
+    raise_exception: true
+- ParallelJoin: # parallel pipeline, region extends starting from ParallelFork
+    verbose: false
+- Dummy:
+    active: true
+    verbose: false
+    sleep_seconds: 0
+    raise_exception: false
+- DummyWriter:
+    active: true

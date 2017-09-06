@@ -29,6 +29,10 @@ test_job:
     - cd postprocessor_output
     - capriq unpack postprocessor.h5
     - capriq merge --output foo.h5 postprocessor.h5
+    # call the parallel pipeline testcases
+    - capriq preproc ${BASE}/capriqorn/tests/data/test_preprocessor_parallel_success.yaml
+    - capriq preproc ${BASE}/capriqorn/tests/data/test_preprocessor_child_failure.yaml  || [ $? == 1 ]
+    - capriq preproc ${BASE}/capriqorn/tests/data/test_preprocessor_master_failure.yaml || [ $? == 1 ]
     - cd $BASE
     # Test the documentation creation.
     - python setup.py build_sphinx
