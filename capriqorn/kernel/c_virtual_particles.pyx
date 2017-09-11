@@ -1,7 +1,7 @@
 # -*- Mode: python; tab-width: 4; indent-tabs-mode:nil; coding: utf-8 -*-
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 fileencoding=utf-8
-# 
-# Capriqorn --- CAlculation of P(R) and I(Q) Of macRomolcules in solutioN 
+#
+# Capriqorn --- CAlculation of P(R) and I(Q) Of macRomolcules in solutioN
 #
 # Copyright (c) Juergen Koefinger, Klaus Reuter, and contributors.
 # See the file AUTHORS.rst for the full list of contributors.
@@ -10,9 +10,6 @@
 
 """Time-critical routines from <preproc_filter_virtual_particles.py>,
 rewritten and accelerated using Cython.
-
-This file is part of the capriqorn package.  See README.rst, LICENSE.txt, and
-the documentation for details.
 """
 
 
@@ -40,18 +37,18 @@ def genLattice(gridLength, latticeConstant, noise=False):
     base[0, 0] = latticeConstant
     base[1, 1] = latticeConstant
     base[2, 2] = latticeConstant
-    
+
     cdef FTYPE_t alpha = np.random.uniform(0, 2 * np.pi)
     cdef FTYPE_t beta = np.arccos(np.random.uniform(-1, 1))
     cdef FTYPE_t gamma = np.random.uniform(0, 2 * np.pi)
-    
+
     cdef np.ndarray[FTYPE_t, ndim=2] baseNew = rot.rotate(base, alpha, beta, gamma)
-    
+
     cdef np.ndarray[FTYPE_t, ndim=2] lattice = np.zeros((gridLength ** 3, 3))
-    
+
     cdef FTYPE_t l_half = gridLength / 2
     cdef ITYPE_t idx = 0
-    
+
     cdef ITYPE_t i
     cdef ITYPE_t j
     cdef ITYPE_t k
@@ -74,7 +71,7 @@ def genLattice(gridLength, latticeConstant, noise=False):
 
     cdef np.ndarray[FTYPE_t, ndim=1] offset = np.random.uniform(-latticeConstant / 2., latticeConstant / 2., 3)
     cdef np.ndarray[FTYPE_t, ndim=2] noize
-    
+
     if noise is True:
         # create randomness in a vectorized way
         noize = np.random.uniform(-0.5, 0.5, (gridLength ** 3, 3))

@@ -1,21 +1,15 @@
 # -*- Mode: python; tab-width: 4; indent-tabs-mode:nil; coding: utf-8 -*-
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 fileencoding=utf-8
-# 
-# Capriqorn --- CAlculation of P(R) and I(Q) Of macRomolcules in solutioN 
+#
+# Capriqorn --- CAlculation of P(R) and I(Q) Of macRomolcules in solutioN
 #
 # Copyright (c) Juergen Koefinger, Klaus Reuter, and contributors.
 # See the file AUTHORS.rst for the full list of contributors.
 #
 # Released under the GNU Public Licence, v2 or any higher version, see the file LICENSE.txt.
 
-"""RDF calculation
 
-(imported from lsz.tar.gz)
-
-(c) Juergen Koefinger, MPI Biophysics, Frankfurt am Main, Germany
-
-This file is part of the capriqorn package.  See README.rst,
-LICENSE.txt, and the documentation for details.
+"""RDF calculation.
 """
 
 
@@ -334,7 +328,7 @@ def getElementPairsAtOnce(histo):
 
 
 def fade(xval, yval, ginfty, l):
-    """ 
+    """
     Decrease noise in plateau of rdf.
 
     Parameters
@@ -342,8 +336,8 @@ def fade(xval, yval, ginfty, l):
     xval: array_like
     yval: array_like
     l: float
-        Decay constant for exponetial tapering.  
-    ginfty: float 
+        Decay constant for exponetial tapering.
+    ginfty: float
         Limiting value of rdf.
     Returns
     -------
@@ -361,7 +355,7 @@ def getRDFCumu(histo, delta):
     Returns
     -------
     histoCumu: array_like
-        Integrated rdfs from large to small distances. 
+        Integrated rdfs from large to small distances.
     """
     # Leave out last bin, which later is set to ginfty. Thus, reapplying this function won't change ginfty.
     histoCumu = histo[:-2, :].copy()
@@ -383,7 +377,7 @@ def getStartingBin(histo, fitFraction):
     Returns
     -------
     index: int
-        Index of bin at approximately 'fitFraction'*(maximal distance) from the end. 
+        Index of bin at approximately 'fitFraction'*(maximal distance) from the end.
     """
     index = len(histo) - int(len(histo) * fitFraction)
     return index
@@ -402,8 +396,8 @@ def getPlateauValue(histoCumu, index):
 
 def taperNoise(histo, index, ginfty, noiseFraction=0.01, verb=False):
     """
-    Tapers noise by subtracting ginfty from rdf, multiplying the resulting residuals with rapidly decaying function, and adding back ginfty. 
-    If noiseFraction is set to 1 then no tapering of the noise takes place.  
+    Tapers noise by subtracting ginfty from rdf, multiplying the resulting residuals with rapidly decaying function, and adding back ginfty.
+    If noiseFraction is set to 1 then no tapering of the noise takes place.
     """
     histo_out = histo.copy()
     if 0 < noiseFraction and noiseFraction < 1:
@@ -431,7 +425,7 @@ def smooth(histo, delta, fitFraction,  noiseFraction, verb=False):
 
     Notes
     -----
-    The parameter 'fitFraction' is the fraction of the rdf distance range at its end, where the rdf shows a plateau. 
+    The parameter 'fitFraction' is the fraction of the rdf distance range at its end, where the rdf shows a plateau.
     'fitFraction' should not be larger than the shortest plateau of the partial rdfs.
     """
     histoCumu = getRDFCumu(histo, delta)

@@ -1,7 +1,7 @@
 # -*- Mode: python; tab-width: 4; indent-tabs-mode:nil; coding: utf-8 -*-
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 fileencoding=utf-8
-# 
-# Capriqorn --- CAlculation of P(R) and I(Q) Of macRomolcules in solutioN 
+#
+# Capriqorn --- CAlculation of P(R) and I(Q) Of macRomolcules in solutioN
 #
 # Copyright (c) Juergen Koefinger, Klaus Reuter, and contributors.
 # See the file AUTHORS.rst for the full list of contributors.
@@ -10,8 +10,6 @@
 
 """Capriqorn (parallel) pipeline builder library, used by the pre-/postprocessor executables.
 """
-# This file is part of the capriqorn package.  See README.rst,
-# LICENSE.txt, and the documentation for details.
 
 from __future__ import print_function
 import os
@@ -25,10 +23,6 @@ from cadishi import base
 from cadishi import util
 from cadishi import dict_util
 from . import parpipe
-
-__author__ = "Klaus Reuter"
-__copyright__ = "Copyright (C) 2015-2017 Juergen Koefinger, Klaus Reuter"
-__license__ = "license_tba"
 
 
 def instantiate_pipeline(pipeline_meta, pipeline_module, worker_id=None):

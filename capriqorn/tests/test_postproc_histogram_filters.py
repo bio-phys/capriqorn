@@ -1,29 +1,25 @@
+#!/usr/bin/env python2.7
 # -*- Mode: python; tab-width: 4; indent-tabs-mode:nil; coding: utf-8 -*-
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 fileencoding=utf-8
-# 
-# Capriqorn --- CAlculation of P(R) and I(Q) Of macRomolcules in solutioN 
+#
+# Capriqorn --- CAlculation of P(R) and I(Q) Of macRomolcules in solutioN
 #
 # Copyright (c) Juergen Koefinger, Klaus Reuter, and contributors.
 # See the file AUTHORS.rst for the full list of contributors.
 #
 # Released under the GNU Public Licence, v2 or any higher version, see the file LICENSE.txt.
 
-#!/usr/bin/env python2.7
 
 """A set of unit tests of the Capriqorn post-processing pipeline code.
 """
-# This file is part of the Capriqorn package.  See README.rst,
-# LICENSE.txt, and the documentation for details.
 
 
 import sys
 import os
 import glob
 import numpy as np
-
 import cadishi.base as base
 import cadishi.util as util
-
 from capriqorn.postproc import io as postproc_io
 from capriqorn.postproc import filter as postproc_filter
 from capriqorn.testing import FrameCounter, KeepLastFrame

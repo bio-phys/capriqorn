@@ -1,28 +1,24 @@
 # -*- Mode: python; tab-width: 4; indent-tabs-mode:nil; coding: utf-8 -*-
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 fileencoding=utf-8
-# 
-# Capriqorn --- CAlculation of P(R) and I(Q) Of macRomolcules in solutioN 
+#
+# Capriqorn --- CAlculation of P(R) and I(Q) Of macRomolcules in solutioN
 #
 # Copyright (c) Juergen Koefinger, Klaus Reuter, and contributors.
 # See the file AUTHORS.rst for the full list of contributors.
 #
 # Released under the GNU Public Licence, v2 or any higher version, see the file LICENSE.txt.
 
-"""capriqorn preprocessor IO, MD reader/writer
 
-This file is part of the capriqorn package.  See README.rst,
-LICENSE.txt, and the documentation for details.
+"""Capriqorn preprocessor IO MD reader/writer.
 """
+
+
 import numpy as np
 import MDAnalysis as mda
 from six.moves import range
 
 from cadishi import base
 from cadishi import pbc
-
-__author__ = "Juergen Koefinger, Klaus Reuter"
-__copyright__ = "Copyright (C) 2015-2016 Juergen Koefinger, Klaus Reuter"
-__license__ = "license_tba"
 
 
 class MDReader(base.Reader):
