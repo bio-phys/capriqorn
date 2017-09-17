@@ -22,7 +22,10 @@ Cadishi.
 Documentation
 -------------
 
-Please visit `doc/html/index.html`.
+Documentation is available at `http://capriqorn.readthedocs.io/en/latest/
+<http://capriqorn.readthedocs.io/en/latest/>`_.
+Alternatively, you may access the local copy at `doc/html/index.html` after having
+cloned the repository.
 
 
 Installation

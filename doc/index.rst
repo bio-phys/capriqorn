@@ -157,7 +157,7 @@ Copyright 2015-2017
   Germany,
   max.linke@biophys.mpg.de
 
-.. TODO: Add code paper reference(s) once it is on the arxiv and/or published!
+.. TODO: Add code paper reference(s) once it is on the arxiv and/or published.
 
 
 Indices and tables
