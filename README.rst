@@ -16,7 +16,7 @@ calculations.
 Capriqorn was developed, built, and tested on SUSE Linux Enterprise Server 11 SP
 4, Ubuntu Linux 14.04 LTS, and Scientific Linux 7 using cPython 2.7.11 from the
 Anaconda Python distribution.  It requires NumPy, SciPy, h5py, MDAnalysis and
-Cadishi.
+Cadishi ( ]https://github.com/bio-phys/cadishi) .
 
 
 Documentation
