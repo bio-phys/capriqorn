@@ -181,7 +181,7 @@ def merge_virtual_particles(frm):
     """
     assert isinstance(frm, base.Container)
     # --- sum up the distance histograms
-    if frm.has_key(base.loc_histograms):
+    if frm.contains_key(base.loc_histograms):
         histgrms = frm.get_data(base.loc_histograms)
         for key in histgrms.keys():
             # Use StripVirtualParticles() earlier in the pipeline!
@@ -204,7 +204,7 @@ def merge_virtual_particles(frm):
                 histgrms[key_new] += histgrms[key]
                 del histgrms[key]
     # --- sum up the particle number arrays
-    if frm.has_key(base.loc_nr_particles):
+    if frm.contains_key(base.loc_nr_particles):
         partnums = frm.get_data(base.loc_nr_particles)
         elements = util.get_elements(partnums.keys())
         if ('X1' in elements) and ('X2' in elements):
@@ -216,7 +216,7 @@ def merge_virtual_particles(frm):
             del partnums['X1']
             del partnums['X2']
     # --- sum up the length histogram arrays
-    if frm.has_key(base.loc_len_histograms):
+    if frm.contains_key(base.loc_len_histograms):
         lenhists = frm.get_data(base.loc_len_histograms)
         elements = util.get_elements(lenhists.keys())
         if ('X1' in elements) and ('X2' in elements):

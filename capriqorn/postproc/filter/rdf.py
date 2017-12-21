@@ -49,8 +49,8 @@ class RDF(base.Filter):
         """
         # This implementation follows <legacy/getRDFFromPBC.py> by Juergen Koefinger
 
-        assert(frm.has_key(base.loc_volumes))
-        assert(frm.has_key(base.loc_nr_particles))
+        assert(frm.contains_key(base.loc_volumes))
+        assert(frm.contains_key(base.loc_nr_particles))
         # obtain array of box volumes from the original trajectory frames
         _volumes = frm.get_data(base.loc_volumes)
         box_volumes = _volumes['box']

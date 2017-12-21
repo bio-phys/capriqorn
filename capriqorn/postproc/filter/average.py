@@ -153,16 +153,16 @@ class Average(base.Filter):
         # --- perform averaging on histograms
         val = np.float_(self.factor) / np.float_(n_avg)
         # --- rescale distance histograms
-        if frm_out.has_key(base.loc_histograms):
+        if frm_out.contains_key(base.loc_histograms):
             X = frm_out.get_data(base.loc_histograms)
             dict_util.scale_values(X, val)
         # --- multiref: rescale shell XX histogram
         if (virtual_param is not None and self.geometry == 'MultiReferenceStructure'):
-            if frm_out.has_key(base.loc_shell_Hxx):
+            if frm_out.contains_key(base.loc_shell_Hxx):
                 X = frm_out.get_data(base.loc_shell_Hxx)
                 dict_util.scale_values(X, val)
         # --- rescale length histograms
-        if frm_out.has_key(base.loc_len_histograms):
+        if frm_out.contains_key(base.loc_len_histograms):
             X = frm_out.get_data(base.loc_len_histograms)
             dict_util.scale_values(X, val)
         # ---
@@ -204,7 +204,7 @@ class Average(base.Filter):
                         histo_sample = histo_par['histogram']['sum']
                         self.factor = self.factor / float(histo_sample)
                 # --- sum distance histograms
-                if not frm_out.has_key(base.loc_histograms + '/radii'):
+                if not frm_out.contains_key(base.loc_histograms + '/radii'):
                     frm_out.put_data(base.loc_histograms + '/radii',
                                      frm_in.get_data(base.loc_histograms + '/radii'))
                 X = frm_out.get_data(base.loc_histograms)
@@ -212,24 +212,24 @@ class Average(base.Filter):
                 dict_util.sum_values(X, Y)
                 # --- sum shell H_xx(r)
                 if (virtual_param is not None and self.geometry == 'MultiReferenceStructure'):
-                    if not frm_out.has_key(base.loc_shell_Hxx):
+                    if not frm_out.contains_key(base.loc_shell_Hxx):
                         frm_out.put_data(base.loc_shell_Hxx, frm_in.get_data(base.loc_shell_Hxx))
                     X = frm_out.get_data(base.loc_shell_Hxx)
                     Y = frm_in.get_data(base.loc_shell_Hxx)
                     dict_util.sum_values(X, Y)
                 # --- sum length histograms (only present with Sphere geometry)
-                if frm_in.has_key(base.loc_len_histograms):
-                    if not frm_out.has_key(base.loc_len_histograms + '/radii'):
+                if frm_in.contains_key(base.loc_len_histograms):
+                    if not frm_out.contains_key(base.loc_len_histograms + '/radii'):
                         frm_out.put_data(base.loc_len_histograms + '/radii',
                                          frm_in.get_data(base.loc_len_histograms + '/radii'))
                     X = frm_out.get_data(base.loc_len_histograms)
                     Y = frm_in.get_data(base.loc_len_histograms)
                     dict_util.sum_values(X, Y)
                 # --- append particle numbers
-                if frm_in.has_key(base.loc_nr_particles):
+                if frm_in.contains_key(base.loc_nr_particles):
                     frm_out.append_data(frm_in, base.loc_nr_particles)
                 # --- append periodic box volumes
-                if frm_in.has_key(base.loc_volumes):
+                if frm_in.contains_key(base.loc_volumes):
                     frm_out.append_data(frm_in, base.loc_volumes)
                 # ---
                 self.count += 1

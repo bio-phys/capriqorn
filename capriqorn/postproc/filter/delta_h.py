@@ -201,7 +201,7 @@ class DeltaH(base.Filter):
                     dHp = copy.deepcopy(dHs)
                     dH = copy.deepcopy(dHs)
                     # ---
-                    assert hs.has_key(base.loc_len_histograms)
+                    assert hs.contains_key(base.loc_len_histograms)
                     # --- construct h matrix
                     x_list = hs.get_data(base.loc_len_histograms + '/radii')
                     r_list = H['radii']
