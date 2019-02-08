@@ -8,6 +8,9 @@
 #
 # Released under the GNU Public Licence, v2 or any higher version, see the file LICENSE.txt.
 
+from __future__ import print_function
+from builtins import map
+from builtins import range
 import numpy as np
 # get rdf from histograms
 
@@ -23,9 +26,9 @@ def readNameList(nameFileName):
 
 def getHistoInfo(infoFileNameList):
     data = []
-    print
+    print()
     for name in infoFileNameList:
-        print "", name
+        print("", name)
         fp = open(name, 'r')
         raw = fp.readlines()
         dummy = [line.strip('\n') for line in raw]
@@ -35,7 +38,7 @@ def getHistoInfo(infoFileNameList):
     for i in range(len(data)):
         for j in range(len(data[i])):
             if data[i][j][0] != "#":
-                data[i][j] = map(float, data[i][j].split())
+                data[i][j] = list(map(float, data[i][j].split()))
             else:
                 data[i][j] = data[i][j].split()
     info = []
