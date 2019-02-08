@@ -11,8 +11,11 @@
 
 """Capriqorn reader for legacy distHisto files.
 """
+from __future__ import print_function
 
 
+from builtins import str
+from builtins import range
 import os
 import numpy as np
 import json
@@ -139,7 +142,7 @@ class distHistoReader(base.Reader):
     def next(self):
         """iterate through all the histogram sets and yield set by set"""
         if self.verb:
-            print
+            print()
         for i in range(len(self.file_list)):
             hs = base.Container()
             # --- fill the hs.histograms dictionary
@@ -173,7 +176,7 @@ class distHistoReader(base.Reader):
             # ---
             yield hs
             if self.verb:
-                print "distHistoReader.next() : " + filename
+                print("distHistoReader.next() : " + filename)
 
 
 class distHistoWriter(base.Writer):
@@ -267,5 +270,5 @@ class distHistoWriter(base.Writer):
                                       filename)
                 # ---
                 if self.verb:
-                    print "distHistoWriter.dump() : " + fullname
+                    print("distHistoWriter.dump() : " + fullname)
                 self.count += 1

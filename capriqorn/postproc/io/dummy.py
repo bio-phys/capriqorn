@@ -11,8 +11,11 @@
 
 """Capriqorn dummy IO.
 """
+from __future__ import print_function
 
 
+from builtins import str
+from builtins import range
 import string
 import numpy as np
 from six.moves import range
@@ -76,7 +79,7 @@ class DummyReader(base.Reader):
                     hs.put_data(base.loc_histograms + '/' + key, histo)
             # ---
             if self.verb:
-                print "DummyReader.next() :", self.count
+                print("DummyReader.next() :", self.count)
             hs.put_meta(self.get_meta())
             yield hs
             self.count += 1
@@ -101,5 +104,5 @@ class DummyWriter(base.Writer):
         for obj in self.src.next():
             if obj is not None:
                 if self.verb:
-                    print "DummyWriter.dump() : ", obj.i
+                    print("DummyWriter.dump() : ", obj.i)
                 pass

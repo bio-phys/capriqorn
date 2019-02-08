@@ -15,8 +15,12 @@ TODO:
 * Transition to dictionaries with species combinations as keys instead of
   using monolithic 2D arrays.
 """
+from __future__ import division
+from __future__ import print_function
 
 
+from builtins import range
+from past.utils import old_div
 import copy
 import numpy as np
 
@@ -128,7 +132,7 @@ class PDDF(base.Filter):
                 R = frm.query_meta('%s/r_max' % geom)
                 assert(R is not None)
 
-                nr = int((R + 2) * 2 / dr)
+                nr = int(old_div((R + 2) * 2, dr))
                 # ---
                 rArray = np.zeros(nr + 1)
                 rArray[0] = 0
@@ -220,7 +224,7 @@ class PDDF(base.Filter):
                 for i in range(len(CFSumSingle)):
                     CFSumSingle[i, 1] = partCFArraySingle[i, 1:].sum()
                 frm.put_data(base.loc_pddf + '/CFSumSingle', CFSumSingle)
-                new, drNew = pddf.binning(CFSumSingle, int(drPrime / self.dr_intra),
+                new, drNew = pddf.binning(CFSumSingle, int(old_div(drPrime, self.dr_intra)),
                                           self.dr_intra, distQ=True)
                 CFSum[:len(new), 1] += new[:, 1]
                 frm.put_data(base.loc_pddf + '/pddf_tot', CFSum)
@@ -243,7 +247,7 @@ class PDDF(base.Filter):
                 # ---
                 frm.put_meta(self.get_meta())
                 if self.verb:
-                    print "PDDF.next() :", frm.i
+                    print("PDDF.next() :", frm.i)
                 yield frm
             else:
                 yield None

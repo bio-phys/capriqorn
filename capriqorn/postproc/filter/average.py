@@ -11,8 +11,13 @@
 
 """Capriqorn averaging filter.
 """
+from __future__ import division
+from __future__ import print_function
 
 
+from builtins import str
+from past.builtins import basestring
+from past.utils import old_div
 import copy
 import numpy as np
 
@@ -28,7 +33,7 @@ def scaleFactorXX(nx, xrho):
     canceling with the factor 2 in the normalization constant,
     because all histograms are multiplied by two in the DeltaH filter.
     """
-    return (nx / xrho ** 2 / (nx - 1.))
+    return (old_div(nx, xrho ** 2 / (nx - 1.)))
 
 
 def scaleFactorX1X2(nx1, nx2, xrho):
@@ -38,7 +43,7 @@ def scaleFactorX1X2(nx1, nx2, xrho):
     We addtionally use the factor 0.5 here because all histograms are
     multiplied by two in the DeltaH filter.
     """
-    return 0.5 * ((nx1 + nx2) / xrho) ** 2 / float(nx1 * nx2)
+    return 0.5 * (old_div((nx1 + nx2), xrho)) ** 2 / float(nx1 * nx2)
 
 
 def scaleVirtualHistograms(frm):
@@ -84,7 +89,7 @@ def scaleVirtualHistograms(frm):
             dict_util.scale_values(shell_Hxx, scaleFactorXX(nXs, xrho))
 
         histgrms = frm.get_data(base.loc_histograms)
-        elements = util.get_elements(histgrms.keys())
+        elements = util.get_elements(list(histgrms.keys()))
         # The scaling is the same for core, cross, shell, and full, because
         # full is given by a linear combination of core, cross, and shell.
         # We identify $H_{ix}(r)$ and $H_{xx}(r)$  by counting 'X' in the keys
@@ -114,7 +119,7 @@ def scaleVirtualHistograms(frm):
             dict_util.scale_values(shell_Hxx, scaleFactorX1X2(nXs1, nXs2, xrho))
 
         histgrms = frm.get_data(base.loc_histograms)
-        elements = util.get_elements(histgrms.keys())
+        elements = util.get_elements(list(histgrms.keys()))
         for key in frm.get_keys(base.loc_histograms):
             XCounter = key.count('X')
             if XCounter == 1:
@@ -151,7 +156,7 @@ class Average(base.Filter):
         """Apply rescaling and averaging operations."""
         frm_out.i = frm_in.i
         # --- perform averaging on histograms
-        val = np.float_(self.factor) / np.float_(n_avg)
+        val = old_div(np.float_(self.factor), np.float_(n_avg))
         # --- rescale distance histograms
         if frm_out.contains_key(base.loc_histograms):
             X = frm_out.get_data(base.loc_histograms)
@@ -237,7 +242,7 @@ class Average(base.Filter):
                 if (not self.all) and (self.count % self.n_avg == 0):
                     self.apply_rescaling(frm_in, frm_out, self.n_avg, virtual_param)
                     if self.verb:
-                        print "Average.next() :", frm_in.i
+                        print("Average.next() :", frm_in.i)
                     yield frm_out
                     del frm_out
                     frm_out = base.Container()
@@ -253,7 +258,7 @@ class Average(base.Filter):
         if (remainder_avg > 0):
             self.apply_rescaling(frm_in, frm_out, remainder_avg, virtual_param)
             if self.verb:
-                print "Average.next() :", frm_in.i
+                print("Average.next() :", frm_in.i)
             yield frm_out
         # yiel a potentially pending None
         if frm_tmp is None:

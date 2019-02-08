@@ -11,6 +11,7 @@
 
 """Capriqorn Dummy filter.
 """
+from __future__ import print_function
 
 from cadishi import base
 
@@ -42,7 +43,7 @@ class Dummy(base.Filter):
         for obj in self.src.next():
             if obj is not None:
                 if self.verb:
-                    print "Dummy.next() :", obj.i
+                    print("Dummy.next() :", obj.i)
                 yield obj
             else:
                 yield None

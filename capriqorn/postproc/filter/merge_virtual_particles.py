@@ -15,6 +15,7 @@ NOTE: The merge functionality is actually implemented in free functions,
       see <selection.py>.  While this file provides a filter, it is
       probably more useful to apply the free functions whenever needed.
 """
+from __future__ import print_function
 
 
 from cadishi import base
@@ -54,13 +55,13 @@ class MergeVirtualParticles(base.Filter):
                 assert isinstance(frm, base.Container)
                 # ---
                 histos = frm.get_data(base.loc_histograms)
-                elements = util.get_elements(histos.keys())
+                elements = util.get_elements(list(histos.keys()))
                 if ('X1' in elements) and ('X2' in elements):
                     selection.merge_virtual_particles(frm)
                 # ---
                 frm.put_meta(self.get_meta())
                 if self.verb:
-                    print "MergeVirtualParticles.next() :", frm.i
+                    print("MergeVirtualParticles.next() :", frm.i)
                 yield frm
             else:
                 yield None

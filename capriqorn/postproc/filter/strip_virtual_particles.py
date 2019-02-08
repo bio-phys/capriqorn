@@ -11,6 +11,7 @@
 
 """Capriqorn strip virtual particles filter.
 """
+from __future__ import print_function
 
 
 from cadishi import base
@@ -53,14 +54,14 @@ class StripVirtualParticles(base.Filter):
             if frm is not None:
                 assert isinstance(frm, base.Container)
                 histgrms = frm.get_data(base.loc_histograms)
-                elements = util.get_elements(histgrms.keys())
+                elements = util.get_elements(list(histgrms.keys()))
                 if ('X1' in elements) and ('X2' in elements):
                     for key in blacklist:
-                        if key in histgrms.keys():
+                        if key in list(histgrms.keys()):
                             del histgrms[key]
                 frm.put_meta(self.get_meta())
                 if self.verb:
-                    print "StripVirtualParticles.next() :", frm.i
+                    print("StripVirtualParticles.next() :", frm.i)
                 yield frm
             else:
                 yield None
