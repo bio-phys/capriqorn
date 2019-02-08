@@ -11,8 +11,11 @@
 
 """Capriqorn preprocessor IO dummy reader/writer.
 """
+from __future__ import print_function
 
 
+from builtins import str
+from builtins import range
 import copy
 import numpy as np
 from cadishi import base
@@ -73,7 +76,7 @@ class DummyReader(base.Reader):
         for frm in self.frms:
             frm.put_meta(self.get_meta())
             if self.verb:
-                print "DummyReader.next() :", frm.i
+                print("DummyReader.next() :", frm.i)
             yield frm
 
 
@@ -94,5 +97,5 @@ class DummyWriter(base.Writer):
         for frm in self.src.next():
             if frm is not None:
                 if self.verb:
-                    print "DummyWriter.dump() : ", frm.i
+                    print("DummyWriter.dump() : ", frm.i)
             pass

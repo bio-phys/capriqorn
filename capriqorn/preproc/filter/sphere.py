@@ -11,8 +11,12 @@
 
 """Cadishi preprocessor sphere geometry filter.
 """
+from __future__ import division
+from __future__ import print_function
 
 
+from builtins import range
+from past.utils import old_div
 import math
 import numpy as np
 from six.moves import range
@@ -107,7 +111,7 @@ class Sphere(base.Filter):
                 frm_out.del_data(base.loc_coordinates)
                 frm_out.del_data(base.loc_len_histograms)
                 if self.do_len_histo:
-                    n_bins = int(round(self.radius / self.len_histo_dr))
+                    n_bins = int(round(old_div(self.radius, self.len_histo_dr)))
                     radii = np.zeros(n_bins)
                     for i in range(n_bins):
                         radii[i] = (0.5 + np.float64(i)) * self.len_histo_dr
@@ -142,7 +146,7 @@ class Sphere(base.Filter):
                 frm_out.put_data('log', frm_in.get_data('log'))
                 frm_out.put_meta(self.get_meta())
                 if self.verb:
-                    print "Sphere.next() :", frm_out.i
+                    print("Sphere.next() :", frm_out.i)
             else:
                 frm_out = None
             yield frm_out

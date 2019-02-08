@@ -11,6 +11,7 @@
 
 """Capriqorn reference structure geometry filter.
 """
+from __future__ import print_function
 
 
 import MDAnalysis as mda
@@ -104,7 +105,7 @@ class ReferenceStructure(base.Filter):
                 assert isinstance(frm_in, base.Container)
                 frm_out = self._process_frame(frm_in)
                 if self.verb:
-                    print "ReferenceStructure.next() :", frm_out.i
+                    print("ReferenceStructure.next() :", frm_out.i)
                 yield frm_out
             else:
                 yield None
@@ -185,7 +186,7 @@ class MultiReferenceStructure(ReferenceStructure):
                     self.r_max = d_max
                 frm_out = self._process_frame(frm_in)
                 if self.verb:
-                    print "MultiReferenceStructure.next() :", frm_out.i
+                    print("MultiReferenceStructure.next() :", frm_out.i)
             else:
                 frm_out = None
             yield frm_out

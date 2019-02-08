@@ -11,8 +11,11 @@
 
 """Cadishi preprocessor xyz filter/writer.
 """
+from __future__ import print_function
 
 
+from builtins import range
+from past.builtins import basestring
 import math
 import numpy as np
 from six.moves import range
@@ -82,7 +85,7 @@ class XYZ(base.Filter):
                 frm_out = frm_in
                 frm_out.put_meta(self.get_meta())
                 if self.verb:
-                    print "XYZ.next() :", frm_out.i
+                    print("XYZ.next() :", frm_out.i)
             else:
                 frm_out = None
             yield frm_out

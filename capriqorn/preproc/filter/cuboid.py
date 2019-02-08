@@ -11,6 +11,7 @@
 
 """Capriqorn cuboid geometry filter.
 """
+from __future__ import print_function
 
 
 import numpy as np
@@ -148,7 +149,7 @@ class Cuboid(base.Filter):
                 frm_out.put_data('log', frm_in.get_data('log'))
                 frm_out.put_meta(self.get_meta())
                 if self.verb:
-                    print "Cuboid.next() :", frm_out.i
+                    print("Cuboid.next() :", frm_out.i)
             else:
                 frm_out = None
             yield frm_out
