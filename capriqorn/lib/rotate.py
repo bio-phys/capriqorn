@@ -11,19 +11,22 @@
 
 """Rotate coordinate sets using Euler angles.
 """
+from __future__ import division
+from __future__ import print_function
 
 
+from past.utils import old_div
 import numpy as np
 
 
 def getAngles(vec):
     r = np.sqrt((vec ** 2).sum())
     if (r == 0):
-        print "r=0"
+        print("r=0")
     if (vec[0] == 0):
-        print "x=0"
+        print("x=0")
     phi = np.arctan2(vec[1], vec[0])
-    theta = np.arccos(vec[2] / r)
+    theta = np.arccos(old_div(vec[2], r))
     return phi, theta
 
 
