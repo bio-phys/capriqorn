@@ -17,6 +17,7 @@ demonstrating the full spectrum of options.
 The idea is that the user then edits the JSON file, removes
 unnecessary steps and adapts the parameters to his/her needs.
 """
+from __future__ import print_function
 
 
 def main(argparse_args):
@@ -32,7 +33,7 @@ def main(argparse_args):
     else:
         expert_flag = False
 
-    print util.SEP
+    print(util.SEP)
 
     template_file = os.path.abspath(os.path.dirname(os.path.abspath(__file__))
                                     + "/../data/preprocessor_template.yaml")
@@ -52,6 +53,6 @@ def main(argparse_args):
                 continue
             fp_out.write(line)
 
-    print " Preprocessor example input file was written to <" + yaml_file + ">."
-    print " Adapt it, and run the preprocessor using the command `capriq preproc`."
-    print util.SEP
+    print(" Preprocessor example input file was written to <" + yaml_file + ">.")
+    print(" Adapt it, and run the preprocessor using the command `capriq preproc`.")
+    print(util.SEP)
