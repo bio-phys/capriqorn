@@ -10,6 +10,9 @@
 # Released under the GNU Public Licence, v2 or any higher version, see the file LICENSE.txt.
 
 
+from __future__ import print_function
+from builtins import str
+from builtins import range
 import numpy as np
 import MDAnalysis as mda
 import copy
@@ -50,27 +53,27 @@ def test_refstuct_cell_list():
     ref_atoms = universe.atoms.select_atoms(ref_selection)
     ref_positions = ref_atoms.positions
 
-    print " number of particles of full system: ", positions.shape[0]
-    print " number of particles of reference system:", ref_positions.shape[0]
+    print(" number of particles of full system: ", positions.shape[0])
+    print(" number of particles of reference system:", ref_positions.shape[0])
 
     # # Cell-list method (step by step)
 
     # calling helper function
     neighbours = refstruct.get_neighbours()
-    print " relative locations of neighbour cells:", neighbours
+    print(" relative locations of neighbour cells:", neighbours)
 
     # determine to which cell each particle belongs
     # for the full structure
     cell_indices = refstruct.get_cell_indices(positions, distance)
     cell_indices_strings = refstruct.get_cell_strings(cell_indices)
     uniq_cell_indices_strings = set(cell_indices_strings)
-    print " number of cells for full structure =", len(uniq_cell_indices_strings)
+    print(" number of cells for full structure =", len(uniq_cell_indices_strings))
 
     # for the reference structure
     ref_cell_indices = refstruct.get_cell_indices(ref_positions, distance)
     ref_cell_indices_strings = refstruct.get_cell_strings(ref_cell_indices)
     ref_uniq_cell_indices_strings = set(ref_cell_indices_strings)
-    print " number of cells for ref. structure =", len(ref_uniq_cell_indices_strings)
+    print(" number of cells for ref. structure =", len(ref_uniq_cell_indices_strings))
 
     # collecting all particle indices belonging to one cell in a single dictionary entry
     particle_indices = refstruct.get_particle_indices(cell_indices_strings, uniq_cell_indices_strings)
@@ -80,19 +83,19 @@ def test_refstuct_cell_list():
     particle_indices_within_neighbours = refstruct.get_particle_indices_within_neighbours(
         ref_particle_indices, particle_indices, cell_indices, neighbours)
 
-    print " approximate number of particles within central cell and its neighbours: ", distance**3 * 27 * 0.1
-    print " number of particles within central cells and neighbours"
-    print " key of central cell | number of particles"
+    print(" approximate number of particles within central cell and its neighbours: ", distance**3 * 27 * 0.1)
+    print(" number of particles within central cells and neighbours")
+    print(" key of central cell | number of particles")
     for k in particle_indices_within_neighbours:
-        print k, len(particle_indices_within_neighbours[k])
+        print(k, len(particle_indices_within_neighbours[k]))
 
     # Determine indices of particles in observation volume using cell lists.
     i_out, num_distances_calc = refstruct.get_observation_volume_particle_indices(ref_positions, positions, ref_particle_indices,
                                                                                   particle_indices_within_neighbours, distance)
-    print " number of distances calculated = %3.2e" % num_distances_calc
+    print(" number of distances calculated = %3.2e" % num_distances_calc)
     all2all_num_distance_calc = len(positions) * len(ref_positions)
-    print " relative to all-to-all: %3.2f" % (num_distances_calc / float(all2all_num_distance_calc))
-    print
+    print(" relative to all-to-all: %3.2f" % (num_distances_calc / float(all2all_num_distance_calc)))
+    print()
 
     # # Brute force method (highly optimized by Klaus)
 
@@ -102,7 +105,7 @@ def test_refstuct_cell_list():
                                    np.asarray(ref_positions, dtype=np.float64), distance)
     t1 = time.time()
 
-    print "### c_refstruct.queryDistance() : dt =", str(t1 - t0)
+    print("### c_refstruct.queryDistance() : dt =", str(t1 - t0))
 
     n_elem_mask = np.sum(mask)
 
@@ -111,14 +114,14 @@ def test_refstuct_cell_list():
     t0 = time.time()
     i_out, num_distances_calc = refstruct.cutout_using_cell_lists(positions, ref_positions, distance)
     t1 = time.time()
-    print " number of distances calculated = %3.2e" % num_distances_calc
-    print " relative to all-to-all: %3.2f" % (num_distances_calc / float(all2all_num_distance_calc))
-    print "### cutout_using_cell_lists() : dt =", str(t1 - t0)
+    print(" number of distances calculated = %3.2e" % num_distances_calc)
+    print(" relative to all-to-all: %3.2f" % (num_distances_calc / float(all2all_num_distance_calc)))
+    print("### cutout_using_cell_lists() : dt =", str(t1 - t0))
 
     # check if we see the same number of particles
     num_particles = len(i_out)
     assert(n_elem_mask == num_particles)
-    print " number of particles in observation volume:", num_particles
+    print(" number of particles in observation volume:", num_particles)
 
     # Write observation volume to xyz for visualization with vmd.
     if write_xyz:

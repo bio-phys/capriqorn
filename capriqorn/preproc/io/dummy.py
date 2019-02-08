@@ -72,7 +72,11 @@ class DummyReader(base.Reader):
         meta[label] = param
         return meta
 
-    def next(self):
+    def __iter__(self):
+        return self
+
+    # def next(self):
+    def __next__(self):
         for frm in self.frms:
             frm.put_meta(self.get_meta())
             if self.verb:

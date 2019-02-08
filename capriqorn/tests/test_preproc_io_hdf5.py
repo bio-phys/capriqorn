@@ -14,6 +14,7 @@
 """
 
 
+from builtins import range
 from six.moves import range
 import cadishi.base as base
 import cadishi.util as util

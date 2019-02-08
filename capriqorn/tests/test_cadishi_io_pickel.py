@@ -26,22 +26,22 @@ from capriqorn.preproc.io import dummy
 
 
 do_cleanup = True
-h5file = util.scratch_dir() + "test_cadishi_io_pickle_"
+tmpfile = util.scratch_dir() + "test_cadishi_io_pickle_"
 
 
 def test_picklewriter():
     reader = dummy.DummyReader(verbose=True, n_frames=3)
-    writer = pickel.PickleWriter(source=reader, file=h5file, verbose=True)
+    writer = pickel.PickleWriter(source=reader, file=tmpfile, verbose=True)
     writer.dump()
 
 
 def test_picklereader():
-    reader = pickel.PickleReader(file=h5file, first=1, last=3, verbose=True)
+    reader = pickel.PickleReader(file=tmpfile, first=1, last=3, verbose=True)
     writer = dummy.DummyWriter(source=reader, verbose=True)
     writer.dump()
 
 
 if do_cleanup:
     def test_final_cleanup():
-        for file in glob.glob(h5file + '*'):
+        for file in glob.glob(tmpfile + '*'):
             util.rmrf(util.scratch_dir())
