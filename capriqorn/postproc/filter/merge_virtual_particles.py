@@ -15,8 +15,6 @@ NOTE: The merge functionality is actually implemented in free functions,
       see <selection.py>.  While this file provides a filter, it is
       probably more useful to apply the free functions whenever needed.
 """
-from __future__ import print_function
-
 
 from cadishi import base
 from cadishi import util
@@ -49,8 +47,11 @@ class MergeVirtualParticles(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for frm in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm in next(self.src):
             if frm is not None:
                 assert isinstance(frm, base.Container)
                 # ---

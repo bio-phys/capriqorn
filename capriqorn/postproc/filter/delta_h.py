@@ -11,11 +11,10 @@
 
 """Capriqorn deltaH filter.
 """
+
 from __future__ import division
-from __future__ import print_function
-
-
 from past.utils import old_div
+
 import numpy as np
 import copy
 
@@ -114,8 +113,11 @@ class DeltaH(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for hs in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for hs in next(self.src):
             # hs was chosen to mean 'histogram set' ...
             if hs is not None:
                 assert isinstance(hs, base.Container)

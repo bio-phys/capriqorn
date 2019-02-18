@@ -11,15 +11,11 @@
 
 """Capriqorn postprocessor module to perform the RDF computation.
 """
-from __future__ import print_function
-
 
 # TODO: catch runtime assertions, use meaningful error messages
 
-
-from builtins import range
-import numpy as np
 from six.moves import range
+import numpy as np
 
 from cadishi import base
 from cadishi import util
@@ -115,8 +111,11 @@ class RDF(base.Filter):
         # ---
         frm.put_data(base.loc_rdf, rdf)
 
-    def next(self):
-        for frm in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm in next(self.src):
             if frm is not None:
                 self._process_frame(frm)
                 frm.put_meta(self.get_meta())

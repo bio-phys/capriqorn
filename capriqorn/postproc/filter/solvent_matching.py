@@ -12,14 +12,12 @@
 """Capriqorn self-consistent solvent matching filter.
 """
 from __future__ import division
-from __future__ import print_function
-
-
-from builtins import range
 from past.utils import old_div
+
+from six.moves import range
+
 import numpy as np
 import scipy.interpolate as sint
-from six.moves import range
 
 from cadishi import base
 from cadishi.io import hdf5
@@ -77,11 +75,14 @@ class Solvent(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
+    def __iter__(self):
+        return self
+
+    def __next__(self):
         """ Self-consistent solvent matching, implemented as a Python
         generator.  Implementation follows <lsz/shell-sc-solv-match.py>.
         """
-        for obj in self.src.next():
+        for obj in next(self.src):
             if obj is not None:
                 assert isinstance(obj, base.Container)
 

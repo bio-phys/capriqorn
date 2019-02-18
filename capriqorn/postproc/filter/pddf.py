@@ -16,11 +16,10 @@ TODO:
   using monolithic 2D arrays.
 """
 from __future__ import division
-from __future__ import print_function
-
-
-from builtins import range
 from past.utils import old_div
+
+from six.moves import range
+
 import copy
 import numpy as np
 
@@ -89,8 +88,11 @@ class PDDF(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for frm in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm in next(self.src):
             if frm is not None:
                 # obtain the dr value used to build the histograms
                 dr = frm.query_meta('histograms/histogram/dr')

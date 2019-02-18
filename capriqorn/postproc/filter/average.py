@@ -11,13 +11,12 @@
 
 """Capriqorn averaging filter.
 """
+# TODO: simplify Py2/Py3 compatibility
 from __future__ import division
-from __future__ import print_function
-
-
 from builtins import str
 from past.builtins import basestring
 from past.utils import old_div
+
 import copy
 import numpy as np
 
@@ -190,9 +189,12 @@ class Average(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
+    def __iter__(self):
+        return self
+
+    def __next__(self):
         frm_out = base.Container()
-        for frm_tmp in self.src.next():
+        for frm_tmp in next(self.src):
             # handle None correctly (used as a sign to abandon ship in parallel pipelines)
             # in combination with the remainder treatment below (which needs the last frm_in)
             if frm_tmp is not None:
