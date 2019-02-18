@@ -11,11 +11,7 @@
 
 """Capriqorn reader for legacy distHisto files.
 """
-from __future__ import print_function
 
-
-from builtins import str
-from builtins import range
 import os
 import numpy as np
 import json
@@ -139,7 +135,10 @@ class distHistoReader(base.Reader):
         meta[label] = param
         return meta
 
-    def next(self):
+    def __iter__(self):
+        return self
+
+    def __next__(self):
         """iterate through all the histogram sets and yield set by set"""
         if self.verb:
             print()
@@ -229,11 +228,10 @@ class distHistoWriter(base.Writer):
 
     def dump(self):
         """save histogram sets"""
-        # print self.src.__class__.__name__
         header_str = ''
         nbin = 0
         ncol = 0
-        for obj in self.src.next():
+        for obj in next(self.src):
             if obj is not None:
                 if (self.count == 0):
                     header_lst = sorted(obj.get_keys(base.loc_histograms,
