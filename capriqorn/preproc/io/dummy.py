@@ -75,7 +75,6 @@ class DummyReader(base.Reader):
     def __iter__(self):
         return self
 
-    # def next(self):
     def __next__(self):
         for frm in self.frms:
             frm.put_meta(self.get_meta())
