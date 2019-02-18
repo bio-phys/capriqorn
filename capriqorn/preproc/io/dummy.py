@@ -98,7 +98,7 @@ class DummyWriter(base.Writer):
         self._conflicts.extend(super(base.Writer, self)._conflicts)
 
     def dump(self):
-        for frm in self.src.next():
+        for frm in next(self.src):
             if frm is not None:
                 if self.verb:
                     print("DummyWriter.dump() : ", frm.i)

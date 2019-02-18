@@ -147,8 +147,8 @@ class VirtualParticles(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for frm in self.src.next():
+    def __next__(self):
+        for frm in next(self.src):
             if frm is not None:
                 assert isinstance(frm, base.Container)
                 # --- add virtual particles
