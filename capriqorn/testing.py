@@ -15,8 +15,9 @@
 
 import os
 from os.path import join as pjoin, isfile, dirname
-import pytest
 import copy
+import pytest
+
 import cadishi.base as base
 from capriqorn.preproc import io
 
@@ -72,8 +73,11 @@ class FrameCounter(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for frm in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm in next(self.src):
             self.count += 1
             self.frames.append(frm.i)
             yield frm
