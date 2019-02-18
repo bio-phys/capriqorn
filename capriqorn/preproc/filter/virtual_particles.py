@@ -13,14 +13,13 @@
 """
 from __future__ import division
 from __future__ import print_function
-
-
-from builtins import str
-from builtins import range
 from past.utils import old_div
+
+from six.moves import range
+
 import numpy as np
 import numpy.random as ran
-from six.moves import range
+
 import cadishi.base as base
 from ...lib import rotate as rot
 
@@ -146,6 +145,9 @@ class VirtualParticles(base.Filter):
         param['random_seed'] = self.random_seed
         meta[label] = param
         return meta
+
+    def __iter__(self):
+        return self
 
     def __next__(self):
         for frm in next(self.src):

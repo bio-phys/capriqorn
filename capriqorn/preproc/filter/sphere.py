@@ -13,14 +13,13 @@
 """
 from __future__ import division
 from __future__ import print_function
-
-
-from builtins import range
 from past.utils import old_div
+
 import math
+import copy
 import numpy as np
 from six.moves import range
-import copy
+
 import cadishi.base as base
 
 
@@ -103,8 +102,11 @@ class Sphere(base.Filter):
         indices = self.selectBody(coords, R - sw)
         return indices
 
-    def next(self):
-        for frm_in in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm_in in next(self.src):
             if frm_in is not None:
                 assert isinstance(frm_in, base.Container)
                 frm_out = copy.deepcopy(frm_in)

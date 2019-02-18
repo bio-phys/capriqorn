@@ -46,8 +46,11 @@ class Dummy(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for frame in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frame in next(self.src):
             if frame is not None:
                 assert isinstance(frame, base.Container)
                 if self.sleep_seconds > 0:

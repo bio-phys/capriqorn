@@ -118,8 +118,11 @@ class Cuboid(base.Filter):
         indices = self.selectBody(coords, (half_lengths[:] - sw))
         return indices
 
-    def next(self):
-        for frm_in in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm_in in next(self.src):
             if frm_in is not None:
                 assert isinstance(frm_in, base.Container)
                 frm_out = copy.deepcopy(frm_in)
