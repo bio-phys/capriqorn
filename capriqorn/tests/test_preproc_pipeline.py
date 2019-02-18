@@ -42,7 +42,7 @@ def test_xyz_pipeline():
 
 def test_sphere_filter_pipeline_query_meta(reader):
     filtre = preproc_filter.Sphere(source=reader, radius=45.0)
-    for frm in filtre.next():
+    for frm in next(filtre):
         assert isinstance(frm, base.Container)
         # --- query some existing and non existing entries
         assert isinstance(frm.query_meta('Sphere'), dict)
