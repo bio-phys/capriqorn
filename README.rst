@@ -1,9 +1,8 @@
 Capriqorn
 =========
 
-.. image:: doc/img/capriqorn_logo.png
+.. image:: doc/img/capriqorn_logo_480.png
    :align: center
-   :scale: 50%
 
 Introduction
 ------------
