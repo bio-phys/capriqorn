@@ -1,35 +1,24 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Background &#8212; Capriqorn 1.0.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Capriqorn modules" href="modules.html" />
-    <link rel="prev" title="Capriqorn documentation" href="index.html" /> 
-  </head>
-  <body role="document">
+    <link rel="prev" title="Capriqorn" href="index.html" /> 
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -40,14 +29,14 @@
           <a href="modules.html" title="Capriqorn modules"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Capriqorn documentation"
+          <a href="index.html" title="Capriqorn"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Capriqorn 1.0.0 documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Background</a></li>
 <li><a class="reference internal" href="#method-details">Method Details</a></li>
@@ -58,7 +47,7 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">Capriqorn documentation</a></p>
+                        title="previous chapter">Capriqorn</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="modules.html"
                         title="next chapter">Capriqorn  modules</a></p>
@@ -71,12 +60,14 @@
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -107,7 +98,7 @@
 <li>increase the signal-to-noise ratio and increase performance by minimizing the amount of bulk solvent while</li>
 <li>including sufficient bulk solvent to avoid finite size effects and to facilitate solvent matching.</li>
 </ul>
-<p>Each of the geometries listed below has its own merits. A sphere is the most efficient geometry for globular macromolecules. For all other geometries, we have to use <strong>virtual particles</strong> (&#8220;ideal gas&#8221; particles) to account for the geometry of the observation volume which comes with additional computational costs.</p>
+<p>Each of the geometries listed below has its own merits. A sphere is the most efficient geometry for globular macromolecules. For all other geometries, we have to use <strong>virtual particles</strong> (“ideal gas” particles) to account for the geometry of the observation volume which comes with additional computational costs.</p>
 <p>Overview of <strong>observation volume geometries</strong>:</p>
 <ul class="simple">
 <li><dl class="first docutils">
@@ -117,7 +108,7 @@
 </li>
 <li><dl class="first docutils">
 <dt>Cuboid and Ellipsoid</dt>
-<dd>Cuboids and ellipsoids are centered at the origin. Their faces/axes are aligned with the coordinate system. The box should be rotated such that the macromolecule is aligned correspondingly (tcl script <a class="reference download internal" href="_downloads/orient.tcl" download=""><code class="xref download docutils literal"><span class="pre">orient.tcl</span></code></a> used with VMD).</dd>
+<dd>Cuboids and ellipsoids are centered at the origin. Their faces/axes are aligned with the coordinate system. The box should be rotated such that the macromolecule is aligned correspondingly (tcl script <a class="reference download internal" download="" href="_downloads/0fb3934555ced982503ff5ad4e4e26fc/orient.tcl"><code class="xref download docutils literal notranslate"><span class="pre">orient.tcl</span></code></a> used with VMD).</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
@@ -154,7 +145,7 @@ We suggest to use it to get started. You can pick the parameter files for the ge
 <li><dl class="first docutils">
 <dt>Mapping of atom names to element names</dt>
 <dd>Different force fields use different atom names. We have to map these names onto the corresponding element names, which determine the form factors for each element. This information is saved in a file we usually call <em>alias.dat</em>. This file contains the atom name provided by the force field in the first column and the element name in the second column.
-The bash script <a class="reference download internal" href="_downloads/get_aliases_initial_guess_from_pdb.sh" download=""><code class="xref download docutils literal"><span class="pre">get_aliases_initial_guess_from_pdb.sh</span></code></a> extracts atom names from a pdb and provides a first guess of the element names.
+The bash script <a class="reference download internal" download="" href="_downloads/6c713a014ada08cda749659c520523d3/get_aliases_initial_guess_from_pdb.sh"><code class="xref download docutils literal notranslate"><span class="pre">get_aliases_initial_guess_from_pdb.sh</span></code></a> extracts atom names from a pdb and provides a first guess of the element names.
 <strong>!!!YOU HAVE TO EDIT THIS FILE BY HAND AND MAKE CORRECTIONS!!!</strong></dd>
 </dl>
 </li>
@@ -178,8 +169,8 @@ The bash script <a class="reference download internal" href="_downloads/get_alia
 <div><p>The macromolecule has to be centered in the box, ideally maximizing the solvent thickness around the macromolecule, i.e., maximizing the minimum distance of atoms of the macromolecule to the box borders:</p>
 <ul class="simple">
 <li>Sphere:   Center macromolecule at origin.</li>
-<li>Cuboid:   Center macromolecule at origin and align principal axis with VMD (tcl script <a class="reference download internal" href="_downloads/orient.tcl" download=""><code class="xref download docutils literal"><span class="pre">orient.tcl</span></code></a>)</li>
-<li>Ellipsoid: Center macromolecule at origin and align principal axis with VMD (tcl script <a class="reference download internal" href="_downloads/orient.tcl" download=""><code class="xref download docutils literal"><span class="pre">orient.tcl</span></code></a>)</li>
+<li>Cuboid:   Center macromolecule at origin and align principal axis with VMD (tcl script <a class="reference download internal" download="" href="_downloads/0fb3934555ced982503ff5ad4e4e26fc/orient.tcl"><code class="xref download docutils literal notranslate"><span class="pre">orient.tcl</span></code></a>)</li>
+<li>Ellipsoid: Center macromolecule at origin and align principal axis with VMD (tcl script <a class="reference download internal" download="" href="_downloads/0fb3934555ced982503ff5ad4e4e26fc/orient.tcl"><code class="xref download docutils literal notranslate"><span class="pre">orient.tcl</span></code></a>)</li>
 <li>Reference: RMSD alignment of the macromolecule with chosen reference structure.</li>
 <li>MultiReference: When using the same trajectories as input and reference, no alignment is necessary.</li>
 </ul>
@@ -207,7 +198,7 @@ The bash script <a class="reference download internal" href="_downloads/get_alia
 <dt>Postprocessing: capriq postproc -f postprocessor.yaml</dt>
 <dd><ul class="first last simple">
 <li>Multiple histogram h5-files can be read in at once for postprocessing.</li>
-<li>The output is stored in an hdf5 file, which can be unpacked using &#8220;capriq unpack&#8221; such that the output files are available in ASCII format.</li>
+<li>The output is stored in an hdf5 file, which can be unpacked using “capriq unpack” such that the output files are available in ASCII format.</li>
 </ul>
 </dd>
 </dl>
@@ -241,18 +232,18 @@ Note that the selection string syntax in VMD is different to the one used in Cap
 </li>
 <li><p class="first">Capriqorn offers a plethora of methods and modules.
 See the example parameter files for an overview.
-The files can be written via the command capriq example [&#8211;expert]
-The <cite>&#8211;expert</cite> switch adds additional options which allow to override some default values.  Some hints on the parameter choices, the general usage, and the file handling are given in the following.</p>
+The files can be written via the command capriq example [–expert]
+The <cite>–expert</cite> switch adds additional options which allow to override some default values.  Some hints on the parameter choices, the general usage, and the file handling are given in the following.</p>
 <blockquote>
 <div><ul class="simple">
 <li>For various reasons Capriqorn uses HDF5 files. To inspect a HDF5 file, use
 a viewer software or extract the HDF5 file using the Capriqorn command
-<code class="docutils literal"><span class="pre">capriq</span> <span class="pre">unpack</span></code>.</li>
+<code class="docutils literal notranslate"><span class="pre">capriq</span> <span class="pre">unpack</span></code>.</li>
 <li>Compression of the HDF5 output datasets using the LZF algorithm is usually
 beneficial regarding performance and file size. LZF comes with h5py by default.
 Other installations and tools may lack LZF, so use no compression or
 gzip compression in case you need to interact with such software.  You can use
-the <code class="docutils literal"><span class="pre">capriq</span> <span class="pre">merge</span></code> tool to change the compression of a file.</li>
+the <code class="docutils literal notranslate"><span class="pre">capriq</span> <span class="pre">merge</span></code> tool to change the compression of a file.</li>
 </ul>
 </div></blockquote>
 </li>
@@ -292,7 +283,7 @@ start with the following configuration: 2 CPU workers, 6 threads per CPU worker,
 <li><p class="first">Capriqorn uses MDAnalysis (<a class="reference external" href="http://www.mdanalysis.org">http://www.mdanalysis.org</a>) for reading in trajectories.</p>
 <blockquote>
 <div><ul class="simple">
-<li>From their website: &#8220;MDAnalysis is an object-oriented Python library to analyze trajectories from molecular dynamics (MD) simulations in many popular formats. It can write most of these formats, too, together with atom selections suitable for visualization or native analysis tools.&#8221;</li>
+<li>From their website: “MDAnalysis is an object-oriented Python library to analyze trajectories from molecular dynamics (MD) simulations in many popular formats. It can write most of these formats, too, together with atom selections suitable for visualization or native analysis tools.”</li>
 <li>To cite MDAnalysis, please visit <a class="reference external" href="http://www.mdanalysis.org/pages/citations/">http://www.mdanalysis.org/pages/citations/</a>.</li>
 </ul>
 </div></blockquote>
@@ -316,14 +307,14 @@ start with the following configuration: 2 CPU workers, 6 threads per CPU worker,
           <a href="modules.html" title="Capriqorn modules"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Capriqorn documentation"
+          <a href="index.html" title="Capriqorn"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Capriqorn 1.0.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017, Juergen Koefinger, Klaus Reuter.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

@@ -1,17 +1,24 @@
-Capriqorn documentation
-=======================
+Capriqorn
+=========
+
+.. image:: ./img/capriqorn_logo.png
+   :align: center
+   :scale: 50%
 
 Introduction
 ------------
 
 **CAPRIQORN**: **CA**\ lculation of **P**\(**R**) and **I**\(**Q**\) **O**\f mac\ **R**\ omolecules in solutio\ **N**.
 
-.. image:: ./img/capriqorn.png
-
 Capriqorn is a software suite designed to facilitate the calculation of
 quantities such as **pair-distance distribution functions** and **scattering
 intensities** directly from the output trajectories of **molecular dynamics
-simulations**. In particular, Capriqorn implements the methods published in the
+simulations**.
+
+.. image:: ./img/capriqorn.png
+   :align: center
+
+In particular, Capriqorn implements the methods published in the
 following publication:
 
 | `Atomic-resolution structural information from scattering experiments on macromolecules in solution <https://journals.aps.org/pre/pdf/10.1103/PhysRevE.87.052712>`_
