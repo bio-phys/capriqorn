@@ -12,12 +12,10 @@
 """Capriqorn postprocessor module to perform the RDF computation.
 """
 
-
 # TODO: catch runtime assertions, use meaningful error messages
 
-
-import numpy as np
 from six.moves import range
+import numpy as np
 
 from cadishi import base
 from cadishi import util
@@ -65,12 +63,12 @@ class RDF(base.Filter):
         histograms = frm.get_data(base.loc_histograms)
         dr = frm.query_meta('histograms/histogram/dr')
         # consistency check if the histogram labels match with the particle numbers
-        _species_h = set(util.get_elements(histograms.keys()))
+        _species_h = set(util.get_elements(list(histograms.keys())))
         _species_p = set(nr_particles.keys())
         assert(_species_h == _species_p)
 
         radii = histograms['radii']
-        histogram_keys = histograms.keys()
+        histogram_keys = list(histograms.keys())
         histogram_keys.remove('radii')
 
         vol = np.sum(box_volumes)
@@ -103,23 +101,26 @@ class RDF(base.Filter):
                     rdf[key][0] = rho_1
             else:
                 if self.verb:
-                    print " RDF: skipping " + key
+                    print(" RDF: skipping " + key)
         rdf['radii'] = radii
         # ---
         if self.verb:
-            print " RDF: average inverse volume =", vol_inv
-            print " RDF: inverse average volume =", 1. / vol
-            print " RDF: ratio =", vol_inv * vol
+            print(" RDF: average inverse volume =", vol_inv)
+            print(" RDF: inverse average volume =", 1. / vol)
+            print(" RDF: ratio =", vol_inv * vol)
         # ---
         frm.put_data(base.loc_rdf, rdf)
 
-    def next(self):
-        for frm in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm in next(self.src):
             if frm is not None:
                 self._process_frame(frm)
                 frm.put_meta(self.get_meta())
                 if self.verb:
-                    print "RDF.next() :", frm.i
+                    print("RDF.next() :", frm.i)
                 yield frm
             else:
                 yield None

@@ -157,7 +157,7 @@ def get_full(frm_in):
     Y = frm_out_shell.get_data(base.loc_histograms)
     dict_util.sum_values(X, Y)  # semantics: X += Y
     # --- sum up cross histograms explicitly due to key handling
-    for (key, Y) in (frm_out_cross.get_data(base.loc_histograms)).items():
+    for (key, Y) in list((frm_out_cross.get_data(base.loc_histograms)).items()):
         if (key == 'radii'):
             continue
         else:
@@ -183,14 +183,14 @@ def merge_virtual_particles(frm):
     # --- sum up the distance histograms
     if frm.contains_key(base.loc_histograms):
         histgrms = frm.get_data(base.loc_histograms)
-        for key in histgrms.keys():
+        for key in list(histgrms.keys()):
             # Use StripVirtualParticles() earlier in the pipeline!
             assert (key not in blacklist)
-        elements = util.get_elements(histgrms.keys())
+        elements = util.get_elements(list(histgrms.keys()))
         if ('X1' in elements) and ('X2' in elements):
             all_X1 = []
             all_X2 = []
-            for key in histgrms.keys():
+            for key in list(histgrms.keys()):
                 if 'X1' in key:
                     all_X1.append(key)
                 elif 'X2' in key:
@@ -199,14 +199,14 @@ def merge_virtual_particles(frm):
             for key in all_X1X2:
                 key_new = key.replace('X1', 'X').replace('X2', 'X')
                 # print "###", key, key_new
-                if key_new not in histgrms.keys():
+                if key_new not in list(histgrms.keys()):
                     histgrms[key_new] = np.zeros_like(histgrms[key])
                 histgrms[key_new] += histgrms[key]
                 del histgrms[key]
     # --- sum up the particle number arrays
     if frm.contains_key(base.loc_nr_particles):
         partnums = frm.get_data(base.loc_nr_particles)
-        elements = util.get_elements(partnums.keys())
+        elements = util.get_elements(list(partnums.keys()))
         if ('X1' in elements) and ('X2' in elements):
             X1 = partnums['X1']
             X2 = partnums['X2']
@@ -218,7 +218,7 @@ def merge_virtual_particles(frm):
     # --- sum up the length histogram arrays
     if frm.contains_key(base.loc_len_histograms):
         lenhists = frm.get_data(base.loc_len_histograms)
-        elements = util.get_elements(lenhists.keys())
+        elements = util.get_elements(list(lenhists.keys()))
         if ('X1' in elements) and ('X2' in elements):
             X1 = lenhists['X1']
             X2 = lenhists['X2']

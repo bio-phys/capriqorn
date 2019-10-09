@@ -11,6 +11,7 @@
 
 """Capriqorn reference structure geometry filter.
 """
+from __future__ import print_function
 
 
 import MDAnalysis as mda
@@ -98,13 +99,16 @@ class ReferenceStructure(base.Filter):
         frm_out.put_meta(self.get_meta())
         return frm_out
 
-    def next(self):
-        for frm_in in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm_in in next(self.src):
             if frm_in is not None:
                 assert isinstance(frm_in, base.Container)
                 frm_out = self._process_frame(frm_in)
                 if self.verb:
-                    print "ReferenceStructure.next() :", frm_out.i
+                    print("ReferenceStructure.next() :", frm_out.i)
                 yield frm_out
             else:
                 yield None
@@ -164,8 +168,11 @@ class MultiReferenceStructure(ReferenceStructure):
                                             'selection': self.selection,
                                             'distance': self.distance}}
 
-    def next(self):
-        for frm_in in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm_in in next(self.src):
             if frm_in is not None:
                 assert isinstance(frm_in, base.Container)
                 # go to new frame to update self.atoms
@@ -185,7 +192,7 @@ class MultiReferenceStructure(ReferenceStructure):
                     self.r_max = d_max
                 frm_out = self._process_frame(frm_in)
                 if self.verb:
-                    print "MultiReferenceStructure.next() :", frm_out.i
+                    print("MultiReferenceStructure.next() :", frm_out.i)
             else:
                 frm_out = None
             yield frm_out

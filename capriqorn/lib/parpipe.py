@@ -36,8 +36,11 @@ this as follows e.g. using five processes:
 
 Status: OK, including order preservation, see also <pipeutil.py>.
 """
+from __future__ import print_function
 
 
+from builtins import str
+from builtins import range
 from cadishi import base
 
 
@@ -192,7 +195,7 @@ class ParallelJoin(base.Filter):
                             print("  buffr'd: " + str(number))
                     else:
                         none_counter += 1
-                except Exception, e:
+                except Exception as e:
                     pass
             else:
                 break
@@ -210,7 +213,7 @@ class ParallelJoin(base.Filter):
                 finished = True
         # The following remainder branch should never be entered:
         if (len(buf) > 0):
-            for key in sorted(buf.iterkeys()):
+            for key in sorted(buf.keys()):
                 yield buf[key]
                 if self.verb:
                     print("  yield'r: " + str(key))

@@ -12,7 +12,6 @@
 """Capriqorn dummy IO.
 """
 
-
 import string
 import numpy as np
 from six.moves import range
@@ -53,7 +52,10 @@ class DummyReader(base.Reader):
         meta[label] = param
         return meta
 
-    def next(self):
+    def __iter__(self):
+        return self
+
+    def __next__(self):
         while (self.count <= self.n_histogram_sets):
             hs = base.Container(number=self.count)
             dr = 0.01
@@ -76,7 +78,7 @@ class DummyReader(base.Reader):
                     hs.put_data(base.loc_histograms + '/' + key, histo)
             # ---
             if self.verb:
-                print "DummyReader.next() :", self.count
+                print("DummyReader.next() :", self.count)
             hs.put_meta(self.get_meta())
             yield hs
             self.count += 1
@@ -98,8 +100,7 @@ class DummyWriter(base.Writer):
         self._conflicts.extend(super(base.Writer, self)._conflicts)
 
     def dump(self):
-        for obj in self.src.next():
+        for obj in next(self.src):
             if obj is not None:
                 if self.verb:
-                    print "DummyWriter.dump() : ", obj.i
-                pass
+                    print("DummyWriter.dump() : ", obj.i)

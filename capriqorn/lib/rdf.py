@@ -11,8 +11,12 @@
 
 """RDF calculation.
 """
+from __future__ import division
+from __future__ import print_function
 
 
+from builtins import range
+from past.utils import old_div
 import numpy as np
 import math
 
@@ -69,9 +73,9 @@ def HDelta(x, R, r):
     Eq. (A3) of Phys. Rev. E vol. 87 p. 052712 (2013)
     """
     if x * x <= (R * R - r * r):
-        return ((x + r) * (x + r) - R * R) / (2. * x)
+        return old_div(((x + r) * (x + r) - R * R), (2. * x))
     else:
-        return -((x - r) * (x - r) - R * R) / (2. * x)
+        return old_div(-((x - r) * (x - r) - R * R), (2. * x))
 
 
 def HDeltaFast(xvec, R, r):
@@ -82,8 +86,8 @@ def HDeltaFast(xvec, R, r):
     """
     val = xvec.copy()
     indices = (xvec ** 2 < (R ** 2 - r ** 2))
-    val[indices] = ((xvec[indices] + r) ** 2 - R ** 2) / (2. * xvec[indices])
-    val[~indices] = -((xvec[~indices] - r) ** 2 - R ** 2) / (2. * xvec[~indices])
+    val[indices] = old_div(((xvec[indices] + r) ** 2 - R ** 2), (2. * xvec[indices]))
+    val[~indices] = old_div(-((xvec[~indices] - r) ** 2 - R ** 2), (2. * xvec[~indices]))
     return val
 
 
@@ -127,7 +131,7 @@ def SrFast(xvec, R, r):
 
 
 def pRg(r, Rg):
-    return 3. * math.exp(-3. * r * r / (4. * Rg * Rg)) * math.sqrt(3. / math.pi) * r * r / (2. * Rg * Rg * Rg)
+    return 3. * math.exp(old_div(-3. * r * r, (4. * Rg * Rg))) * math.sqrt(3. / math.pi) * r * r / (2. * Rg * Rg * Rg)
 
 
 def P(r, R):
@@ -136,24 +140,24 @@ def P(r, R):
     Eq. (A4) of Phys. Rev. E vol. 87 p. 052712 (2013)
     """
     if r >= 0 and r <= 2 * R:
-        return 3. * math.pow(r, 5) / (16. * math.pow(R, 6)) - 9. * math.pow(r, 3) / (4 * math.pow(R, 4)) + 3 * math.pow(r, 2) / math.pow(R, 3)
+        return 3. * math.pow(r, 5) / (16. * math.pow(R, 6)) - 9. * math.pow(r, 3) / (4 * math.pow(R, 4)) + old_div(3 * math.pow(r, 2), math.pow(R, 3))
     else:
         return 0.
 
 
 def PInt(r, R):
-    return math.pow(r, 6) / (32. * math.pow(R, 6)) - 9. * math.pow(r, 4) / (16. * math.pow(R, 4)) + math.pow(r, 3) / math.pow(R, 3)
+    return old_div(math.pow(r, 6), (32. * math.pow(R, 6))) - 9. * math.pow(r, 4) / (16. * math.pow(R, 4)) + old_div(math.pow(r, 3), math.pow(R, 3))
 
 
 def getRDF(data, R, col, delta):
     norm = np.sum(data[:, col]) - data[0, col]
     nr = data[0, col]
-    print norm, nr, norm / nr ** 2
+    print(norm, nr, old_div(norm, nr ** 2))
     res = np.zeros((len(data[:, col]), 2))
-    print len(data[:, col])
+    print(len(data[:, col]))
     for i in range(1, len(data[:, col])):
         res[i, 0] = data[i, 0]
-        res[i, 1] = data[i, col] / (P(res[i, 0], R) * nr * nr * delta)
+        res[i, 1] = old_div(data[i, col], (P(res[i, 0], R) * nr * nr * delta))
     return res
 
 
@@ -236,7 +240,7 @@ def PSh(R1, R2, r):
     """
     Normalized pair-distance distribution function of spherical shell with inner radius R1 an outer radius R2.
     """
-    return MSh(R1, R2, r) / VShell(R1, R2) ** 2
+    return old_div(MSh(R1, R2, r), VShell(R1, R2) ** 2)
 
 # def getRDFInhom(distData, lenData, R, col, delta, lenCol):
 #    norm=np.sum(distData[:,col])-distData[0,col]
@@ -344,7 +348,7 @@ def fade(xval, yval, ginfty, l):
     newVal: array_like
         New rdf values with tapered noise.
     """
-    temp = (xval) / l
+    temp = old_div((xval), l)
     temp *= temp
     newVal = ginfty + (yval - ginfty) * math.exp(-temp)
     return newVal
@@ -402,10 +406,10 @@ def taperNoise(histo, index, ginfty, noiseFraction=0.01, verb=False):
     histo_out = histo.copy()
     if 0 < noiseFraction and noiseFraction < 1:
         dR = histo[-1, 0] - histo[index, 0]
-        l = math.sqrt(-dR**2 / math.log(noiseFraction))
+        l = math.sqrt(old_div(-dR**2, math.log(noiseFraction)))
         rStart = histo[index, 0]
         if verb == True:
-            print " Smoothening rdfs from bin", index, "at distance r =", rStart, "to bin", len(histo), "at distance r =", histo[-1, 0], ".\n"
+            print(" Smoothening rdfs from bin", index, "at distance r =", rStart, "to bin", len(histo), "at distance r =", histo[-1, 0], ".\n")
         for i in range(index, len(histo)):
             r = math.sqrt(histo[i, 0] * histo[i, 0])
             for j in range(1, len(histo[i])):

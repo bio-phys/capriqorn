@@ -11,19 +11,22 @@
 
 """Rotate coordinate sets using Euler angles.
 """
+from __future__ import division
+from __future__ import print_function
 
 
+from past.utils import old_div
 import numpy as np
 
 
 def getAngles(vec):
     r = np.sqrt((vec ** 2).sum())
     if (r == 0):
-        print "r=0"
+        print("r=0")
     if (vec[0] == 0):
-        print "x=0"
+        print("x=0")
     phi = np.arctan2(vec[1], vec[0])
-    theta = np.arccos(vec[2] / r)
+    theta = np.arccos(old_div(vec[2], r))
     return phi, theta
 
 
@@ -35,7 +38,7 @@ def getCoordinates(r, theta, phi):
 
 
 def getRx(phi):
-    R = np.matrix(np.zeros((3, 3)))
+    R = np.zeros((3, 3))
     R[0, 0] = 1
     R[1, 1] = np.cos(phi)
     R[1, 2] = -np.sin(phi)
@@ -45,7 +48,7 @@ def getRx(phi):
 
 
 def getRy(phi):
-    R = np.matrix(np.zeros((3, 3)))
+    R = np.zeros((3, 3))
     R[0, 0] = np.cos(phi)
     R[0, 2] = np.sin(phi)
     R[1, 1] = 1
@@ -55,7 +58,7 @@ def getRy(phi):
 
 
 def getRz(phi):
-    R = np.matrix(np.zeros((3, 3)))
+    R = np.zeros((3, 3))
     R[0, 0] = np.cos(phi)
     R[0, 1] = -np.sin(phi)
     R[1, 0] = np.sin(phi)
@@ -65,7 +68,7 @@ def getRz(phi):
 
 
 def getD(phi):
-    R = np.matrix(np.zeros((3, 3)))
+    R = np.zeros((3, 3))
     R[0, 0] = np.cos(phi)
     R[0, 1] = np.sin(phi)
     R[1, 0] = -np.sin(phi)
@@ -75,7 +78,7 @@ def getD(phi):
 
 
 def getC(phi):
-    R = np.matrix(np.zeros((3, 3)))
+    R = np.zeros((3, 3))
     R[0, 0] = 1.
     R[1, 1] = np.cos(phi)
     R[1, 2] = np.sin(phi)
@@ -85,17 +88,33 @@ def getC(phi):
 
 
 def rotate(coor, alpha, beta, gamma):
-    newCoor = coor.copy()
-    # R1=getRz(alpha)
-    # R2=getRy(beta)
-    # R3=getRz(gamma)
+    """Rotate 'coor' by the angles alpha, beta, gamma.
+    """
     R1 = getD(alpha)
     R2 = getC(beta)
     R3 = getD(gamma)
     M = R3 * R2 * R1
-    # print M
-    for i, c in enumerate(newCoor):
-        # print np.asarray(M*np.matrix(c).T)
-        newCoor[i] = np.asarray((M * np.matrix(c).T).T)
-        # print c, newCoor[i]
-    return newCoor
+    return np.dot(coor, M)
+
+
+# def rotate(coor, alpha, beta, gamma):
+#     newCoor = coor.copy()
+#     # n2 = coor.copy()
+#     # R1=getRz(alpha)
+#     # R2=getRy(beta)
+#     # R3=getRz(gamma)
+#     R1 = getD(alpha)
+#     R2 = getC(beta)
+#     R3 = getD(gamma)
+#     M = R3 * R2 * R1
+#     # print M
+#     # print("###", newCoor)
+#     for i, c in enumerate(newCoor):
+#         # print np.asarray(M*np.matrix(c).T)
+#         #newCoor[i] = np.asarray((M * c.T).T)
+#         newCoor[i] = np.asarray((M * np.matrix(c).T).T)
+#         # print c, newCoor[i]
+#     print("###", newCoor)
+#     # print("###", np.dot(n2, M))
+#     # raise RuntimeError()
+#     return newCoor

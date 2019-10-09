@@ -11,8 +11,11 @@
 
 """Intensity calculation from histograms.
 """
+from __future__ import division
 
 
+from builtins import range
+from past.utils import old_div
 import numpy as np
 import math
 from six.moves import range
@@ -36,7 +39,7 @@ def intensitiesFFFaster(nq, dq, dIntegrand, keys, ffDict, dr):
     #    sinc=j0(q*r)
     formFacProd = np.zeros((nq, len(dIntegrand[0])))
     for i in range(nq):
-        sincList = np.sinc(rList * qList[i] / math.pi) * dr
+        sincList = np.sinc(old_div(rList * qList[i], math.pi)) * dr
         for k in range(1, len(dIntegrand[0])):
             # print k
             formFacProd[i, k] = ff.fiveGaussian(ffDict[nameList[k - 1][0]], qList[i])\
@@ -49,7 +52,7 @@ def intensitiesFFFaster(nq, dq, dIntegrand, keys, ffDict, dr):
 
 
 def getPartNrsProd(partNrs):
-    partNrsProd = np.zeros(len(partNrs) * (len(partNrs) + 1) / 2)
+    partNrsProd = np.zeros(old_div(len(partNrs) * (len(partNrs) + 1), 2))
     k = 0
     for i in range(len(partNrs)):
         for j in range(i, len(partNrs)):

@@ -12,6 +12,7 @@
 """Tests for the idxcode module."""
 
 
+from builtins import range
 from ..lib import idxcode
 
 def test_idxcode():

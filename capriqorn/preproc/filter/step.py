@@ -11,6 +11,7 @@
 
 """Capriqorn preprocessor step filter.
 """
+from __future__ import print_function
 
 
 import cadishi.base as base
@@ -40,14 +41,17 @@ class Step(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for frm in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm in next(self.src):
             if frm is not None:
                 if (self.count % self.step == 0):
                     assert isinstance(frm, base.Container)
                     frm.put_meta(self.get_meta())
                     if self.verb:
-                        print "Step.next() :", frm.i
+                        print("Step.next() :", frm.i)
                     yield frm
                 else:
                     pass

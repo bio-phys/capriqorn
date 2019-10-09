@@ -11,11 +11,13 @@
 
 """Cadishi preprocessor xyz filter/writer.
 """
+from __future__ import print_function
+from past.builtins import basestring
 
+from six.moves import range
 
 import math
 import numpy as np
-from six.moves import range
 
 import cadishi.base as base
 import cadishi.util as util
@@ -57,10 +59,13 @@ class XYZ(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
+    def __iter__(self):
+        return self
+
+    def __next__(self):
         do_write = True
         util.md(self.output_directory)
-        for frm_in in self.src.next():
+        for frm_in in next(self.src):
             if frm_in is not None:
                 assert isinstance(frm_in, base.Container)
                 # ---
@@ -82,7 +87,7 @@ class XYZ(base.Filter):
                 frm_out = frm_in
                 frm_out.put_meta(self.get_meta())
                 if self.verb:
-                    print "XYZ.next() :", frm_out.i
+                    print("XYZ.next() :", frm_out.i)
             else:
                 frm_out = None
             yield frm_out

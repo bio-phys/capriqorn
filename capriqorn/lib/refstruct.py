@@ -18,8 +18,12 @@ The cell list implementation uses dictionaries (hashes). The number of particles
 considered is given by the cutoff distance and approximately d^3*27, where d is
 the cutout distance. d is usually 10 Angstrom.
 """
+from __future__ import division
+from __future__ import print_function
 
 
+from builtins import range
+from past.utils import old_div
 import numpy as np
 import copy
 import re
@@ -238,7 +242,7 @@ def get_cell_indices(positions, distance):
 
     Indices of a cell are given by three integer numbers, e.g., [1,0,-2] denotes a single cell.
     """
-    return np.asarray(np.rint(positions / distance), dtype=np.int64)
+    return np.asarray(np.rint(old_div(positions, distance)), dtype=np.int64)
 
 
 def get_cell_strings(indices):
@@ -265,7 +269,7 @@ def get_cell_index_from_string(string):
     """
     tokens = re.split('(\d+)', string)
     index = []
-    for i in xrange(3):
+    for i in range(3):
         index.append(int(tokens[2 * i] + tokens[2 * i + 1]))
     return np.asarray(index)
 

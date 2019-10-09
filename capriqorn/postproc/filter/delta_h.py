@@ -12,6 +12,8 @@
 """Capriqorn deltaH filter.
 """
 
+from __future__ import division
+from past.utils import old_div
 
 import numpy as np
 import copy
@@ -32,9 +34,9 @@ def _make_2d(dict_in):
     2d array and the sorted list of keys.
     """
     # ---
-    assert ('radii' in dict_in.keys())
+    assert ('radii' in list(dict_in.keys()))
     # ---
-    np_2d = np.zeros((len(dict_in['radii']), len(dict_in.keys())))
+    np_2d = np.zeros((len(dict_in['radii']), len(list(dict_in.keys()))))
     np_2d[:, 0] = (dict_in['radii'])[:]
     np_2d_keys = sorted(dict_in.keys())
     np_2d_keys.remove('radii')
@@ -111,8 +113,11 @@ class DeltaH(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for hs in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for hs in next(self.src):
             # hs was chosen to mean 'histogram set' ...
             if hs is not None:
                 assert isinstance(hs, base.Container)
@@ -140,25 +145,25 @@ class DeltaH(base.Filter):
                     self.x_particle_method = virtual_param['method']
                     xrho = virtual_param['x_density']
                 # ---
-                rdf_header = (hs.get_data(base.loc_solv_match + '/g_scaled')).keys()
+                rdf_header = list((hs.get_data(base.loc_solv_match + '/g_scaled')).keys())
                 rdf_header.remove('radii')
                 rdf_elements = util.get_elements(rdf_header)
                 n_solv = len(rdf_elements)
                 hs_full = selection.get_full(hs)
-                n_part_elements = util.get_elements(hs_full.get_data(base.loc_nr_particles).keys())
-                histo_elements = util.get_elements(hs_full.get_data(base.loc_histograms).keys())
+                n_part_elements = util.get_elements(list(hs_full.get_data(base.loc_nr_particles).keys()))
+                histo_elements = util.get_elements(list(hs_full.get_data(base.loc_histograms).keys()))
                 # --- print '###', n_part_elements, histo_elements
                 assert (n_part_elements == histo_elements)
                 n_prot = len(histo_elements)
                 if (self.debug):
-                    print " rdf_header", rdf_header
-                    print " rdf_elements", rdf_elements
-                    print " n_solv =", n_solv
-                    print " n_prot=", n_prot
+                    print(" rdf_header", rdf_header)
+                    print(" rdf_elements", rdf_elements)
+                    print(" n_solv =", n_solv)
+                    print(" n_prot=", n_prot)
 
                 histo = copy.deepcopy(hs_full.get_data(base.loc_histograms))
                 nr = len(hs_full.get_data(base.loc_histograms + '/radii'))
-                for key in histo.keys():
+                for key in list(histo.keys()):
                     if (key == 'radii'):
                         continue
                     histo[key] *= 2.0
@@ -174,7 +179,7 @@ class DeltaH(base.Filter):
                 assert np.all(np.fabs(radii_1 - radii_2) < eps)
                 #
                 rdf_expanded = {}
-                for key in (hs.get_data(base.loc_solv_match + '/g_scaled')).keys():
+                for key in list((hs.get_data(base.loc_solv_match + '/g_scaled')).keys()):
                     # Note: g_scaled dictionary includes the radii array
                     rdf_expanded[key] = np.zeros(nr)
                     (rdf_expanded[key])[0:nr] = (hs.get_data(base.loc_solv_match + '/g_scaled/' + key))[0:nr]
@@ -184,7 +189,7 @@ class DeltaH(base.Filter):
                     hs.put_data(base.loc_delta_h + '/debug/rdf_org', rdf_org)
                 rho = hs.get_data(base.loc_solv_match + '/rho')
                 # ---
-                for key in rdf_expanded.keys():
+                for key in list(rdf_expanded.keys()):
                     # zero densities as done in the reference code <deltaH.py>
                     if (key == 'radii'):
                         continue
@@ -194,7 +199,7 @@ class DeltaH(base.Filter):
                     # print "### delta_H :: SPHERE BRANCH ###"
                     R = geometry_param['radius']
                     dHs = copy.deepcopy(H)
-                    for key in dHs.keys():
+                    for key in list(dHs.keys()):
                         if (key == 'radii'):
                             continue
                         (dHs[key])[:] = 0.0
@@ -222,10 +227,10 @@ class DeltaH(base.Filter):
                     dx = dr  # DANGER! However, these two should be the same anyway!
                     # ---
                     getSr = rdf.SrFast
-                    print
+                    print()
                     for j, rv in enumerate(r_list):
                         if self.verb and (j % 1000 == 0):
-                            print " DeltaH:bin ", j
+                            print(" DeltaH:bin ", j)
                         Sr = getSr(x_list, R, rv)
                         for key in hs.get_keys(base.loc_len_histograms, skip_keys=['radii']):
                             (h_dict[key])[j] += (hs.get_data(base.loc_len_histograms + '/' + key)[:] * Sr[:]).sum(axis=0)
@@ -264,7 +269,7 @@ class DeltaH(base.Filter):
                     # print "delta_h "
                     nx = np.mean(hs_full.get_data(base.loc_nr_particles + '/X'), dtype=np.float64)
                     if not (self.geometry == 'Sphere' or self.geometry == 'Cuboid' or self.geometry == 'Ellipsoid'):
-                        V = nx / xrho
+                        V = old_div(nx, xrho)
                     VAvg = V
                     if (self.geometry == 'MultiReferenceStructure'):
                         V = 1.
@@ -281,7 +286,7 @@ class DeltaH(base.Filter):
                                 Hx[key] /= nx
                     # ---
                     dHs = copy.deepcopy(H)
-                    for key in dHs.keys():
+                    for key in list(dHs.keys()):
                         if (key == 'radii'):
                             continue
                         (dHs[key])[:] = 0.0
@@ -375,7 +380,7 @@ class DeltaH(base.Filter):
                 # --- prepare 2D input array for library routine
                 #     (cannot use _make_2d() routine here)
                 n_row = len(rdf_org['radii'])
-                n_col = len(dH.keys())
+                n_col = len(list(dH.keys()))
                 rdf_org_2d = np.zeros((n_row, n_col))
                 rdf_org_2d[:, 0] = (rdf_org['radii'])[:]
                 rdf_org_2d_keys = sorted(rdf_org.keys())
@@ -415,7 +420,7 @@ class DeltaH(base.Filter):
 
                 hs.put_meta(self.get_meta())
                 if self.verb:
-                    print "DeltaH.next() :", hs.i
+                    print("DeltaH.next() :", hs.i)
                 yield hs
             else:
                 yield None

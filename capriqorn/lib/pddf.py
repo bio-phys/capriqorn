@@ -9,11 +9,16 @@
 # Released under the GNU Public Licence, v2 or any higher version, see the file LICENSE.txt.
 
 
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import range
+from past.utils import old_div
 import os
 import sys
 import math
 import numpy as np
-import rdf
+from . import rdf
 from . import formFactor as ff
 import cadishi.util
 # --- use fast Cython functions for time critical parts, if available
@@ -36,7 +41,7 @@ def j0(x):
     if x == 0:
         return 1.
     else:
-        return math.sin(x) / x
+        return old_div(math.sin(x), x)
 
 
 def binning(data, n, dr, distQ=False):
@@ -47,14 +52,14 @@ def binning(data, n, dr, distQ=False):
     """
     tmp = data[0, :].copy()
     data[0, :] = 0
-    new = np.zeros((len(data) / n + 1, len(data[0])))
+    new = np.zeros((old_div(len(data), n) + 1, len(data[0])))
     if distQ:
         fac = 1. / float(n)
         iadd = 1
     else:
         fac = 1.
         iadd = 0
-    for i in range(len(data) / n):
+    for i in range(old_div(len(data), n)):
         total = np.zeros(len(data[0]))
         for j in range(n):
             total[:] += data[i * n + j + iadd, :]
@@ -166,19 +171,19 @@ def getPartCharFunc2Org(partDHisto, key, paramProd, rArray, drPrime, delta):
     param = paramProd[key]
     elements = key.split(",")
     NMean = partDHisto[key][0, 1]
-    print "NMean(" + key + ") =", NMean
+    print("NMean(" + key + ") =", NMean)
 
     a = np.asarray(param[0][1:])
     b = np.asarray(param[1][1:])
     dr = drPrime  # DANGER
     for i, [r, valCF] in enumerate(partCF[1:]):
         if (i % 100 == 0):
-            print " r =", r
+            print(" r =", r)
         tmp = 0.
         for [rPrime, val] in partDHisto[key][1:]:
             if val != 0:
                 for rr in np.arange(rPrime - 0.5 * (drPrime - delta), rPrime + 0.5 * drPrime, delta):
-                    tmp += val * r / rr * ff.FT2(a, b, r, rr) * delta / drPrime
+                    tmp += old_div(val * r, rr * ff.FT2(a, b, r, rr) * delta / drPrime)
         partCF[i + 1, 1] += tmp
     return partCF
 
@@ -204,7 +209,7 @@ def getPartCharFunc2_Python(partDHisto, key, paramProd, rArray, drPrime, delta):
     # print "NMean("+key+") =", NMean
     a = np.asarray(param[0][1:])
     b = np.asarray(param[1][1:])
-    fac = a / (2. * np.sqrt(b * np.pi))
+    fac = old_div(a, (2. * np.sqrt(b * np.pi)))
     facEx = 1. / (4. * b)
     dr = drPrime  # DANGER
     for i, [r, valCF] in enumerate(partCF[1:]):
@@ -213,10 +218,10 @@ def getPartCharFunc2_Python(partDHisto, key, paramProd, rArray, drPrime, delta):
         for [rPrime, val] in partDHisto[key][1:]:
             if (rPrime - r) ** 2 < 9:  # MODI
                 if val != 0:
-                    val *= r * delta / drPrime
+                    val *= old_div(r * delta, drPrime)
                     for rr in np.arange(rPrime - 0.5 * (drPrime - delta), rPrime + 0.5 * drPrime, delta):
-                        tmp += val / rr * (fac * (np.exp(-(r - rr) ** 2 * facEx) -
-                                                  np.exp(-(r + rr) ** 2 * facEx))).sum()
+                        tmp += old_div(val, rr * (fac * (np.exp(-(r - rr) ** 2 * facEx) -
+                                                  np.exp(-(r + rr) ** 2 * facEx))).sum())
         partCF[i + 1, 1] += tmp
     return partCF
 
@@ -309,7 +314,7 @@ def partCharFuncAdd_Python(partCF, partDHisto, key, paramProd, rArray, drPrime):
             # if val!=0:
             if (round(r * 100000) == round(rPrime * 100000)):  # DANGER
                 # if (i % 100 == 0): print r, val*param[0][0]
-                tmp += val * param[0][0] / drPrime
+                tmp += old_div(val * param[0][0], drPrime)
                 break
         partCF[i + 1, 1] += tmp
     return partCF
@@ -410,12 +415,12 @@ def bulkSolvHistogram(g, dr):
     nrEl = rdf.getNrElements(nProd)
     elCol = rdf.getElementColumns(nrEl)
     indexPairs = rdf.getIndexPairs(nrEl)
-    print " indexPairs =", indexPairs
+    print(" indexPairs =", indexPairs)
     elPairs = rdf.getElementPairs(indexPairs, elCol)
-    print " elPairs =", elPairs
+    print(" elPairs =", elPairs)
     tmp = 4. * math.pi * g[1:, 0] * g[1:, 0] * dr
     for i in range(1, nProd + 1):
-        print indexPairs[i]
+        print(indexPairs[i])
         i0 = elPairs[i][0]
         i1 = elPairs[i][1]
         rhoProd = g[0, i0] * g[0, i1]

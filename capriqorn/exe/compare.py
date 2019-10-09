@@ -13,11 +13,11 @@
 """Compare two HDF5 files containing distance histograms.
 The distance histograms are NumPy arrays.
 """
+from __future__ import print_function
 
 
 import os
 import sys
-import itertools
 import glob
 import numpy as np
 import argparse
@@ -49,7 +49,7 @@ def main(pargs):
     reader_2 = postproc_io.H5Reader(filename=file_list[1], verbose=False)
 
     # --- iterate through both the generators (== readers) simultaneously
-    for (container_1, container_2) in itertools.izip(reader_1.next(), reader_2.next()):
+    for (container_1, container_2) in zip(next(reader_1), next(reader_2)):
         hs_1 = container_1.get_data(base.loc_histograms)
         hs_2 = container_2.get_data(base.loc_histograms)
         hsk_1 = sorted(hs_1.keys())
@@ -66,8 +66,8 @@ def main(pargs):
             except AssertionError:
                 np.savetxt('h1.dat', h1)
                 np.savetxt('h2.dat', h2)
-                print " FAIL"
+                print(" FAIL")
                 sys.exit(1)
 
-    print " OK!"
+    print(" OK!")
     print(util.SEP)

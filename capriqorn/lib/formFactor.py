@@ -10,7 +10,11 @@
 
 """Form factor routines
 """
+from __future__ import division
+from __future__ import print_function
 
+from builtins import range
+from past.utils import old_div
 import math
 import copy
 import numpy as np
@@ -71,7 +75,7 @@ def reformatSFParam(param):
     newParam = {}
     fourPi = 4. * math.pi
     fac = 1. / (fourPi * fourPi)
-    for k in param.keys():
+    for k in list(param.keys()):
         newParam[k] = [np.asarray(
             [param[k][0][2]] + param[k][1]), np.asarray([0.] + param[k][2]) * fac]
     return newParam
@@ -81,8 +85,8 @@ def SFParamProd(newParam):
     """ newParam is a dictionary """
     paramProd = {}
     # print newParam.keys()
-    for k1 in newParam.keys():
-        for k2 in newParam.keys():
+    for k1 in list(newParam.keys()):
+        for k2 in list(newParam.keys()):
             k = k1 + "," + k2
             # paramProd[k]=[np.asarray(newParam[k1][0])*np.asarray(newParam[k1][0]), newParam[k1][1]+newParam[k1][1]]
             l1 = []
@@ -108,7 +112,7 @@ def FT1Func(a, b, rSqr):
     Calculate: 2/pi Int[ f^2(q) sin(qr) (qr) dq = a r^2/(2 sqrt(pi b^3)) exp(-r^2/(4b))
     """
     if b > 0:
-        return a * rSqr / (2. * math.sqrt(math.pi * b * b * b)) * math.exp(-rSqr / (4. * b))
+        return old_div(a * rSqr, (2. * math.sqrt(math.pi * b * b * b)) * math.exp(old_div(-rSqr, (4. * b))))
     else:
         # if rSqr==0:
         #    return a
@@ -132,13 +136,13 @@ def FT1(paramList, rSqr):
 def printFT1(paramList, rList):
     for r in rList:
         rSqr = r * r
-        print r, FT1(paramList, rSqr)
+        print(r, FT1(paramList, rSqr))
     return
 
 
 def FT2Func(a, b, rMinusSqr, rPlusSqr):
     if b > 0:
-        return a / (2. * math.sqrt(b * math.pi)) * (math.exp(-rMinusSqr / (4. * b)) - math.exp(-rPlusSqr / (4. * b)))
+        return old_div(a, (2. * math.sqrt(b * math.pi)) * (math.exp(old_div(-rMinusSqr, (4. * b))) - math.exp(old_div(-rPlusSqr, (4. * b)))))
     else:
         # if rMinusSqr==0:
         #    return a
@@ -151,7 +155,7 @@ def FT2(a, b, r, rPrime):
     """ a and b are numpy arrays """
     rMinusSqr = (r - rPrime) * (r - rPrime)
     rPlusSqr = (r + rPrime) * (r + rPrime)
-    return (a / (2. * np.sqrt(b * np.pi)) * (np.exp(-rMinusSqr / (4. * b)) - np.exp(-rPlusSqr / (4. * b)))).sum()
+    return (old_div(a, (2. * np.sqrt(b * np.pi)) * (np.exp(old_div(-rMinusSqr, (4. * b))) - np.exp(old_div(-rPlusSqr, (4. * b)))))).sum()
 
 
 def fiveGaussian(param, q):
@@ -168,5 +172,5 @@ def fiveGaussian(param, q):
 
 def printFiveGaussian(param, qList):
     for q in qList:
-        print q, fiveGaussian(param, q)
+        print(q, fiveGaussian(param, q))
     return

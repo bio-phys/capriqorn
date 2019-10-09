@@ -11,6 +11,7 @@
 
 """Cadishi preprocessor dummy filter.
 """
+from __future__ import print_function
 
 
 import time
@@ -45,8 +46,11 @@ class Dummy(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for frame in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frame in next(self.src):
             if frame is not None:
                 assert isinstance(frame, base.Container)
                 if self.sleep_seconds > 0:
@@ -57,5 +61,5 @@ class Dummy(base.Filter):
                     raise RuntimeError("test exception raised by Dummy filter")
                 frame.put_meta(self.get_meta())
                 if self.verb:
-                    print "Dummy.next() :", frame.i
+                    print("Dummy.next() :", frame.i)
             yield frame

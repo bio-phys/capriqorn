@@ -11,6 +11,7 @@
 
 """Capriqorn cuboid geometry filter.
 """
+from __future__ import print_function
 
 
 import numpy as np
@@ -117,8 +118,11 @@ class Cuboid(base.Filter):
         indices = self.selectBody(coords, (half_lengths[:] - sw))
         return indices
 
-    def next(self):
-        for frm_in in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm_in in next(self.src):
             if frm_in is not None:
                 assert isinstance(frm_in, base.Container)
                 frm_out = copy.deepcopy(frm_in)
@@ -148,7 +152,7 @@ class Cuboid(base.Filter):
                 frm_out.put_data('log', frm_in.get_data('log'))
                 frm_out.put_meta(self.get_meta())
                 if self.verb:
-                    print "Cuboid.next() :", frm_out.i
+                    print("Cuboid.next() :", frm_out.i)
             else:
                 frm_out = None
             yield frm_out

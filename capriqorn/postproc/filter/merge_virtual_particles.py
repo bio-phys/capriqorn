@@ -16,7 +16,6 @@ NOTE: The merge functionality is actually implemented in free functions,
       probably more useful to apply the free functions whenever needed.
 """
 
-
 from cadishi import base
 from cadishi import util
 
@@ -48,19 +47,22 @@ class MergeVirtualParticles(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for frm in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm in next(self.src):
             if frm is not None:
                 assert isinstance(frm, base.Container)
                 # ---
                 histos = frm.get_data(base.loc_histograms)
-                elements = util.get_elements(histos.keys())
+                elements = util.get_elements(list(histos.keys()))
                 if ('X1' in elements) and ('X2' in elements):
                     selection.merge_virtual_particles(frm)
                 # ---
                 frm.put_meta(self.get_meta())
                 if self.verb:
-                    print "MergeVirtualParticles.next() :", frm.i
+                    print("MergeVirtualParticles.next() :", frm.i)
                 yield frm
             else:
                 yield None

@@ -12,6 +12,8 @@
 """
 
 from __future__ import print_function
+from builtins import str
+from builtins import range
 import os
 import sys
 import time
@@ -53,7 +55,7 @@ def instantiate_pipeline(pipeline_meta, pipeline_module, worker_id=None):
         assert (len(filter_meta) == 1)
         label = ""
         parameters = {}
-        for (label, parameters) in filter_meta.iteritems():
+        for (label, parameters) in filter_meta.items():
             # we leave the loop immediately since filter_meta must have only a single item
             break
         if 'active' in parameters:
@@ -95,7 +97,7 @@ def check_filter_dependencies(pipeline, pipeline_module):
                     instance.__class__.__name__ + "\" is not available. " + \
                     "Check implementation."
                 raise AttributeError(msg)
-            for j in xrange(i):
+            for j in range(i):
                 if isinstance(pipeline[j], required_class):
                     break
             else:
@@ -125,7 +127,7 @@ def check_filter_conflicts(pipeline, pipeline_module):
                 conflicting_class = util.load_class(pipeline_module, label)
             except AttributeError:
                 continue
-            for j in xrange(i):
+            for j in range(i):
                 if isinstance(pipeline[j], conflicting_class):
                     msg = "pipeline conflict detected: " \
                         + instance.__class__.__name__ + " conflicts with " \
@@ -164,7 +166,7 @@ def get_parallel_configuration(pipeline_meta):
         assert (len(filter_meta) == 1)
         label = ""
         parameters = {}
-        for (label, parameters) in filter_meta.iteritems():
+        for (label, parameters) in filter_meta.items():
             # we leave the loop immediately since filter_meta must have only a single item
             break
         if (label == 'ParallelJoin') and (n_workers == 0):
@@ -264,7 +266,7 @@ def get_pipeline_meta_segments(pipeline_meta):
         assert (len(filter_meta) == 1)
         label = ""
         parameters = {}
-        for (label, parameters) in filter_meta.iteritems():
+        for (label, parameters) in filter_meta.items():
             # we leave the loop immediately since filter_meta must have only a single item
             break
         # disable ParallelJoin in case ParallelFork is not enabled

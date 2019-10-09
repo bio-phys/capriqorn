@@ -19,25 +19,29 @@
 #   (histo.dat: average distance histograms) has been commented out
 #   rdf.PBC.dat: rdfs
 
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import str
+from builtins import range
 import numpy as np
 import math
 import sys
 import rdf
-import getRDFLib as getRDF
+from . import getRDFLib as getRDF
 
 if len(sys.argv) == 3:
     PBCName = sys.argv[1]
-    print
-    print " PBCName =", PBCName
+    print()
+    print(" PBCName =", PBCName)
     delta = float(sys.argv[2])
-    print " delta =", delta
+    print(" delta =", delta)
 else:
-    print " Usage: " + sys.argv[0] + " PBCName delta \n"
+    print(" Usage: " + sys.argv[0] + " PBCName delta \n")
     exit()
 
 
 oname = PBCName.split('.')[0]
-print " oname = ", oname
+print(" oname = ", oname)
 
 nameList = getRDF.readNameList(PBCName)
 info = getRDF.getHistoInfo(nameList)
@@ -49,14 +53,14 @@ norm = 0.
 dt = np.dtype('d')
 for i in range(len(info)):
     path = info[i]['name']
-    print
-    print "", path
+    print()
+    print("", path)
     for line in info[i]['data']:
         name = path + "rdfHisto." + str(int(line[0])) + ".dat"
         invVol += line[3]
         vol += line[2]
         norm += line[1]
-        print "", name
+        print("", name)
         if qFirst == 0:
             histo = np.loadtxt(name, dtype=dt)
             qFirst = 1
@@ -66,10 +70,10 @@ for i in range(len(info)):
             # for i in range(len(histo)):
             #    for j in range(1,len(histo[i])):
             #        histo[i,j]+=dummy[i,j]
-print
+print()
 
 header = rdf.readHeader(name)
-print header
+print(header)
 
 invVol /= norm
 vol /= norm
@@ -121,6 +125,6 @@ for j in range(1, len(histo[0])):
 
 rdf.savetxtHeader("rdf." + oname + ".dat", header, histo)
 
-print " average inverse volume =", invVol
-print " inverse average volume =", 1. / vol
-print " ratio =", invVol * vol
+print(" average inverse volume =", invVol)
+print(" inverse average volume =", 1. / vol)
+print(" ratio =", invVol * vol)

@@ -38,11 +38,14 @@ class Dummy(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for obj in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for obj in next(self.src):
             if obj is not None:
                 if self.verb:
-                    print "Dummy.next() :", obj.i
+                    print("Dummy.next() :", obj.i)
                 yield obj
             else:
                 yield None

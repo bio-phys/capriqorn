@@ -11,11 +11,15 @@
 
 """Capriqorn virtual particles filter.
 """
+from __future__ import division
+from __future__ import print_function
+from past.utils import old_div
 
+from six.moves import range
 
 import numpy as np
 import numpy.random as ran
-from six.moves import range
+
 import cadishi.base as base
 from ...lib import rotate as rot
 
@@ -57,7 +61,7 @@ else:
         gamma = np.random.uniform(0, 2 * np.pi)
         baseNew = rot.rotate(base, alpha, beta, gamma)
         lattice = np.zeros((gridLength ** 3, 3))
-        l_half = gridLength / 2
+        l_half = old_div(gridLength, 2)
         counter = 0
         for i in range(gridLength):
             for j in range(gridLength):
@@ -100,7 +104,7 @@ class VirtualParticles(base.Filter):
         # --- compute derived quantities
         if (method == "lattice"):
             xD = (2. / x_density) ** (1. / 3.)  # we'll generate two lattices, each with half the density
-            x_box_length = int(round(x_box_length / xD))
+            x_box_length = int(round(old_div(x_box_length, xD)))
             x_box_length += x_box_length % 2
             xN = x_box_length ** 3
         elif (method == "gas"):
@@ -142,15 +146,18 @@ class VirtualParticles(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
-        for frm in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm in next(self.src):
             if frm is not None:
                 assert isinstance(frm, base.Container)
                 # --- add virtual particles
                 if (self.method == "lattice"):
                     if self.verb:
-                        print "VirtualParticles : adding 2x " + str(self.x_box_length ** 3) \
-                            + " lattice particles"
+                        print("VirtualParticles : adding 2x " + str(self.x_box_length ** 3) \
+                            + " lattice particles")
                     for i in [1, 2]:
                         coords = _genLattice(self.x_box_length, self.xD, noise=self.noise)
                         frm.put_data(base.loc_coordinates + '/' + self.label + str(i), coords)
@@ -160,6 +167,6 @@ class VirtualParticles(base.Filter):
                 #
                 frm.put_meta(self.get_meta())
                 if self.verb:
-                    print "VirtualParticles.next() :", frm.i
+                    print("VirtualParticles.next() :", frm.i)
             # yield modified frame, or simply pass through None
             yield frm

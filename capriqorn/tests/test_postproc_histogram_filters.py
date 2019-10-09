@@ -13,11 +13,11 @@
 """A set of unit tests of the Capriqorn post-processing pipeline code.
 """
 
-
 import sys
 import os
 import glob
 import numpy as np
+
 import cadishi.base as base
 import cadishi.util as util
 from capriqorn.postproc import io as postproc_io
@@ -46,7 +46,7 @@ def test_average_filter():
     # consistency checks
     frame_indices_expected = np.arange(n_avg, n_tot + 1, n_avg)
     frame_indices_measured = np.array(counter.frames)
-    assert(counter.count == n_tot / n_avg)
+    assert(np.isclose(counter.count, n_tot/n_avg))
     assert np.allclose(frame_indices_measured, frame_indices_expected)
     # check the last processed frame
     frm = keeper.last_frame

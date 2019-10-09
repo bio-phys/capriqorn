@@ -11,7 +11,9 @@
 
 """Capriqorn ellipsoid geometry filter.
 """
-
+from __future__ import division
+from __future__ import print_function
+from past.utils import old_div
 
 import math
 import numpy as np
@@ -68,7 +70,7 @@ class Ellipsoid(base.Filter):
         assert (len(semi_principal_axes) == 3)
         # ---
         semi_principal_axes_sq = semi_principal_axes ** 2
-        q_within_body = (coords ** 2 / semi_principal_axes_sq[np.newaxis, :]).sum(axis=1) < 1.0
+        q_within_body = (old_div(coords ** 2, semi_principal_axes_sq[np.newaxis, :])).sum(axis=1) < 1.0
         indices = np.where(q_within_body)
         return indices
 
@@ -88,10 +90,10 @@ class Ellipsoid(base.Filter):
         coords_sq = coords ** 2
         # select body
         semi_principal_axes_sq = semi_principal_axes ** 2
-        q_within_body = (coords_sq / semi_principal_axes_sq[np.newaxis, :]).sum(axis=1) < 1.0
+        q_within_body = (old_div(coords_sq, semi_principal_axes_sq[np.newaxis, :])).sum(axis=1) < 1.0
         # select core
         semi_principal_axes_sq = (semi_principal_axes[:] - sw) ** 2
-        q_outside_core = (coords_sq / semi_principal_axes_sq[np.newaxis, :]).sum(axis=1) >= 1.0
+        q_outside_core = (old_div(coords_sq, semi_principal_axes_sq[np.newaxis, :])).sum(axis=1) >= 1.0
         # determine cut-set
         indices = np.where(np.logical_and(q_within_body, q_outside_core))
         return indices
@@ -112,8 +114,11 @@ class Ellipsoid(base.Filter):
         indices = self.selectBody(coords, (semi_principal_axes[:] - sw))
         return indices
 
-    def next(self):
-        for frm_in in self.src.next():
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        for frm_in in next(self.src):
             if frm_in is not None:
                 assert isinstance(frm_in, base.Container)
                 frm_out = copy.deepcopy(frm_in)
@@ -144,7 +149,7 @@ class Ellipsoid(base.Filter):
                 frm_out.put_meta(self.get_meta())
                 # ---
                 if self.verb:
-                    print "Ellipsoid.next() :", frm_out.i
+                    print("Ellipsoid.next() :", frm_out.i)
             else:
                 frm_out = None
             yield frm_out

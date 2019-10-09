@@ -11,11 +11,13 @@
 
 """Capriqorn self-consistent solvent matching filter.
 """
+from __future__ import division
+from past.utils import old_div
 
+from six.moves import range
 
 import numpy as np
 import scipy.interpolate as sint
-from six.moves import range
 
 from cadishi import base
 from cadishi.io import hdf5
@@ -73,11 +75,14 @@ class Solvent(base.Filter):
         meta[label] = param
         return meta
 
-    def next(self):
+    def __iter__(self):
+        return self
+
+    def __next__(self):
         """ Self-consistent solvent matching, implemented as a Python
         generator.  Implementation follows <lsz/shell-sc-solv-match.py>.
         """
-        for obj in self.src.next():
+        for obj in next(self.src):
             if obj is not None:
                 assert isinstance(obj, base.Container)
 
@@ -197,11 +202,11 @@ class Solvent(base.Filter):
                     #  JK: Can/should be moved to Average filter?
                     if (self.geometry == 'ReferenceStructure' or self.geometry == 'MultiReferenceStructure'):
                         nx = (shell.get_data(base.loc_nr_particles + '/X')).mean()
-                        V_shell = nx / xrho
+                        V_shell = old_div(nx, xrho)
                         VSqr_shell = V_shell ** 2
                         if self.geometry == 'MultiReferenceStructure':
                             nxSqr = ((shell.get_data(base.loc_nr_particles + '/X')) ** 2).mean()
-                            VSqr_shell = nxSqr / xrho ** 2
+                            VSqr_shell = old_div(nxSqr, xrho ** 2)
                     # ---
                     # print "###", self.g_match, shell.get_keys(base.loc_histograms)
                     assert (self.g_match in shell.get_keys(base.loc_histograms))
@@ -210,7 +215,7 @@ class Solvent(base.Filter):
                     assert (pair[0] in shell.get_keys(base.loc_nr_particles))
                     # print shell.particles[pair[0]]
                     n_match_avg = (shell.get_data(base.loc_nr_particles + '/' + pair[0])).mean()
-                    rho_match = n_match_avg / V_shell
+                    rho_match = old_div(n_match_avg, V_shell)
                     # JK: Should we instead use <n_i/V_i> averaged over frames for multiref??
 
                     # Use SciPy interpolator object to operate on the
@@ -248,7 +253,7 @@ class Solvent(base.Filter):
                     # print "### pre_factor =", pre_factor
                     H[:] *= pre_factor
                     histo = shell.get_data(base.loc_histograms + '/' + self.g_match)
-                    scale_factor = np.sum(histo[:] * H[:]) / np.sum(H[:] ** 2)
+                    scale_factor = old_div(np.sum(histo[:] * H[:]), np.sum(H[:] ** 2))
                     # print "###  scale_factor =", scale_factor
                     obj.put_data(base.loc_solv_match + '/scale_factor', scale_factor)
                     if (self.debug):
@@ -269,7 +274,7 @@ class Solvent(base.Filter):
                     rho_dict = {}
                     for name in g_elements:
                         avg = (shell.get_data(base.loc_nr_particles + '/' + name)).mean()
-                        rho_dict[name] = avg / V_shell
+                        rho_dict[name] = old_div(avg, V_shell)
 
                     if (self.debug):
                         obj.put_data(base.loc_solv_match + '/rho_g_org', rho_g_org)
@@ -296,7 +301,7 @@ class Solvent(base.Filter):
                 obj.put_data(base.loc_solv_match + '/rho', rho_dict)
                 obj.put_meta(self.get_meta())
                 if self.verb:
-                    print "Solvent.next() :", obj.i
+                    print("Solvent.next() :", obj.i)
                 yield obj
             else:
                 yield None

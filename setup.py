@@ -11,6 +11,7 @@
 # ez_setup attempts to download setuptools in case it is not available
 # import ez_setup
 # ez_setup.use_setuptools()
+from __future__ import print_function
 from setuptools import setup, Extension, Command
 import os
 import sys
@@ -28,7 +29,7 @@ else:
     do_cython = False
 if do_cython:
     from Cython.Build import cythonize
-    print "Re-generating C code for extensions from Cython sources ..."
+    print("Re-generating C code for extensions from Cython sources ...")
 
 
 def get_version_string():
