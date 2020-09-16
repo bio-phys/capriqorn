@@ -28,7 +28,7 @@ from .. import version
 version_string = version.get_printable_version_string()
 
 
-def parse_args():
+def setup_cli():
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--version', help='print version information',
                         action='version', version=version_string)
@@ -43,13 +43,16 @@ def parse_args():
     if ('compare' in '\t'.join(sys.argv)):
         compare.configure_cli(subparsers)
     # ---
-    return parser.parse_args()
+    return parser
 
 
 def main():
-    args = parse_args()
-    args.func(args)
-
-
-if __name__ == "__main__":
-    main()
+    parser = setup_cli()
+    args = parser.parse_args()
+    try:
+        func = args.func
+    except AttributeError:
+        parser.print_help()
+        parser.exit()
+    else:
+        func(args)
