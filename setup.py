@@ -82,15 +82,15 @@ def find_in_path(filenames):
 
 # compilation of the Cython extension
 cc_flags = ['-O3']
+ld_flags = ['-lm']
 if (find_in_path(['gcc']) is not None):
     # let us assume that gcc will be used
     cc_flags += ['-ffast-math']
-    # cc_flags += ['-msse4.2']  # runs well on any reasonably modern system
-    # cc_flags += ['-mavx']  # AVX, found to be slower than SSE 4.2
-    # cc_flags += ['-march=native']  # non portable, not clear what gcc is doing
+    cc_flags += ['-msse4.2']  # runs well on any reasonably modern system
     cc_flags += ['-mtune=native']  # portable
     # if not on_mac():
     #     cc_flags += ['-fopenmp']
+    ld_flags = cc_flags + ld_flags
 else:
     pass
 
@@ -110,7 +110,7 @@ c_pddf = Extension(c_pddf_basename.replace('/', '.'),
                    sources=[c_pddf_basename + '.c'],
                    include_dirs=[numpy_include],
                    extra_compile_args=cc_flags,
-                   extra_link_args=cc_flags)
+                   extra_link_args=ld_flags)
 
 c_virtual_basename = 'capriqorn/kernel/c_virtual_particles'
 if do_cython:
